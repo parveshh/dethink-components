@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+dist/
+storybook-static/
+coverage/
+.turbo/
+.vite/
+*.tsbuildinfo
+pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

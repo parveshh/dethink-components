@@ -1,0 +1,22 @@
+{
+  "name": "dethink-components-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "build": "pnpm --filter @dethink/components build && pnpm --filter @dethink/playground-vite build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "test": "pnpm -r --if-present test",
+    "test:a11y": "pnpm -r --if-present test:a11y",
+    "storybook": "pnpm --filter @dethink/storybook storybook",
+    "storybook:build": "pnpm --filter @dethink/storybook storybook:build",
+    "registry:validate": "node scripts/validate-registry.mjs",
+    "registry:smoke": "node scripts/smoke-button-registry.mjs",
+    "changeset": "changeset"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "@types/node": "^26.0.1"
+  }
+}
