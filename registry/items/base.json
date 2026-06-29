@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dethink-base",
+  "type": "registry:base",
+  "title": "Dethink Components Base",
+  "description": "Base Tailwind CSS variables, foundation provider, and shared class utilities for Dethink Components.",
+  "dependencies": ["clsx", "tailwind-merge"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "packages/components/src/styles.css",
+      "type": "registry:style"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    },
+    {
+      "path": "packages/components/src/foundation/dethink-provider.tsx",
+      "type": "registry:component"
+    }
+  ],
+  "cssVars": {
+    "theme": {
+      "color-background": "var(--dt-color-background)",
+      "color-foreground": "var(--dt-color-foreground)",
+      "color-border": "var(--dt-color-border)",
+      "color-ring": "var(--dt-color-ring)",
+      "radius-md": "var(--dt-radius-md)"
+    }
+  }
+}
+

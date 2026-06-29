@@ -1,0 +1,23 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "paths": {
+      "@dethink/components": ["../../packages/components/src/index.ts"],
+      "@dethink/components/styles.css": ["../../packages/components/src/styles.css"]
+    },
+    "types": ["node"]
+  },
+  "include": [
+    "src",
+    "vite.config.ts",
+    "../../packages/components/src/**/*.ts",
+    "../../packages/components/src/**/*.tsx",
+    "../../packages/components/src/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../packages/components/src/**/*.test.ts",
+    "../../packages/components/src/**/*.test.tsx",
+    "../../packages/components/src/**/*.stories.tsx"
+  ]
+}

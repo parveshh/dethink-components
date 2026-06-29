@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "paths": {
+      "@dethink/components": ["../../packages/components/src/index.ts"]
+    },
+    "types": ["node"]
+  },
+  "include": [
+    ".storybook",
+    "src",
+    "../../packages/components/src/**/*.ts",
+    "../../packages/components/src/**/*.tsx",
+    "../../packages/components/src/**/*.d.ts"
+  ],
+  "exclude": [
+    "../../packages/components/src/**/*.test.ts",
+    "../../packages/components/src/**/*.test.tsx",
+    "../../packages/components/src/**/*.stories.tsx"
+  ]
+}
