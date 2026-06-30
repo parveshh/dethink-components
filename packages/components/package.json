@@ -27,7 +27,9 @@
     "test:a11y": "vitest run src/foundation/*.a11y.test.tsx src/components/*/*.a11y.test.tsx"
   },
   "dependencies": {
+    "@internationalized/date": "^3.12.2",
     "clsx": "^2.1.1",
+    "react-aria-components": "^1.19.0",
     "tailwind-merge": "^3.4.0"
   },
   "peerDependencies": {
