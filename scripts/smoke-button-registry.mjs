@@ -1,5 +1,5 @@
 import { access, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -17,6 +17,61 @@ async function readJson(path) {
 
 async function assertFileExists(path) {
   await access(path);
+}
+
+async function resolveExistingSourcePath(pathWithoutExtension) {
+  const candidates = [
+    pathWithoutExtension,
+    `${pathWithoutExtension}.ts`,
+    `${pathWithoutExtension}.tsx`,
+    join(pathWithoutExtension, "index.ts"),
+    join(pathWithoutExtension, "index.tsx"),
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return undefined;
+}
+
+async function assertRegistryRelativeImportsResolve(item) {
+  const registryFilePaths = new Set((item.files ?? []).map((file) => normalize(file.path)));
+  const importPattern =
+    /\b(?:import|export)\b(?:[\s\S]*?)\bfrom\s*["'](\.{1,2}\/[^"']+)["']/g;
+
+  for (const file of item.files ?? []) {
+    if (!/\.[cm]?[tj]sx?$/.test(file.path)) {
+      continue;
+    }
+
+    const absoluteFilePath = join(root, file.path);
+    const source = await readFile(absoluteFilePath, "utf8");
+
+    for (const match of source.matchAll(importPattern)) {
+      const importPath = match[1];
+      const resolvedPath = await resolveExistingSourcePath(
+        normalize(join(dirname(absoluteFilePath), importPath)),
+      );
+
+      assert(
+        resolvedPath,
+        `${item.name} registry source ${file.path} imports missing path ${importPath}.`,
+      );
+
+      const relativeResolvedPath = normalize(relative(root, resolvedPath));
+
+      assert(
+        registryFilePaths.has(relativeResolvedPath),
+        `${item.name} registry source ${file.path} imports ${relativeResolvedPath}, but that file is not declared in the registry item.`,
+      );
+    }
+  }
 }
 
 const base = await readJson(join(registryRoot, "base.json"));
@@ -128,6 +183,8 @@ for (const item of [
     await assertFileExists(join(root, file.path));
   }
 }
+
+await assertRegistryRelativeImportsResolve(container);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");

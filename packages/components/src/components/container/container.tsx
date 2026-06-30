@@ -135,7 +135,15 @@ function composeRefs<T>(...refs: Array<Ref<T> | undefined>) {
 }
 
 function getChildRef(child: ReactElement<ContainerSlotProps>) {
-  return child.props.ref;
+  if (child.props.ref !== undefined) {
+    return child.props.ref;
+  }
+
+  const descriptor = Object.getOwnPropertyDescriptor(child, "ref");
+
+  return descriptor && "value" in descriptor
+    ? (descriptor.value as Ref<HTMLElement> | undefined)
+    : undefined;
 }
 
 function isEventHandler(key: string, value: unknown): value is EventHandler {
