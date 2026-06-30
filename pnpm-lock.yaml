@@ -54,6 +54,9 @@ importers:
       '@dethink/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@internationalized/date':
+        specifier: ^3.12.2
+        version: 3.12.2
       '@storybook/addon-a11y':
         specifier: ^10.4.6
         version: 10.4.6(storybook@10.4.6(@testing-library/dom@10.4.1)(@types/react@19.2.17)(prettier@2.8.8)(react@19.2.7))
