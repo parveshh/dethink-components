@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "date-time-picker",
+  "type": "registry:ui",
+  "title": "DateTimePicker",
+  "description": "Accessible segmented DateTimePicker with calendar popover, timezone-aware values, presets, and form wiring.",
+  "dependencies": ["@internationalized/date", "react-aria-components"],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/date-time-picker/date-time-picker.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/date-time-picker/date-time-picker-utils.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/date-time-picker/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}

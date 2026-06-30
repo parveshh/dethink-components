@@ -21,13 +21,22 @@ async function assertFileExists(path) {
 
 const base = await readJson(join(registryRoot, "base.json"));
 const button = await readJson(join(registryRoot, "button.json"));
+const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(button.name === "button", "button registry item must be named button.");
+assert(
+  dateTimePicker.name === "date-time-picker",
+  "date-time-picker registry item must be named date-time-picker.",
+);
 assert(timeline.name === "timeline", "timeline registry item must be named timeline.");
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
+);
+assert(
+  dateTimePicker.registryDependencies?.includes("dethink-base"),
+  "date-time-picker registry item must depend on dethink-base.",
 );
 assert(
   timeline.registryDependencies?.includes("dethink-base"),
@@ -41,8 +50,16 @@ assert(
   Array.isArray(timeline.dependencies) && timeline.dependencies.length === 0,
   "timeline registry item must not add runtime dependencies.",
 );
+assert(
+  dateTimePicker.dependencies?.includes("@internationalized/date"),
+  "date-time-picker registry item must include @internationalized/date.",
+);
+assert(
+  dateTimePicker.dependencies?.includes("react-aria-components"),
+  "date-time-picker registry item must include react-aria-components.",
+);
 
-for (const item of [base, button, timeline]) {
+for (const item of [base, button, dateTimePicker, timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -58,6 +75,10 @@ const buttonSource = await readFile(
 );
 const timelineSource = await readFile(
   join(root, "packages/components/src/components/timeline/timeline.tsx"),
+  "utf8",
+);
+const dateTimePickerSource = await readFile(
+  join(root, "packages/components/src/components/date-time-picker/date-time-picker.tsx"),
   "utf8",
 );
 
@@ -95,5 +116,30 @@ assert(
   "timeline source must use timeline rail token utilities.",
 );
 assert(!timelineSource.includes("@radix-ui"), "timeline source must remain dependency-free.");
+assert(
+  dateTimePickerSource.includes("react-aria-components"),
+  "date-time-picker source must use React Aria Components.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker"'),
+  "date-time-picker source must expose a stable root slot.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker-field"'),
+  "date-time-picker source must expose a stable field slot.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker-calendar"'),
+  "date-time-picker source must expose a stable calendar slot.",
+);
+assert(
+  dateTimePickerSource.includes("border-input"),
+  "date-time-picker source must use tokenized input border utilities.",
+);
+assert(
+  dateTimePickerSource.includes("focus-visible:ring-2"),
+  "date-time-picker source must include visible focus styling.",
+);
+assert(!dateTimePickerSource.includes("@radix-ui"), "date-time-picker source must not use Radix.");
 
 console.log("Registry smoke passed.");
