@@ -6,7 +6,7 @@ This repository is for Dethink Components, a React component library derived fro
 
 The product direction is a shadcn-compatible, open-code component system for production SaaS dashboards, internal tools, B2B applications, and AI-native React interfaces. The primary distribution model is a custom shadcn-style registry, with optional npm package exports after the registry path is stable.
 
-Current planning artifacts live in `docs/`:
+Current planning artifacts may be mirrored in `docs/`, but GitHub is the source of truth for planned work:
 
 - `docs/component-inventory.md` contains the full component, foundation, utility, and block inventory.
 - `docs/development-path.md` defines the component-by-component build order.
@@ -23,19 +23,28 @@ The implementation scaffold now exists and should stay aligned with the PRD:
 
 Keep future work aligned with the scaffold: TypeScript, React, Tailwind CSS, CSS variables, shadcn registry metadata, Storybook/docs, accessibility tests, visual tests, Vite/package builds, and Changesets.
 
-## Component Workflow
+## GitHub PRD And Issue Workflow
 
-Work component by component. Do not start broad implementation work without a component spec and PRD.
+All product and component work must move through GitHub PRDs and GitHub issues. Do not start implementation from a chat request, local note, local PRD file, or broad plan alone.
 
-1. Read `react_component_library_prd.docx` and the relevant docs in `docs/`.
-2. For each component, create or update `docs/components/<component>/spec.md`.
-3. Create or update `docs/components/<component>/prd.md` using the `to-prd` structure.
-4. Confirm testing seams before treating the PRD as ready.
-5. Create or update `docs/components/<component>/issues.md` using tracer-bullet vertical slices.
-6. Get approval for issue granularity and HITL/AFK classification before publishing issues.
-7. Implement only approved slices unless the user explicitly asks for exploratory work.
+For any new work:
 
-Prefer thin vertical slices that include component code, docs, registry metadata, tests, and verification together.
+1. Use `/Users/pm/.agents/skills/to-prd/SKILL.md` (`to-prd`) to synthesize the PRD from the current context and publish it to GitHub with the expected ready-for-agent triage label.
+2. Use `/Users/pm/.agents/skills/to-issues/SKILL.md` (`to-issues`) to break the approved PRD into GitHub issues using tracer-bullet vertical slices.
+3. Do not implement until the PRD exists on GitHub and the implementation issues exist on GitHub.
+4. Implement only the approved GitHub issues for that PRD.
+
+Branch workflow:
+
+1. Create a PRD branch from the current integration base, named for the PRD, for example `codex/prd-<prd-number>-<slug>`.
+2. Create stacked issue branches for the PRD in dependency order.
+3. Branch Issue 1 from the PRD branch, for example `codex/issue-<issue-number>-<slug>`.
+4. Branch Issue 2 from Issue 1, and continue stacking later issue branches from the previous issue branch unless the GitHub issue dependency graph says otherwise.
+5. Keep each issue branch scoped to its GitHub issue, including code, docs, registry metadata, tests, and verification needed for that vertical slice.
+6. When all issues under the PRD are complete, open the final stacked branch as a pull request targeting the PRD branch.
+7. Do not open the final PR to the repository default branch unless the user explicitly asks for that release/integration step.
+
+Prefer thin vertical slices that include component code, docs, registry metadata, tests, and verification together. A local `docs/components/<component>/prd.md` or `issues.md` file can support the work, but it does not replace the GitHub PRD or GitHub issues.
 
 ## Required Skills
 
