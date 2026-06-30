@@ -1,4 +1,4 @@
-import { Button, DethinkProvider, cn } from "@dethink/components";
+import { Button, DethinkProvider, Link, cn } from "@dethink/components";
 
 function ArrowRightIcon() {
   return (
@@ -20,7 +20,7 @@ export function App() {
         </h1>
         <p className="text-muted-foreground">
           This app verifies package imports, style imports, Tailwind tokens, the
-          foundation provider, and the first Button component.
+          foundation provider, and the first action and navigation components.
         </p>
         <div className="flex flex-wrap items-center gap-density-gap">
           <Button>Primary action</Button>
@@ -30,6 +30,9 @@ export function App() {
           <Button asChild rightIcon={<ArrowRightIcon />}>
             <a href="#smoke-input">Jump to input</a>
           </Button>
+          <Link href="#smoke-link-target" underline="always">
+            Smoke link
+          </Link>
         </div>
         <div
           className={cn(
@@ -46,6 +49,9 @@ export function App() {
             placeholder="Token-backed field"
           />
         </div>
+        <p id="smoke-link-target" className="text-sm text-muted-foreground">
+          Link smoke target reached through native anchor behavior.
+        </p>
       </main>
     </DethinkProvider>
   );
