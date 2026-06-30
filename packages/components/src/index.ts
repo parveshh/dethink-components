@@ -15,6 +15,18 @@ export {
   type ButtonVariant,
 } from "./components/button";
 export {
+  Box,
+  boxClassNames,
+  type BoxBorder,
+  type BoxDisplay,
+  type BoxElement,
+  type BoxOverflow,
+  type BoxProps,
+  type BoxRadius,
+  type BoxSpacing,
+  type BoxSurface,
+} from "./components/box";
+export {
   Link,
   linkClassNames,
   type LinkProps,
