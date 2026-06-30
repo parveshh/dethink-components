@@ -1,9 +1,22 @@
-import { Button, DethinkProvider, Link, cn } from "@dethink/components";
+import { Button, DethinkProvider, IconButton, Link, cn } from "@dethink/components";
 
 function ArrowRightIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor">
       <path d="M3.5 8h9M9 4.5 12.5 8 9 11.5" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.75" />
+    </svg>
+  );
+}
+
+function RefreshIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+      <path
+        d="M13 4.5V1.75h-2.75M3 11.5v2.75h2.75M12.15 6A4.5 4.5 0 0 0 4.2 3.7L3 5M3.85 10A4.5 4.5 0 0 0 11.8 12.3L13 11"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.75"
+      />
     </svg>
   );
 }
@@ -33,6 +46,9 @@ export function App() {
           <Link href="#smoke-link-target" underline="always">
             Smoke link
           </Link>
+          <IconButton aria-label="Refresh playground" variant="outline">
+            <RefreshIcon />
+          </IconButton>
         </div>
         <div
           className={cn(

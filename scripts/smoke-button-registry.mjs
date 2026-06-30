@@ -26,6 +26,11 @@ const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(button.name === "button", "button registry item must be named button.");
 assert(link.name === "link", "link registry item must be named link.");
+const iconButton = await readJson(join(registryRoot, "icon-button.json"));
+const timeline = await readJson(join(registryRoot, "timeline.json"));
+
+assert(button.name === "button", "button registry item must be named button.");
+assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(timeline.name === "timeline", "timeline registry item must be named timeline.");
 assert(
   button.registryDependencies?.includes("dethink-base"),
@@ -34,6 +39,12 @@ assert(
 assert(
   link.registryDependencies?.includes("dethink-base"),
   "link registry item must depend on dethink-base.",
+  iconButton.registryDependencies?.includes("dethink-base"),
+  "icon-button registry item must depend on dethink-base.",
+);
+assert(
+  iconButton.registryDependencies?.includes("button"),
+  "icon-button registry item must depend on button for shared variant types.",
 );
 assert(
   timeline.registryDependencies?.includes("dethink-base"),
@@ -46,13 +57,15 @@ assert(
 assert(
   Array.isArray(link.dependencies) && link.dependencies.length === 0,
   "link registry item must not add runtime dependencies.",
+  Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
+  "icon-button registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(timeline.dependencies) && timeline.dependencies.length === 0,
   "timeline registry item must not add runtime dependencies.",
 );
 
-for (const item of [base, button, link, timeline]) {
+for (const item of [base, button, iconButton, link,timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -68,6 +81,8 @@ const buttonSource = await readFile(
 );
 const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
+const iconButtonSource = await readFile(
+  join(root, "packages/components/src/components/icon-button/icon-button.tsx"),
   "utf8",
 );
 const timelineSource = await readFile(
@@ -100,6 +115,24 @@ assert(linkSource.includes("noopener"), "link source must add new-tab noopener s
 assert(linkSource.includes("asChild"), "link source must expose router composition.");
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(
+  iconButtonSource.includes("IconButtonAccessibleName"),
+  "icon-button source must expose accessible-name typing.",
+);
+assert(
+  iconButtonSource.includes("data-slot=\"icon-button\""),
+  "icon-button source must expose stable root slot data.",
+);
+assert(
+  iconButtonSource.includes("data-slot=\"icon-button-icon\""),
+  "icon-button source must expose stable icon slot data.",
+);
+assert(
+  iconButtonSource.includes("aria-busy"),
+  "icon-button source must expose loading busy state.",
+);
+assert(iconButtonSource.includes("bg-primary"), "icon-button source must use tokenized primary utilities.");
+assert(!iconButtonSource.includes("@radix-ui"), "icon-button source must remain dependency-free.");
 assert(timelineSource.includes("data-slot=\"timeline\""), "timeline source must expose stable root slot data.");
 assert(timelineSource.includes("data-slot=\"timeline-viewport\""), "timeline source must expose viewport slot data.");
 assert(timelineSource.includes("<ol"), "timeline source must render an ordered list.");
