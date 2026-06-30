@@ -15,6 +15,13 @@ export {
   type ButtonVariant,
 } from "./components/button";
 export {
+  Link,
+  linkClassNames,
+  type LinkProps,
+  type LinkUnderline,
+  type LinkVariant,
+} from "./components/link";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,
