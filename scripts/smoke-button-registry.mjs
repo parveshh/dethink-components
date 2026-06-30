@@ -22,6 +22,7 @@ async function assertFileExists(path) {
 const base = await readJson(join(registryRoot, "base.json"));
 const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
+const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const link = await readJson(join(registryRoot, "link.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
@@ -30,6 +31,7 @@ const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
+assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(link.name === "link", "link registry item must be named link.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
@@ -45,6 +47,10 @@ assert(
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
+);
+assert(
+  container.registryDependencies?.includes("dethink-base"),
+  "container registry item must depend on dethink-base.",
 );
 assert(
   iconButton.registryDependencies?.includes("dethink-base"),
@@ -79,6 +85,10 @@ assert(
   "button registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(container.dependencies) && container.dependencies.length === 0,
+  "container registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
 );
@@ -103,7 +113,17 @@ assert(
   "date-time-picker registry item must include react-aria-components.",
 );
 
-for (const item of [base, box, button, iconButton, link, typography, dateTimePicker, timeline]) {
+for (const item of [
+  base,
+  box,
+  button,
+  container,
+  iconButton,
+  link,
+  typography,
+  dateTimePicker,
+  timeline,
+]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -119,6 +139,10 @@ const boxSource = await readFile(
 );
 const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
+  "utf8",
+);
+const containerSource = await readFile(
+  join(root, "packages/components/src/components/container/container.tsx"),
   "utf8",
 );
 const iconButtonSource = await readFile(
@@ -171,6 +195,28 @@ assert(buttonSource.includes("asChild"), "button source must expose asChild.");
 assert(buttonSource.includes("data-slot=\"button\""), "button source must expose stable slot data.");
 assert(buttonSource.includes("bg-primary"), "button source must use tokenized primary utilities.");
 assert(!buttonSource.includes("@radix-ui"), "button source must remain dependency-free.");
+assert(
+  containerSource.includes('"data-slot": "container"'),
+  "container source must expose stable slot data.",
+);
+assert(containerSource.includes("asChild"), "container source must expose child composition.");
+assert(
+  containerSource.includes("containerClassNames"),
+  "container source must expose class-name composition.",
+);
+assert(
+  containerSource.includes("max-w-[80rem]"),
+  "container source must use static max-width utilities.",
+);
+assert(containerSource.includes("px-4"), "container source must use static gutter utilities.");
+assert(
+  containerSource.includes("safe-area-inset-left"),
+  "container source must support safe-area gutters.",
+);
+assert(containerSource.includes("mx-auto"), "container source must default to centered layout.");
+assert(containerSource.includes("me-auto"), "container source must support logical start alignment.");
+assert(containerSource.includes("ms-auto"), "container source must support logical end alignment.");
+assert(!containerSource.includes("@radix-ui"), "container source must remain dependency-free.");
 assert(
   iconButtonSource.includes("IconButtonAccessibleName"),
   "icon-button source must expose accessible-name typing.",

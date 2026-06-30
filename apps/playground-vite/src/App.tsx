@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Container,
   DateTimePicker,
   DethinkProvider,
   Heading,
@@ -33,7 +34,7 @@ function RefreshIcon() {
 export function App() {
   return (
     <DethinkProvider className="min-h-screen p-8" theme="light">
-      <Box as="main" className="mx-auto max-w-3xl space-y-4">
+      <Container as="main" className="space-y-4" size="md">
         <Text size="sm" tone="muted" weight="medium">
           @dethink/components playground
         </Text>
@@ -42,8 +43,8 @@ export function App() {
         </Heading>
         <Text tone="muted">
           This app verifies package imports, style imports, Tailwind tokens, the
-          foundation provider, and the first layout, action, navigation,
-          typography, and date/time components.
+          foundation provider, and the first wrapper, container, action,
+          navigation, typography, and date/time components.
         </Text>
         <Box display="flex" gap="2" className="flex-wrap items-center">
           <Button>Primary action</Button>
@@ -85,7 +86,7 @@ export function App() {
           label="Smoke date and time"
           name="smokeDateTime"
         />
-      </Box>
+      </Container>
     </DethinkProvider>
   );
 }

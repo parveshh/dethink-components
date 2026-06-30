@@ -27,6 +27,15 @@ export {
   type BoxSurface,
 } from "./components/box";
 export {
+  Container,
+  containerClassNames,
+  type ContainerAlign,
+  type ContainerElement,
+  type ContainerGutter,
+  type ContainerProps,
+  type ContainerSize,
+} from "./components/container";
+export {
   Link,
   linkClassNames,
   type LinkProps,
