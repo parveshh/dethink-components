@@ -25,9 +25,10 @@
       "color-background": "var(--dt-color-background)",
       "color-foreground": "var(--dt-color-foreground)",
       "color-border": "var(--dt-color-border)",
+      "color-timeline-border": "var(--dt-color-timeline-border)",
+      "color-timeline-rail": "var(--dt-color-timeline-rail)",
       "color-ring": "var(--dt-color-ring)",
       "radius-md": "var(--dt-radius-md)"
     }
   }
 }
-

@@ -1,24 +1,15 @@
-import "./styles.css";
-
-export { DethinkProvider } from "./foundation/dethink-provider";
-export type {
-  DethinkDensity,
-  DethinkProviderProps,
-  DethinkTheme,
-} from "./foundation/dethink-provider";
-export { cn } from "./utils/cn";
-export {
-  Button,
-  buttonClassNames,
-  type ButtonProps,
-  type ButtonSize,
-  type ButtonVariant,
-} from "./components/button";
 export {
   Timeline,
   TimelineControls,
   TimelineItem,
   TimelineViewport,
+  type TimelineControlsProps,
+  type TimelineItemProps,
+  type TimelineItemRenderer,
+  type TimelineProps,
+  type TimelineViewportProps,
+} from "./timeline";
+export {
   centerTimelinePoint,
   clampNumber,
   fitTimelineTransform,
@@ -36,26 +27,21 @@ export {
   timelineGeometry,
   zoomTimelineTransform,
   type NormalizedTimelineItem,
-  type TimelineControlsProps,
   type TimelineImage,
   type TimelineItemBaseData,
   type TimelineItemData,
   type TimelineItemDefaultContent,
   type TimelineItemPayload,
-  type TimelineItemProps,
-  type TimelineItemRenderer,
   type TimelineLayout,
   type TimelineMode,
   type TimelineOrder,
   type TimelineOrientation,
   type TimelinePoint,
-  type TimelineProps,
   type TimelineScale,
+  type TimelineControlsVisibility,
   type TimelineStatus,
   type TimelineTransform,
-  type TimelineControlsVisibility,
   type TimelineViewportChrome,
   type TimelineViewportOptions,
-  type TimelineViewportProps,
   type TimelineWheelZoom,
-} from "./components/timeline";
+} from "./timeline-utils";

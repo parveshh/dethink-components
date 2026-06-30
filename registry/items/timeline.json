@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "timeline",
+  "type": "registry:ui",
+  "title": "Timeline",
+  "description": "Semantic pannable and zoomable Timeline component for events and progress.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/timeline/timeline.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/timeline/timeline-utils.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/timeline/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}
