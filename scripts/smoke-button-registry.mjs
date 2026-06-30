@@ -21,6 +21,11 @@ async function assertFileExists(path) {
 
 const base = await readJson(join(registryRoot, "base.json"));
 const button = await readJson(join(registryRoot, "button.json"));
+const link = await readJson(join(registryRoot, "link.json"));
+const timeline = await readJson(join(registryRoot, "timeline.json"));
+
+assert(button.name === "button", "button registry item must be named button.");
+assert(link.name === "link", "link registry item must be named link.");
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
 
@@ -32,6 +37,8 @@ assert(
   "button registry item must depend on dethink-base.",
 );
 assert(
+  link.registryDependencies?.includes("dethink-base"),
+  "link registry item must depend on dethink-base.",
   iconButton.registryDependencies?.includes("dethink-base"),
   "icon-button registry item must depend on dethink-base.",
 );
@@ -48,6 +55,8 @@ assert(
   "button registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(link.dependencies) && link.dependencies.length === 0,
+  "link registry item must not add runtime dependencies.",
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
 );
@@ -56,7 +65,7 @@ assert(
   "timeline registry item must not add runtime dependencies.",
 );
 
-for (const item of [base, button, iconButton, timeline]) {
+for (const item of [base, button, iconButton, link,timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -70,6 +79,8 @@ const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
   "utf8",
 );
+const linkSource = await readFile(
+  join(root, "packages/components/src/components/link/link.tsx"),
 const iconButtonSource = await readFile(
   join(root, "packages/components/src/components/icon-button/icon-button.tsx"),
   "utf8",
@@ -98,6 +109,12 @@ assert(buttonSource.includes("asChild"), "button source must expose asChild.");
 assert(buttonSource.includes("data-slot=\"button\""), "button source must expose stable slot data.");
 assert(buttonSource.includes("bg-primary"), "button source must use tokenized primary utilities.");
 assert(!buttonSource.includes("@radix-ui"), "button source must remain dependency-free.");
+assert(linkSource.includes("data-slot=\"link\""), "link source must expose stable slot data.");
+assert(linkSource.includes("aria-current"), "link source must preserve aria-current state.");
+assert(linkSource.includes("noopener"), "link source must add new-tab noopener safety.");
+assert(linkSource.includes("asChild"), "link source must expose router composition.");
+assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
+assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
 assert(
   iconButtonSource.includes("IconButtonAccessibleName"),
   "icon-button source must expose accessible-name typing.",
