@@ -2,8 +2,10 @@ import {
   Button,
   DateTimePicker,
   DethinkProvider,
+  Heading,
   IconButton,
   Link,
+  Text,
   cn,
 } from "@dethink/components";
 
@@ -32,17 +34,17 @@ export function App() {
   return (
     <DethinkProvider className="min-h-screen p-8" theme="light">
       <main className="mx-auto max-w-3xl space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">
+        <Text size="sm" tone="muted" weight="medium">
           @dethink/components playground
-        </p>
-        <h1 className="text-3xl font-semibold tracking-tight">
+        </Text>
+        <Heading level={1} visualLevel={2}>
           Foundation scaffold is active
-        </h1>
-        <p className="text-muted-foreground">
+        </Heading>
+        <Text tone="muted">
           This app verifies package imports, style imports, Tailwind tokens, the
-          foundation provider, and the first action, navigation, and date/time
-          components.
-        </p>
+          foundation provider, and the first action, navigation, typography, and
+          date/time components.
+        </Text>
         <div className="flex flex-wrap items-center gap-density-gap">
           <Button>Primary action</Button>
           <Button variant="outline">Secondary action</Button>
@@ -73,9 +75,9 @@ export function App() {
             placeholder="Token-backed field"
           />
         </div>
-        <p id="smoke-link-target" className="text-sm text-muted-foreground">
+        <Text id="smoke-link-target" size="sm" tone="muted">
           Link smoke target reached through native anchor behavior.
-        </p>
+        </Text>
         <DateTimePicker
           clearable
           description="Verifies the date/time registry dependency path."
