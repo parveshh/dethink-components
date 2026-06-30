@@ -1,4 +1,4 @@
-import { Button, DethinkProvider, cn } from "@dethink/components";
+import { Button, DateTimePicker, DethinkProvider, cn } from "@dethink/components";
 
 function ArrowRightIcon() {
   return (
@@ -20,7 +20,7 @@ export function App() {
         </h1>
         <p className="text-muted-foreground">
           This app verifies package imports, style imports, Tailwind tokens, the
-          foundation provider, and the first Button component.
+          foundation provider, Button, and DateTimePicker.
         </p>
         <div className="flex flex-wrap items-center gap-density-gap">
           <Button>Primary action</Button>
@@ -46,6 +46,12 @@ export function App() {
             placeholder="Token-backed field"
           />
         </div>
+        <DateTimePicker
+          clearable
+          description="Verifies the date/time registry dependency path."
+          label="Smoke date and time"
+          name="smokeDateTime"
+        />
       </main>
     </DethinkProvider>
   );
