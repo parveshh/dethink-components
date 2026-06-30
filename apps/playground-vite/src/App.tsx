@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   DateTimePicker,
   DethinkProvider,
@@ -6,7 +7,6 @@ import {
   IconButton,
   Link,
   Text,
-  cn,
 } from "@dethink/components";
 
 function ArrowRightIcon() {
@@ -33,7 +33,7 @@ function RefreshIcon() {
 export function App() {
   return (
     <DethinkProvider className="min-h-screen p-8" theme="light">
-      <main className="mx-auto max-w-3xl space-y-4">
+      <Box as="main" className="mx-auto max-w-3xl space-y-4">
         <Text size="sm" tone="muted" weight="medium">
           @dethink/components playground
         </Text>
@@ -42,10 +42,10 @@ export function App() {
         </Heading>
         <Text tone="muted">
           This app verifies package imports, style imports, Tailwind tokens, the
-          foundation provider, and the first action, navigation, typography, and
-          date/time components.
+          foundation provider, and the first layout, action, navigation,
+          typography, and date/time components.
         </Text>
-        <div className="flex flex-wrap items-center gap-density-gap">
+        <Box display="flex" gap="2" className="flex-wrap items-center">
           <Button>Primary action</Button>
           <Button variant="outline">Secondary action</Button>
           <Button variant="ghost">Quiet action</Button>
@@ -59,12 +59,13 @@ export function App() {
           <IconButton aria-label="Refresh playground" variant="outline">
             <RefreshIcon />
           </IconButton>
-        </div>
-        <div
-          className={cn(
-            "rounded-lg border border-border bg-muted p-4 text-foreground",
-            "focus-within:ring-2 focus-within:ring-ring",
-          )}
+        </Box>
+        <Box
+          border="default"
+          p="4"
+          radius="lg"
+          surface="muted"
+          className="focus-within:ring-2 focus-within:ring-ring"
         >
           <label className="block text-sm font-medium" htmlFor="smoke-input">
             Smoke input
@@ -74,7 +75,7 @@ export function App() {
             className="mt-2 h-density-control rounded-md border border-input bg-background px-3"
             placeholder="Token-backed field"
           />
-        </div>
+        </Box>
         <Text id="smoke-link-target" size="sm" tone="muted">
           Link smoke target reached through native anchor behavior.
         </Text>
@@ -84,7 +85,7 @@ export function App() {
           label="Smoke date and time"
           name="smokeDateTime"
         />
-      </main>
+      </Box>
     </DethinkProvider>
   );
 }
