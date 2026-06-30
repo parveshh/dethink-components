@@ -147,6 +147,8 @@ describe("Container", () => {
     const invalidSize = <Container size="3xl" />;
     // @ts-expect-error Container gutters use constrained token values.
     const invalidGutter = <Container gutter="2" />;
+    // @ts-expect-error Container alignment uses constrained token values.
+    const invalidAlign = <Container align="middle" />;
     // @ts-expect-error Container does not support arbitrary elements.
     const invalidElement = <Container as="span" />;
     // @ts-expect-error Container does not expose arbitrary CSS prop parsing.
@@ -155,6 +157,7 @@ describe("Container", () => {
     expect(valid).toBeTruthy();
     expect(invalidSize).toBeTruthy();
     expect(invalidGutter).toBeTruthy();
+    expect(invalidAlign).toBeTruthy();
     expect(invalidElement).toBeTruthy();
     expect(invalidStyleProp).toBeTruthy();
   });
@@ -173,14 +176,28 @@ describe("Container", () => {
 
   it("composes classes, refs, events, and data attributes onto a child element", async () => {
     const user = userEvent.setup();
+    const containerRef = createRef<HTMLElement>();
     const containerClick = vi.fn();
+    const childRef = createRef<HTMLAnchorElement>();
     const childClick = vi.fn((event: MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
     });
 
     render(
-      <Container asChild onClick={containerClick} size="lg" gutter="sm">
-        <RouterAnchor className="custom-child" onClick={childClick} to="/docs">
+      <Container
+        ref={containerRef}
+        asChild
+        data-testid="container-link"
+        onClick={containerClick}
+        size="lg"
+        gutter="sm"
+      >
+        <RouterAnchor
+          ref={childRef}
+          className="custom-child"
+          onClick={childClick}
+          to="/docs"
+        >
           Container child
         </RouterAnchor>
       </Container>,
@@ -193,7 +210,10 @@ describe("Container", () => {
     expect(link).toHaveAttribute("data-as-child", "true");
     expect(link).toHaveAttribute("data-size", "lg");
     expect(link).toHaveAttribute("data-gutter", "sm");
+    expect(link).toHaveAttribute("data-testid", "container-link");
     expect(link.className).toContain("custom-child");
+    expect(containerRef.current).toBe(link);
+    expect(childRef.current).toBe(link);
 
     await user.click(link);
 
