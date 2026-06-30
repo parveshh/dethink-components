@@ -21,30 +21,38 @@ async function assertFileExists(path) {
 
 const base = await readJson(join(registryRoot, "base.json"));
 const button = await readJson(join(registryRoot, "button.json"));
-const link = await readJson(join(registryRoot, "link.json"));
-const timeline = await readJson(join(registryRoot, "timeline.json"));
-
-assert(button.name === "button", "button registry item must be named button.");
-assert(link.name === "link", "link registry item must be named link.");
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
+const link = await readJson(join(registryRoot, "link.json"));
+const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(button.name === "button", "button registry item must be named button.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
+assert(link.name === "link", "link registry item must be named link.");
+assert(
+  dateTimePicker.name === "date-time-picker",
+  "date-time-picker registry item must be named date-time-picker.",
+);
 assert(timeline.name === "timeline", "timeline registry item must be named timeline.");
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
 );
 assert(
-  link.registryDependencies?.includes("dethink-base"),
-  "link registry item must depend on dethink-base.",
   iconButton.registryDependencies?.includes("dethink-base"),
   "icon-button registry item must depend on dethink-base.",
 );
 assert(
   iconButton.registryDependencies?.includes("button"),
   "icon-button registry item must depend on button for shared variant types.",
+);
+assert(
+  link.registryDependencies?.includes("dethink-base"),
+  "link registry item must depend on dethink-base.",
+);
+assert(
+  dateTimePicker.registryDependencies?.includes("dethink-base"),
+  "date-time-picker registry item must depend on dethink-base.",
 );
 assert(
   timeline.registryDependencies?.includes("dethink-base"),
@@ -55,17 +63,27 @@ assert(
   "button registry item must not add runtime dependencies.",
 );
 assert(
-  Array.isArray(link.dependencies) && link.dependencies.length === 0,
-  "link registry item must not add runtime dependencies.",
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(link.dependencies) && link.dependencies.length === 0,
+  "link registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(timeline.dependencies) && timeline.dependencies.length === 0,
   "timeline registry item must not add runtime dependencies.",
 );
+assert(
+  dateTimePicker.dependencies?.includes("@internationalized/date"),
+  "date-time-picker registry item must include @internationalized/date.",
+);
+assert(
+  dateTimePicker.dependencies?.includes("react-aria-components"),
+  "date-time-picker registry item must include react-aria-components.",
+);
 
-for (const item of [base, button, iconButton, link,timeline]) {
+for (const item of [base, button, iconButton, link, dateTimePicker, timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -79,10 +97,16 @@ const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
   "utf8",
 );
-const linkSource = await readFile(
-  join(root, "packages/components/src/components/link/link.tsx"),
 const iconButtonSource = await readFile(
   join(root, "packages/components/src/components/icon-button/icon-button.tsx"),
+  "utf8",
+);
+const linkSource = await readFile(
+  join(root, "packages/components/src/components/link/link.tsx"),
+  "utf8",
+);
+const dateTimePickerSource = await readFile(
+  join(root, "packages/components/src/components/date-time-picker/date-time-picker.tsx"),
   "utf8",
 );
 const timelineSource = await readFile(
@@ -109,12 +133,6 @@ assert(buttonSource.includes("asChild"), "button source must expose asChild.");
 assert(buttonSource.includes("data-slot=\"button\""), "button source must expose stable slot data.");
 assert(buttonSource.includes("bg-primary"), "button source must use tokenized primary utilities.");
 assert(!buttonSource.includes("@radix-ui"), "button source must remain dependency-free.");
-assert(linkSource.includes("data-slot=\"link\""), "link source must expose stable slot data.");
-assert(linkSource.includes("aria-current"), "link source must preserve aria-current state.");
-assert(linkSource.includes("noopener"), "link source must add new-tab noopener safety.");
-assert(linkSource.includes("asChild"), "link source must expose router composition.");
-assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
-assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
 assert(
   iconButtonSource.includes("IconButtonAccessibleName"),
   "icon-button source must expose accessible-name typing.",
@@ -133,6 +151,37 @@ assert(
 );
 assert(iconButtonSource.includes("bg-primary"), "icon-button source must use tokenized primary utilities.");
 assert(!iconButtonSource.includes("@radix-ui"), "icon-button source must remain dependency-free.");
+assert(linkSource.includes("data-slot=\"link\""), "link source must expose stable slot data.");
+assert(linkSource.includes("aria-current"), "link source must preserve aria-current state.");
+assert(linkSource.includes("noopener"), "link source must add new-tab noopener safety.");
+assert(linkSource.includes("asChild"), "link source must expose router composition.");
+assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
+assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(
+  dateTimePickerSource.includes("react-aria-components"),
+  "date-time-picker source must use React Aria Components.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker"'),
+  "date-time-picker source must expose a stable root slot.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker-field"'),
+  "date-time-picker source must expose a stable field slot.",
+);
+assert(
+  dateTimePickerSource.includes('data-slot="date-time-picker-calendar"'),
+  "date-time-picker source must expose a stable calendar slot.",
+);
+assert(
+  dateTimePickerSource.includes("border-input"),
+  "date-time-picker source must use tokenized input border utilities.",
+);
+assert(
+  dateTimePickerSource.includes("focus-visible:ring-2"),
+  "date-time-picker source must include visible focus styling.",
+);
+assert(!dateTimePickerSource.includes("@radix-ui"), "date-time-picker source must not use Radix.");
 assert(timelineSource.includes("data-slot=\"timeline\""), "timeline source must expose stable root slot data.");
 assert(timelineSource.includes("data-slot=\"timeline-viewport\""), "timeline source must expose viewport slot data.");
 assert(timelineSource.includes("<ol"), "timeline source must render an ordered list.");

@@ -21,6 +21,7 @@ export {
   type LinkUnderline,
   type LinkVariant,
 } from "./components/link";
+export {
   IconButton,
   iconButtonClassNames,
   type IconButtonAccessibleName,
