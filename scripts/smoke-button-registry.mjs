@@ -20,6 +20,7 @@ async function assertFileExists(path) {
 }
 
 const base = await readJson(join(registryRoot, "base.json"));
+const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const link = await readJson(join(registryRoot, "link.json"));
@@ -27,6 +28,7 @@ const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
 
+assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(link.name === "link", "link registry item must be named link.");
@@ -36,6 +38,10 @@ assert(
   "date-time-picker registry item must be named date-time-picker.",
 );
 assert(timeline.name === "timeline", "timeline registry item must be named timeline.");
+assert(
+  box.registryDependencies?.includes("dethink-base"),
+  "box registry item must depend on dethink-base.",
+);
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
@@ -63,6 +69,10 @@ assert(
 assert(
   timeline.registryDependencies?.includes("dethink-base"),
   "timeline registry item must depend on dethink-base.",
+);
+assert(
+  Array.isArray(box.dependencies) && box.dependencies.length === 0,
+  "box registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(button.dependencies) && button.dependencies.length === 0,
@@ -93,7 +103,7 @@ assert(
   "date-time-picker registry item must include react-aria-components.",
 );
 
-for (const item of [base, button, iconButton, link, typography, dateTimePicker, timeline]) {
+for (const item of [base, box, button, iconButton, link, typography, dateTimePicker, timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -103,6 +113,10 @@ const stylePath = base.files.find((file) => file.type === "registry:style")?.pat
 assert(stylePath, "base registry item must include a registry:style file.");
 
 const styles = await readFile(join(root, stylePath), "utf8");
+const boxSource = await readFile(
+  join(root, "packages/components/src/components/box/box.tsx"),
+  "utf8",
+);
 const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
   "utf8",
@@ -141,6 +155,16 @@ assert(
   styles.includes("--color-timeline-rail"),
   "base styles must expose timeline rail token.",
 );
+assert(boxSource.includes('"data-slot": "box"'), "box source must expose stable slot data.");
+assert(boxSource.includes("asChild"), "box source must expose child composition.");
+assert(boxSource.includes("boxClassNames"), "box source must expose class-name composition.");
+assert(boxSource.includes("ps-4"), "box source must use logical start spacing utilities.");
+assert(boxSource.includes("me-4"), "box source must use logical end margin utilities.");
+assert(boxSource.includes("bg-primary"), "box source must use tokenized primary surface utilities.");
+assert(boxSource.includes("border-input"), "box source must use tokenized input border utilities.");
+assert(boxSource.includes("rounded-md"), "box source must use tokenized radius utilities.");
+assert(boxSource.includes("overflow-clip"), "box source must expose overflow clip utilities.");
+assert(!boxSource.includes("@radix-ui"), "box source must remain dependency-free.");
 assert(buttonSource.includes("leftIcon"), "button source must expose leftIcon.");
 assert(buttonSource.includes("rightIcon"), "button source must expose rightIcon.");
 assert(buttonSource.includes("asChild"), "button source must expose asChild.");
