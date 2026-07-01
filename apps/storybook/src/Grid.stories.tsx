@@ -508,6 +508,20 @@ export const SemanticElementsAndAsChild: Story = {
   ),
 };
 
+export const ResponsiveClassNameComposition: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="rounded-lg border border-border p-6">
+      <Grid columns="1" gap="3" className="sm:grid-cols-2 lg:grid-cols-4">
+        {["Backlog", "In review", "Blocked", "Released"].map((label) => (
+          <GridItem key={label} minInlineSize="0">
+            <ResourceCard label={label} status="Responsive" />
+          </GridItem>
+        ))}
+      </Grid>
+    </DethinkProvider>
+  ),
+};
+
 export const ThemeDensityAndRTL: Story = {
   render: () => (
     <Grid columns="1" gap="4">
