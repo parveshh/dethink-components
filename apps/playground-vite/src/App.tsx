@@ -1,6 +1,12 @@
 import {
   Box,
   Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
   Container,
   DateTimePicker,
   DethinkProvider,
@@ -108,6 +114,24 @@ export function App() {
             </Text>
           </Flex>
           <Divider decorative spacing="1" tone="muted" />
+          <Card as="section">
+            <CardHeader>
+              <CardTitle>Card smoke</CardTitle>
+              <CardDescription>
+                Verifies the package export path for Card and its anatomy slots.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Text size="sm" tone="muted">
+                Card composes existing layout, text, and action primitives.
+              </Text>
+            </CardContent>
+            <CardFooter justify="end">
+              <Button size="sm" variant="outline">
+                Inspect card
+              </Button>
+            </CardFooter>
+          </Card>
           <Box
             border="default"
             p="4"

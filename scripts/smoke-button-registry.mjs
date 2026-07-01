@@ -77,6 +77,7 @@ async function assertRegistryRelativeImportsResolve(item) {
 const base = await readJson(join(registryRoot, "base.json"));
 const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
+const card = await readJson(join(registryRoot, "card.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
@@ -90,6 +91,7 @@ const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
+assert(card.name === "card", "card registry item must be named card.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
@@ -110,6 +112,10 @@ assert(
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
+);
+assert(
+  card.registryDependencies?.includes("dethink-base"),
+  "card registry item must depend on dethink-base.",
 );
 assert(
   container.registryDependencies?.includes("dethink-base"),
@@ -164,6 +170,10 @@ assert(
   "button registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(card.dependencies) && card.dependencies.length === 0,
+  "card registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(container.dependencies) && container.dependencies.length === 0,
   "container registry item must not add runtime dependencies.",
 );
@@ -212,6 +222,7 @@ for (const item of [
   base,
   box,
   button,
+  card,
   container,
   iconButton,
   flex,
@@ -229,6 +240,7 @@ for (const item of [
 }
 
 await assertRegistryRelativeImportsResolve(container);
+await assertRegistryRelativeImportsResolve(card);
 await assertRegistryRelativeImportsResolve(grid);
 await assertRegistryRelativeImportsResolve(separator);
 
@@ -242,6 +254,10 @@ const boxSource = await readFile(
 );
 const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
+  "utf8",
+);
+const cardSource = await readFile(
+  join(root, "packages/components/src/components/card/card.tsx"),
   "utf8",
 );
 const containerSource = await readFile(
@@ -314,6 +330,44 @@ assert(buttonSource.includes("asChild"), "button source must expose asChild.");
 assert(buttonSource.includes("data-slot=\"button\""), "button source must expose stable slot data.");
 assert(buttonSource.includes("bg-primary"), "button source must use tokenized primary utilities.");
 assert(!buttonSource.includes("@radix-ui"), "button source must remain dependency-free.");
+assert(cardSource.includes('"data-slot": "card"'), "card source must expose stable root slot data.");
+assert(
+  cardSource.includes('"data-slot": "card-header"'),
+  "card source must expose stable header slot data.",
+);
+assert(
+  cardSource.includes('"data-slot": "card-title"'),
+  "card source must expose stable title slot data.",
+);
+assert(
+  cardSource.includes('"data-slot": "card-description"'),
+  "card source must expose stable description slot data.",
+);
+assert(
+  cardSource.includes('"data-slot": "card-action"'),
+  "card source must expose stable action slot data.",
+);
+assert(
+  cardSource.includes('"data-slot": "card-content"'),
+  "card source must expose stable content slot data.",
+);
+assert(
+  cardSource.includes('"data-slot": "card-footer"'),
+  "card source must expose stable footer slot data.",
+);
+assert(cardSource.includes("asChild"), "card source must expose child composition.");
+assert(cardSource.includes("cardClassNames"), "card source must expose class-name composition.");
+assert(cardSource.includes("CardFooterJustify"), "card source must expose footer justification typing.");
+assert(cardSource.includes("bg-background"), "card source must use tokenized background utilities.");
+assert(cardSource.includes("bg-muted"), "card source must use tokenized muted utilities.");
+assert(cardSource.includes("border-border"), "card source must use tokenized border utilities.");
+assert(cardSource.includes("rounded-lg"), "card source must use tokenized radius utilities.");
+assert(cardSource.includes("shadow-sm"), "card source must expose shadow utilities.");
+assert(cardSource.includes("--card-padding"), "card source must expose density-backed card padding.");
+assert(cardSource.includes("--card-gap"), "card source must expose density-backed card gap.");
+assert(cardSource.includes("ms-4"), "card source must use logical action spacing.");
+assert(cardSource.includes("justify-between"), "card source must expose footer distribution utilities.");
+assert(!cardSource.includes("@radix-ui"), "card source must remain dependency-free.");
 assert(
   containerSource.includes('"data-slot": "container"'),
   "container source must expose stable slot data.",
