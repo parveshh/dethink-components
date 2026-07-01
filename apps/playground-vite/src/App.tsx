@@ -6,6 +6,8 @@ import {
   DethinkProvider,
   Flex,
   FlexItem,
+  Grid,
+  GridItem,
   Heading,
   IconButton,
   Link,
@@ -82,6 +84,17 @@ export function App() {
               </Button>
             </FlexItem>
           </Flex>
+          <Grid columns="auto-fit-xs" gap="3">
+            {["Grid smoke", "Auto-fit tracks", "Token gaps"].map((label) => (
+              <GridItem key={label} minInlineSize="0">
+                <Box border="default" p="3" radius="md" surface="background">
+                  <Text size="sm" weight="medium">
+                    {label}
+                  </Text>
+                </Box>
+              </GridItem>
+            ))}
+          </Grid>
           <Box
             border="default"
             p="4"

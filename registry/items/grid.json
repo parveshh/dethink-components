@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "grid",
+  "type": "registry:ui",
+  "title": "Grid",
+  "description": "Two-dimensional layout primitive with GridItem spans, token-backed gaps, fixed and auto-fit columns, alignment, and asChild composition.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/grid/grid.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/grid/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}
