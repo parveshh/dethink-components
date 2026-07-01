@@ -67,6 +67,28 @@ export {
   type StackWrap,
 } from "./components/stack";
 export {
+  Flex,
+  FlexItem,
+  flexClassNames,
+  flexItemClassNames,
+  type FlexAlign,
+  type FlexContent,
+  type FlexDirection,
+  type FlexDisplay,
+  type FlexElement,
+  type FlexGap,
+  type FlexItemAlign,
+  type FlexItemBasis,
+  type FlexItemElement,
+  type FlexItemGrow,
+  type FlexItemMinInlineSize,
+  type FlexItemProps,
+  type FlexItemShrink,
+  type FlexJustify,
+  type FlexProps,
+  type FlexWrap,
+} from "./components/flex";
+export {
   IconButton,
   iconButtonClassNames,
   type IconButtonAccessibleName,
