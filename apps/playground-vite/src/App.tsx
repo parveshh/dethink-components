@@ -3,6 +3,8 @@ import {
   Button,
   DateTimePicker,
   DethinkProvider,
+  Flex,
+  FlexItem,
   Heading,
   IconButton,
   Link,
@@ -46,7 +48,7 @@ export function App() {
           foundation provider, and the first layout, action, navigation,
           typography, and date/time components.
         </Text>
-        <Stack direction="horizontal" gap="2" align="center" wrap="wrap">
+        <Flex gap="2" align="center" wrap="wrap">
           <Button>Primary action</Button>
           <Button variant="outline">Secondary action</Button>
           <Button variant="ghost">Quiet action</Button>
@@ -60,7 +62,24 @@ export function App() {
           <IconButton aria-label="Refresh playground" variant="outline">
             <RefreshIcon />
           </IconButton>
-        </Stack>
+        </Flex>
+        <Flex gap="3" align="center" className="rounded-lg border border-border p-3">
+          <FlexItem shrink="0">
+            <Text size="sm" weight="medium">
+              Flex smoke
+            </Text>
+          </FlexItem>
+          <FlexItem grow="1" minInlineSize="0">
+            <Text className="truncate" size="sm" tone="muted">
+              Long content can shrink inside a FlexItem without forcing row overflow.
+            </Text>
+          </FlexItem>
+          <FlexItem shrink="0">
+            <Button size="sm" variant="outline">
+              Inspect
+            </Button>
+          </FlexItem>
+        </Flex>
         <Box
           border="default"
           p="4"
