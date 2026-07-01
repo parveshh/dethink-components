@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { axe, toHaveNoViolations } from "jest-axe";
 import { describe, expect, it } from "vitest";
 import { DethinkProvider } from "../../foundation/dethink-provider";
@@ -40,6 +40,26 @@ describe("Flex accessibility", () => {
         </Flex>
       </DethinkProvider>,
     );
+
+    const main = screen.getByRole("main", { name: "Flex accessibility smoke" });
+    const section = screen.getByRole("region", { name: "Integration filters" });
+    const list = screen.getByRole("list");
+    const listItems = within(list).getAllByRole("listitem");
+    const form = screen.getByRole("form", { name: "Example flex filter form" });
+
+    expect(main.tagName).toBe("MAIN");
+    expect(section.tagName).toBe("SECTION");
+    expect(list.tagName).toBe("UL");
+    expect(form.tagName).toBe("FORM");
+    expect(main).not.toHaveAttribute("role");
+    expect(section).not.toHaveAttribute("role");
+    expect(list).not.toHaveAttribute("role");
+    expect(form).not.toHaveAttribute("role");
+    expect(listItems.map((item) => item.tagName)).toEqual(["LI", "LI"]);
+    expect(listItems.map((item) => item.textContent)).toEqual([
+      "List semantics remain native.",
+      "No ARIA role is added by default.",
+    ]);
 
     await expect(axe(container)).resolves.toHaveNoViolations();
   });

@@ -4,6 +4,7 @@ import {
   createElement,
   forwardRef,
   isValidElement,
+  version as reactVersion,
   type FieldsetHTMLAttributes,
   type FormHTMLAttributes,
   type ForwardedRef,
@@ -112,6 +113,10 @@ export type FlexItemProps = NativeFlexItemProps | ChildFlexItemProps;
 type FlexSlotProps = Record<string, unknown> & {
   children?: ReactNode;
   className?: string;
+  ref?: Ref<HTMLElement>;
+};
+
+type FlexElementWithRef = ReactElement<FlexSlotProps> & {
   ref?: Ref<HTMLElement>;
 };
 
@@ -316,7 +321,11 @@ function composeRefs<T>(...refs: Array<Ref<T> | undefined>) {
 }
 
 function getChildRef(child: ReactElement<FlexSlotProps>) {
-  return child.props.ref;
+  if ("ref" in child.props) {
+    return child.props.ref;
+  }
+
+  return reactVersion.startsWith("18.") ? (child as FlexElementWithRef).ref : undefined;
 }
 
 function isEventHandler(key: string, value: unknown): value is EventHandler {

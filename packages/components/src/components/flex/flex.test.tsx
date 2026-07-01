@@ -309,14 +309,16 @@ describe("Flex", () => {
 
   it("composes classes, refs, events, and data attributes onto a child element", async () => {
     const user = userEvent.setup();
+    const flexRef = createRef<HTMLElement>();
+    const childRef = createRef<HTMLAnchorElement>();
     const flexClick = vi.fn();
     const childClick = vi.fn((event: MouseEvent<HTMLAnchorElement>) => {
       event.preventDefault();
     });
 
     render(
-      <Flex asChild gap="3" onClick={flexClick} wrap="wrap">
-        <RouterAnchor className="custom-child" onClick={childClick} to="/docs">
+      <Flex ref={flexRef} asChild gap="3" onClick={flexClick} wrap="wrap">
+        <RouterAnchor ref={childRef} className="custom-child" onClick={childClick} to="/docs">
           Flex child
         </RouterAnchor>
       </Flex>,
@@ -331,6 +333,8 @@ describe("Flex", () => {
     expect(link).toHaveAttribute("data-gap", "3");
     expect(link).toHaveAttribute("data-wrap", "wrap");
     expect(link.className).toContain("custom-child");
+    expect(flexRef.current).toBe(link);
+    expect(childRef.current).toBe(link);
 
     await user.click(link);
 
@@ -475,12 +479,26 @@ describe("FlexItem", () => {
 
   it("composes item classes, refs, events, and data attributes onto a child element", async () => {
     const user = userEvent.setup();
+    const itemRef = createRef<HTMLElement>();
+    const childRef = createRef<HTMLButtonElement>();
     const itemClick = vi.fn();
     const childClick = vi.fn();
 
     render(
-      <FlexItem asChild basis="sm" grow="1" minInlineSize="0" onClick={itemClick}>
-        <button className="custom-item-child" onClick={childClick} type="button">
+      <FlexItem
+        ref={itemRef}
+        asChild
+        basis="sm"
+        grow="1"
+        minInlineSize="0"
+        onClick={itemClick}
+      >
+        <button
+          ref={childRef}
+          className="custom-item-child"
+          onClick={childClick}
+          type="button"
+        >
           Flex item child
         </button>
       </FlexItem>,
@@ -494,6 +512,8 @@ describe("FlexItem", () => {
     expect(button).toHaveAttribute("data-basis", "sm");
     expect(button).toHaveAttribute("data-min-inline-size", "0");
     expect(button.className).toContain("custom-item-child");
+    expect(itemRef.current).toBe(button);
+    expect(childRef.current).toBe(button);
 
     await user.click(button);
 

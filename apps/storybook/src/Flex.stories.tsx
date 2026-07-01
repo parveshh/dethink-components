@@ -362,6 +362,111 @@ export const LongContentShrink: Story = {
   ),
 };
 
+export const MediaRow: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="rounded-lg border border-border p-6">
+      <Flex gap="4" align="start" className="max-w-2xl">
+        <FlexItem shrink="0">
+          <Box
+            aria-hidden="true"
+            className="flex size-14 items-center justify-center rounded-md bg-primary text-lg font-semibold text-primary-foreground"
+          >
+            AP
+          </Box>
+        </FlexItem>
+        <FlexItem grow="1" minInlineSize="0">
+          <Stack gap="2">
+            <Flex gap="2" align="center" justify="between" wrap="wrap">
+              <Heading level={3} visualLevel={5}>
+                Audit pipeline
+              </Heading>
+              <Text size="sm" tone="muted">
+                Updated 4m ago
+              </Text>
+            </Flex>
+            <Text tone="muted">
+              Flex keeps the media object, summary copy, and trailing metadata aligned
+              without changing reading order.
+            </Text>
+          </Stack>
+        </FlexItem>
+        <FlexItem shrink="0">
+          <Button size="sm" variant="outline">
+            Open
+          </Button>
+        </FlexItem>
+      </Flex>
+    </DethinkProvider>
+  ),
+};
+
+export const FormActionRow: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="rounded-lg border border-border p-6">
+      <form aria-label="Invite teammate">
+        <Stack gap="4">
+          <Stack gap="2">
+            <label className="text-sm font-medium" htmlFor="flex-invite-email">
+              Teammate email
+            </label>
+            <input
+              id="flex-invite-email"
+              className="h-density-control rounded-md border border-input bg-background px-3 text-sm"
+              placeholder="name@example.com"
+              type="email"
+            />
+          </Stack>
+          <Flex gap="3" align="center" justify="between" wrap="wrap">
+            <Text size="sm" tone="muted">
+              Invitations expire after seven days.
+            </Text>
+            <Flex gap="2" align="center" wrap="wrap">
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+              <Button type="submit">Send invite</Button>
+            </Flex>
+          </Flex>
+        </Stack>
+      </form>
+    </DethinkProvider>
+  ),
+};
+
+export const PromptInputShell: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="rounded-lg border border-border p-6">
+      <Box border="default" p="3" radius="lg" surface="background">
+        <Stack gap="3">
+          <label className="sr-only" htmlFor="flex-prompt">
+            Ask assistant
+          </label>
+          <textarea
+            id="flex-prompt"
+            className="min-h-24 w-full resize-none rounded-md border border-input bg-background p-3 text-sm"
+            placeholder="Summarize deployment risk for the current release"
+          />
+          <Flex gap="3" align="center" justify="between" wrap="wrap">
+            <Flex gap="2" align="center" wrap="wrap">
+              <Button size="sm" type="button" variant="outline">
+                Attach
+              </Button>
+              <Button size="sm" type="button" variant="ghost">
+                Model
+              </Button>
+            </Flex>
+            <FlexItem shrink="0">
+              <Button size="sm" type="button">
+                Send
+              </Button>
+            </FlexItem>
+          </Flex>
+        </Stack>
+      </Box>
+    </DethinkProvider>
+  ),
+};
+
 export const SemanticElements: Story = {
   render: () => (
     <DethinkProvider theme="light" className="rounded-lg border border-border p-6">
