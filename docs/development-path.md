@@ -10,6 +10,8 @@ Tailwind CSS is the default component styling layer. Component specs and PRDs sh
 
 Use logged-in Context7 before web search for any library, framework, SDK, API, CLI, or cloud-service documentation. Start with `npx ctx7 whoami`; if it is not logged in, run `npx ctx7 login` or use `CONTEXT7_API_KEY` before fetching docs. Resolve a library with `npx ctx7@latest library "<official library name>" "<full question>"`, then fetch docs with `npx ctx7@latest docs <libraryId> "<full question>"`.
 
+Use `docs/high-impact-component-priority.md` as the current prioritization overlay when selecting the next component PRD. It preserves the component-by-component workflow but weighs repeated SaaS/internal-tool usage, ecosystem demand, and downstream unlock value more heavily than the original static P0/P1/P2 order.
+
 ## Repository Scaffold
 
 The base scaffold is a pnpm workspace:
@@ -145,6 +147,31 @@ Start with Button because it validates the smallest complete vertical slice: tok
 57. FocusTrap / FocusScope
 58. Presence / Transition
 59. useControllableState
+
+## High-Impact Next Component Order
+
+The static P0/P1/P2 lists remain the full inventory order. The current high-impact ordering should guide near-term PRD selection after completed components and deliberate exceptions are accounted for:
+
+1. Stack
+2. Flex
+3. Grid
+4. Separator / Divider
+5. Card
+6. Form + Field primitives
+7. Input + Textarea + NumberInput
+8. Checkbox + RadioGroup + Switch
+9. Select
+10. Combobox
+11. Dialog + AlertDialog
+12. Popover + Tooltip + DropdownMenu
+13. Table
+14. DataTable
+15. DatePicker + DateRangePicker
+16. MultiSelect + AsyncSelect + TagInput
+17. Sidebar + CommandPalette
+18. Toast + feedback states
+19. Chart + Stat/KPI
+20. FileUpload / Dropzone
 
 ## P1 Component Order
 

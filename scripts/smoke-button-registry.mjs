@@ -79,7 +79,9 @@ const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
+const flex = await readJson(join(registryRoot, "flex.json"));
 const link = await readJson(join(registryRoot, "link.json"));
+const stack = await readJson(join(registryRoot, "stack.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
@@ -88,7 +90,9 @@ assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
+assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(link.name === "link", "link registry item must be named link.");
+assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
   dateTimePicker.name === "date-time-picker",
@@ -116,8 +120,16 @@ assert(
   "icon-button registry item must depend on button for shared variant types.",
 );
 assert(
+  flex.registryDependencies?.includes("dethink-base"),
+  "flex registry item must depend on dethink-base.",
+);
+assert(
   link.registryDependencies?.includes("dethink-base"),
   "link registry item must depend on dethink-base.",
+);
+assert(
+  stack.registryDependencies?.includes("dethink-base"),
+  "stack registry item must depend on dethink-base.",
 );
 assert(
   typography.registryDependencies?.includes("dethink-base"),
@@ -148,8 +160,16 @@ assert(
   "icon-button registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(flex.dependencies) && flex.dependencies.length === 0,
+  "flex registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(link.dependencies) && link.dependencies.length === 0,
   "link registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
+  "stack registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(typography.dependencies) && typography.dependencies.length === 0,
@@ -174,7 +194,9 @@ for (const item of [
   button,
   container,
   iconButton,
+  flex,
   link,
+  stack,
   typography,
   dateTimePicker,
   timeline,
@@ -206,8 +228,16 @@ const iconButtonSource = await readFile(
   join(root, "packages/components/src/components/icon-button/icon-button.tsx"),
   "utf8",
 );
+const flexSource = await readFile(
+  join(root, "packages/components/src/components/flex/flex.tsx"),
+  "utf8",
+);
 const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
+  "utf8",
+);
+const stackSource = await readFile(
+  join(root, "packages/components/src/components/stack/stack.tsx"),
   "utf8",
 );
 const typographySource = await readFile(
@@ -292,12 +322,46 @@ assert(
 );
 assert(iconButtonSource.includes("bg-primary"), "icon-button source must use tokenized primary utilities.");
 assert(!iconButtonSource.includes("@radix-ui"), "icon-button source must remain dependency-free.");
+assert(flexSource.includes('"data-slot": "flex"'), "flex source must expose stable root slot data.");
+assert(
+  flexSource.includes('"data-slot": "flex-item"'),
+  "flex source must expose stable item slot data.",
+);
+assert(flexSource.includes("asChild"), "flex source must expose child composition.");
+assert(flexSource.includes("flexClassNames"), "flex source must expose class-name composition.");
+assert(flexSource.includes("flexItemClassNames"), "flex source must expose item class-name composition.");
+assert(flexSource.includes("inline-flex"), "flex source must expose inline-flex utilities.");
+assert(flexSource.includes("flex-row"), "flex source must expose row direction utilities.");
+assert(flexSource.includes("flex-col"), "flex source must expose column direction utilities.");
+assert(flexSource.includes("flex-wrap"), "flex source must expose wrapping utilities.");
+assert(flexSource.includes("gap-y-2"), "flex source must expose row gap utilities.");
+assert(flexSource.includes("gap-x-6"), "flex source must expose column gap utilities.");
+assert(flexSource.includes("items-center"), "flex source must expose alignment utilities.");
+assert(flexSource.includes("justify-evenly"), "flex source must expose distribution utilities.");
+assert(flexSource.includes("content-between"), "flex source must expose align-content utilities.");
+assert(flexSource.includes("grow-0"), "flex source must expose grow utilities.");
+assert(flexSource.includes("shrink-0"), "flex source must expose shrink utilities.");
+assert(flexSource.includes("basis-64"), "flex source must expose basis utilities.");
+assert(flexSource.includes("min-w-0"), "flex source must expose long-content shrink utilities.");
+assert(!flexSource.includes("reverse"), "flex source must not expose visual reverse ordering.");
+assert(!flexSource.includes("@radix-ui"), "flex source must remain dependency-free.");
 assert(linkSource.includes("data-slot=\"link\""), "link source must expose stable slot data.");
 assert(linkSource.includes("aria-current"), "link source must preserve aria-current state.");
 assert(linkSource.includes("noopener"), "link source must add new-tab noopener safety.");
 assert(linkSource.includes("asChild"), "link source must expose router composition.");
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(stackSource.includes('"data-slot": "stack"'), "stack source must expose stable slot data.");
+assert(stackSource.includes("asChild"), "stack source must expose child composition.");
+assert(stackSource.includes("stackClassNames"), "stack source must expose class-name composition.");
+assert(stackSource.includes("flex-col"), "stack source must expose vertical direction utilities.");
+assert(stackSource.includes("flex-row"), "stack source must expose horizontal direction utilities.");
+assert(stackSource.includes("gap-4"), "stack source must expose tokenized gap utilities.");
+assert(stackSource.includes("items-center"), "stack source must expose alignment utilities.");
+assert(stackSource.includes("justify-between"), "stack source must expose justification utilities.");
+assert(stackSource.includes("flex-wrap"), "stack source must expose wrapping utilities.");
+assert(!stackSource.includes("reverse"), "stack source must not expose visual reverse ordering.");
+assert(!stackSource.includes("@radix-ui"), "stack source must remain dependency-free.");
 assert(
   typographySource.includes('"data-slot": "typography"'),
   "typography source must expose stable typography slot data.",
