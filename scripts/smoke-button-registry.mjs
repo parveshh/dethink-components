@@ -1,5 +1,5 @@
 import { access, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join, normalize, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -19,9 +19,65 @@ async function assertFileExists(path) {
   await access(path);
 }
 
+async function resolveExistingSourcePath(pathWithoutExtension) {
+  const candidates = [
+    pathWithoutExtension,
+    `${pathWithoutExtension}.ts`,
+    `${pathWithoutExtension}.tsx`,
+    join(pathWithoutExtension, "index.ts"),
+    join(pathWithoutExtension, "index.tsx"),
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Try the next candidate.
+    }
+  }
+
+  return undefined;
+}
+
+async function assertRegistryRelativeImportsResolve(item) {
+  const registryFilePaths = new Set((item.files ?? []).map((file) => normalize(file.path)));
+  const importPattern =
+    /\b(?:import|export)\b(?:[\s\S]*?)\bfrom\s*["'](\.{1,2}\/[^"']+)["']/g;
+
+  for (const file of item.files ?? []) {
+    if (!/\.[cm]?[tj]sx?$/.test(file.path)) {
+      continue;
+    }
+
+    const absoluteFilePath = join(root, file.path);
+    const source = await readFile(absoluteFilePath, "utf8");
+
+    for (const match of source.matchAll(importPattern)) {
+      const importPath = match[1];
+      const resolvedPath = await resolveExistingSourcePath(
+        normalize(join(dirname(absoluteFilePath), importPath)),
+      );
+
+      assert(
+        resolvedPath,
+        `${item.name} registry source ${file.path} imports missing path ${importPath}.`,
+      );
+
+      const relativeResolvedPath = normalize(relative(root, resolvedPath));
+
+      assert(
+        registryFilePaths.has(relativeResolvedPath),
+        `${item.name} registry source ${file.path} imports ${relativeResolvedPath}, but that file is not declared in the registry item.`,
+      );
+    }
+  }
+}
+
 const base = await readJson(join(registryRoot, "base.json"));
 const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
+const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const link = await readJson(join(registryRoot, "link.json"));
@@ -32,6 +88,7 @@ const timeline = await readJson(join(registryRoot, "timeline.json"));
 
 assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
+assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(link.name === "link", "link registry item must be named link.");
@@ -49,6 +106,10 @@ assert(
 assert(
   button.registryDependencies?.includes("dethink-base"),
   "button registry item must depend on dethink-base.",
+);
+assert(
+  container.registryDependencies?.includes("dethink-base"),
+  "container registry item must depend on dethink-base.",
 );
 assert(
   iconButton.registryDependencies?.includes("dethink-base"),
@@ -91,6 +152,10 @@ assert(
   "button registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(container.dependencies) && container.dependencies.length === 0,
+  "container registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
 );
@@ -127,6 +192,7 @@ for (const item of [
   base,
   box,
   button,
+  container,
   iconButton,
   flex,
   link,
@@ -140,6 +206,8 @@ for (const item of [
   }
 }
 
+await assertRegistryRelativeImportsResolve(container);
+
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");
 
@@ -150,6 +218,10 @@ const boxSource = await readFile(
 );
 const buttonSource = await readFile(
   join(root, "packages/components/src/components/button/button.tsx"),
+  "utf8",
+);
+const containerSource = await readFile(
+  join(root, "packages/components/src/components/container/container.tsx"),
   "utf8",
 );
 const iconButtonSource = await readFile(
@@ -210,6 +282,28 @@ assert(buttonSource.includes("asChild"), "button source must expose asChild.");
 assert(buttonSource.includes("data-slot=\"button\""), "button source must expose stable slot data.");
 assert(buttonSource.includes("bg-primary"), "button source must use tokenized primary utilities.");
 assert(!buttonSource.includes("@radix-ui"), "button source must remain dependency-free.");
+assert(
+  containerSource.includes('"data-slot": "container"'),
+  "container source must expose stable slot data.",
+);
+assert(containerSource.includes("asChild"), "container source must expose child composition.");
+assert(
+  containerSource.includes("containerClassNames"),
+  "container source must expose class-name composition.",
+);
+assert(
+  containerSource.includes("max-w-[80rem]"),
+  "container source must use static max-width utilities.",
+);
+assert(containerSource.includes("px-4"), "container source must use static gutter utilities.");
+assert(
+  containerSource.includes("safe-area-inset-left"),
+  "container source must support safe-area gutters.",
+);
+assert(containerSource.includes("mx-auto"), "container source must default to centered layout.");
+assert(containerSource.includes("me-auto"), "container source must support logical start alignment.");
+assert(containerSource.includes("ms-auto"), "container source must support logical end alignment.");
+assert(!containerSource.includes("@radix-ui"), "container source must remain dependency-free.");
 assert(
   iconButtonSource.includes("IconButtonAccessibleName"),
   "icon-button source must expose accessible-name typing.",
