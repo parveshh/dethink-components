@@ -374,7 +374,7 @@ assert(
 );
 assert(gridSource.includes("grid-cols-12"), "grid source must expose fixed grid columns.");
 assert(
-  gridSource.includes("repeat(auto-fit,minmax(16rem,1fr))"),
+  gridSource.includes("repeat(auto-fit,minmax(min(16rem,100%),1fr))"),
   "grid source must expose static auto-fit grid columns.",
 );
 assert(gridSource.includes("grid-rows-3"), "grid source must expose row utilities.");

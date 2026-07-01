@@ -76,10 +76,10 @@ const columnClasses: Record<GridColumns, string> = {
   5: "grid-cols-5",
   6: "grid-cols-6",
   12: "grid-cols-12",
-  "auto-fit-xs": "grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]",
-  "auto-fit-sm": "grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]",
-  "auto-fit-md": "grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]",
-  "auto-fit-lg": "grid-cols-[repeat(auto-fit,minmax(24rem,1fr))]",
+  "auto-fit-xs": "grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))]",
+  "auto-fit-sm": "grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))]",
+  "auto-fit-md": "grid-cols-[repeat(auto-fit,minmax(min(20rem,100%),1fr))]",
+  "auto-fit-lg": "grid-cols-[repeat(auto-fit,minmax(min(24rem,100%),1fr))]",
 };
 const alignClasses: Record<GridAlign, string> = {
   stretch: "items-stretch",
@@ -305,7 +305,7 @@ describe("Grid", () => {
     });
 
     expect(className).toContain("grid");
-    expect(className).toContain("grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]");
+    expect(className).toContain("grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))]");
     expect(className).toContain("grid-rows-3");
     expect(className).toContain("gap-4");
     expect(className).toContain("gap-y-2");

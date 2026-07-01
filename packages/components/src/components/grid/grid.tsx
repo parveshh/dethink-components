@@ -142,10 +142,10 @@ const gridColumnClasses: Record<GridColumns, string> = {
   5: "grid-cols-5",
   6: "grid-cols-6",
   12: "grid-cols-12",
-  "auto-fit-xs": "grid-cols-[repeat(auto-fit,minmax(12rem,1fr))]",
-  "auto-fit-sm": "grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]",
-  "auto-fit-md": "grid-cols-[repeat(auto-fit,minmax(20rem,1fr))]",
-  "auto-fit-lg": "grid-cols-[repeat(auto-fit,minmax(24rem,1fr))]",
+  "auto-fit-xs": "grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))]",
+  "auto-fit-sm": "grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))]",
+  "auto-fit-md": "grid-cols-[repeat(auto-fit,minmax(min(20rem,100%),1fr))]",
+  "auto-fit-lg": "grid-cols-[repeat(auto-fit,minmax(min(24rem,100%),1fr))]",
 };
 
 const gridRowClasses: Record<GridRows, string | undefined> = {
