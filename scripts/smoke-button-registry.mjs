@@ -24,6 +24,7 @@ const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const link = await readJson(join(registryRoot, "link.json"));
+const stack = await readJson(join(registryRoot, "stack.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
@@ -32,6 +33,7 @@ assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(link.name === "link", "link registry item must be named link.");
+assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
   dateTimePicker.name === "date-time-picker",
@@ -57,6 +59,10 @@ assert(
 assert(
   link.registryDependencies?.includes("dethink-base"),
   "link registry item must depend on dethink-base.",
+);
+assert(
+  stack.registryDependencies?.includes("dethink-base"),
+  "stack registry item must depend on dethink-base.",
 );
 assert(
   typography.registryDependencies?.includes("dethink-base"),
@@ -87,6 +93,10 @@ assert(
   "link registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
+  "stack registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(typography.dependencies) && typography.dependencies.length === 0,
   "typography registry item must not add runtime dependencies.",
 );
@@ -103,7 +113,7 @@ assert(
   "date-time-picker registry item must include react-aria-components.",
 );
 
-for (const item of [base, box, button, iconButton, link, typography, dateTimePicker, timeline]) {
+for (const item of [base, box, button, iconButton, link, stack, typography, dateTimePicker, timeline]) {
   for (const file of item.files ?? []) {
     await assertFileExists(join(root, file.path));
   }
@@ -127,6 +137,10 @@ const iconButtonSource = await readFile(
 );
 const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
+  "utf8",
+);
+const stackSource = await readFile(
+  join(root, "packages/components/src/components/stack/stack.tsx"),
   "utf8",
 );
 const typographySource = await readFile(
@@ -195,6 +209,17 @@ assert(linkSource.includes("noopener"), "link source must add new-tab noopener s
 assert(linkSource.includes("asChild"), "link source must expose router composition.");
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(stackSource.includes('"data-slot": "stack"'), "stack source must expose stable slot data.");
+assert(stackSource.includes("asChild"), "stack source must expose child composition.");
+assert(stackSource.includes("stackClassNames"), "stack source must expose class-name composition.");
+assert(stackSource.includes("flex-col"), "stack source must expose vertical direction utilities.");
+assert(stackSource.includes("flex-row"), "stack source must expose horizontal direction utilities.");
+assert(stackSource.includes("gap-4"), "stack source must expose tokenized gap utilities.");
+assert(stackSource.includes("items-center"), "stack source must expose alignment utilities.");
+assert(stackSource.includes("justify-between"), "stack source must expose justification utilities.");
+assert(stackSource.includes("flex-wrap"), "stack source must expose wrapping utilities.");
+assert(!stackSource.includes("reverse"), "stack source must not expose visual reverse ordering.");
+assert(!stackSource.includes("@radix-ui"), "stack source must remain dependency-free.");
 assert(
   typographySource.includes('"data-slot": "typography"'),
   "typography source must expose stable typography slot data.",

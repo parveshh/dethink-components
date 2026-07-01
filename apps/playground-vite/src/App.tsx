@@ -6,6 +6,7 @@ import {
   Heading,
   IconButton,
   Link,
+  Stack,
   Text,
 } from "@dethink/components";
 
@@ -33,7 +34,7 @@ function RefreshIcon() {
 export function App() {
   return (
     <DethinkProvider className="min-h-screen p-8" theme="light">
-      <Box as="main" className="mx-auto max-w-3xl space-y-4">
+      <Stack as="main" gap="4" className="mx-auto max-w-3xl">
         <Text size="sm" tone="muted" weight="medium">
           @dethink/components playground
         </Text>
@@ -45,7 +46,7 @@ export function App() {
           foundation provider, and the first layout, action, navigation,
           typography, and date/time components.
         </Text>
-        <Box display="flex" gap="2" className="flex-wrap items-center">
+        <Stack direction="horizontal" gap="2" align="center" wrap="wrap">
           <Button>Primary action</Button>
           <Button variant="outline">Secondary action</Button>
           <Button variant="ghost">Quiet action</Button>
@@ -59,7 +60,7 @@ export function App() {
           <IconButton aria-label="Refresh playground" variant="outline">
             <RefreshIcon />
           </IconButton>
-        </Box>
+        </Stack>
         <Box
           border="default"
           p="4"
@@ -85,7 +86,7 @@ export function App() {
           label="Smoke date and time"
           name="smokeDateTime"
         />
-      </Box>
+      </Stack>
     </DethinkProvider>
   );
 }

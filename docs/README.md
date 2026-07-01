@@ -6,6 +6,7 @@ This folder contains implementation planning derived from `react_component_libra
 
 - `component-inventory.md` lists the full component, foundation, utility, and block inventory from the PRD.
 - `development-path.md` defines the component-by-component build order and the repeated PRD-to-issues workflow.
+- `high-impact-component-priority.md` records the current demand-weighted component priority overlay used to choose the next PRD candidate.
 - `components/button/spec.md` is the first concrete component specification.
 - `components/button/prd.md` is the first component PRD drafted with the `to-prd` template.
 - `components/button/issues.md` is the first component issue breakdown drafted with the `to-issues` template. It is not published yet because the issue breakdown needs approval first.
