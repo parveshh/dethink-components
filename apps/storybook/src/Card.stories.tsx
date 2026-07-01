@@ -250,6 +250,115 @@ export const DashboardCards: Story = {
   ),
 };
 
+export const ContentOnly: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Card>
+        <CardContent>
+          <Stack gap="2">
+            <Text weight="medium">Content-only surface</Text>
+            <Text tone="muted">
+              Use CardContent directly when the surrounding page already owns the
+              heading and action controls.
+            </Text>
+          </Stack>
+        </CardContent>
+      </Card>
+    </DethinkProvider>
+  ),
+};
+
+export const MediaContent: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Card as="article" className="max-w-xl">
+        <div className="aspect-[16/9] bg-muted" aria-hidden="true" />
+        <CardHeader>
+          <CardTitle as="h2">Deployment overview</CardTitle>
+          <CardDescription>
+            Media stays regular content; Card only owns the framed surface.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Grid columns="auto-fit-xs" gap="3">
+            {["Build", "Checks", "Regions"].map((label) => (
+              <div key={label} className="rounded-md border border-border p-3">
+                <Text size="sm" weight="medium">
+                  {label}
+                </Text>
+                <Text size="sm" tone="muted">
+                  Ready
+                </Text>
+              </div>
+            ))}
+          </Grid>
+        </CardContent>
+      </Card>
+    </DethinkProvider>
+  ),
+};
+
+export const EmptyContentStates: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Grid columns="auto-fit-sm" gap="3">
+        <Card>
+          <CardHeader>
+            <CardTitle as="h3">No alerts</CardTitle>
+            <CardDescription>Nothing needs attention right now.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Text tone="muted">When EmptyState lands it should own richer empty UX.</Text>
+          </CardContent>
+          <CardFooter>
+            <Button size="sm" variant="outline">
+              Create monitor
+            </Button>
+          </CardFooter>
+        </Card>
+        <Card surface="muted">
+          <CardHeader>
+            <CardTitle as="h3">Loading placeholder</CardTitle>
+            <CardDescription>Skeleton will own animated loading states later.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Stack gap="2">
+              <div className="h-3 rounded-md bg-muted-foreground/20" />
+              <div className="h-3 w-2/3 rounded-md bg-muted-foreground/20" />
+            </Stack>
+          </CardContent>
+        </Card>
+      </Grid>
+    </DethinkProvider>
+  ),
+};
+
+export const ResponsiveClassNameComposition: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Card className="sm:[--card-padding:1.25rem] lg:[--card-padding:2rem]">
+        <CardHeader>
+          <CardTitle>Responsive local rhythm</CardTitle>
+          <CardDescription>
+            Consumer classes remain the escape hatch for breakpoint-specific card
+            layout.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Grid columns="auto-fit-xs" gap="3">
+            <Text size="sm" tone="muted">
+              Small screens keep content stacked.
+            </Text>
+            <Text size="sm" tone="muted">
+              Wider containers can tune local spacing without new Card props.
+            </Text>
+          </Grid>
+        </CardContent>
+      </Card>
+    </DethinkProvider>
+  ),
+};
+
 export const SettingsPanel: Story = {
   render: () => (
     <DethinkProvider theme="light" className="p-6">
