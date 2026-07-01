@@ -56,6 +56,17 @@ export {
   type TypographyWeight,
 } from "./components/typography";
 export {
+  Stack,
+  stackClassNames,
+  type StackAlign,
+  type StackDirection,
+  type StackElement,
+  type StackGap,
+  type StackJustify,
+  type StackProps,
+  type StackWrap,
+} from "./components/stack";
+export {
   IconButton,
   iconButtonClassNames,
   type IconButtonAccessibleName,
