@@ -201,6 +201,14 @@ describe("Separator", () => {
     const invalidTabIndex = <Separator tabIndex={0} />;
     // @ts-expect-error Separator owns the separator role contract.
     const invalidRole = <Separator role="presentation" />;
+    // @ts-expect-error Separator does not expose splitter value semantics.
+    const invalidValueNow = <Separator aria-valuenow={50} />;
+    // @ts-expect-error Separator does not expose splitter value semantics.
+    const invalidValueMin = <Separator aria-valuemin={0} />;
+    // @ts-expect-error Separator does not expose splitter value semantics.
+    const invalidValueMax = <Separator aria-valuemax={100} />;
+    // @ts-expect-error Separator does not expose splitter value semantics.
+    const invalidValueText = <Separator aria-valuetext="50 percent" />;
 
     expect(valid).toBeTruthy();
     expect(validAlias).toBeTruthy();
@@ -208,6 +216,51 @@ describe("Separator", () => {
     expect(invalidChildren).toBeTruthy();
     expect(invalidTabIndex).toBeTruthy();
     expect(invalidRole).toBeTruthy();
+    expect(invalidValueNow).toBeTruthy();
+    expect(invalidValueMin).toBeTruthy();
+    expect(invalidValueMax).toBeTruthy();
+    expect(invalidValueText).toBeTruthy();
+  });
+
+  it("strips splitter value semantics from native and child props", () => {
+    const splitterProps = {
+      "aria-valuemax": 100,
+      "aria-valuemin": 0,
+      "aria-valuenow": 50,
+      "aria-valuetext": "50 percent",
+      tabIndex: 0,
+    } as Record<string, unknown>;
+
+    render(
+      <>
+        <Separator data-testid="native" {...splitterProps} />
+        <Separator asChild data-testid="child" {...splitterProps}>
+          <span
+            aria-valuemax={90}
+            aria-valuemin={10}
+            aria-valuenow={75}
+            aria-valuetext="75 percent"
+            role="presentation"
+            tabIndex={0}
+          />
+        </Separator>
+      </>,
+    );
+
+    const native = screen.getByTestId("native");
+    const child = screen.getByTestId("child");
+
+    for (const separator of [native, child]) {
+      expect(separator).not.toHaveAttribute("aria-valuemax");
+      expect(separator).not.toHaveAttribute("aria-valuemin");
+      expect(separator).not.toHaveAttribute("aria-valuenow");
+      expect(separator).not.toHaveAttribute("aria-valuetext");
+      expect(separator).not.toHaveAttribute("tabindex");
+    }
+
+    expect(native).not.toHaveAttribute("role");
+    expect(child).toHaveAttribute("role", "separator");
+    expect(child).toHaveAttribute("aria-orientation", "horizontal");
   });
 
   it("forwards refs to the native element", () => {

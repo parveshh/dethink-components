@@ -444,7 +444,14 @@ assert(separatorSource.includes("bg-muted-foreground/25"), "separator source mus
 assert(separatorSource.includes("bg-foreground/40"), "separator source must expose strong tone utilities.");
 assert(separatorSource.includes("my-4"), "separator source must expose horizontal spacing utilities.");
 assert(separatorSource.includes("mx-4"), "separator source must expose vertical spacing utilities.");
-assert(!separatorSource.includes("aria-valuenow"), "separator source must not expose splitter value semantics.");
+assert(
+  separatorSource.includes('"aria-valuenow"?: never'),
+  "separator source must type-reject splitter value semantics.",
+);
+assert(
+  separatorSource.includes('"aria-valuenow": undefined'),
+  "separator source must strip splitter value semantics at runtime.",
+);
 assert(!separatorSource.includes("@radix-ui"), "separator source must remain dependency-free.");
 assert(stackSource.includes('"data-slot": "stack"'), "stack source must expose stable slot data.");
 assert(stackSource.includes("asChild"), "stack source must expose child composition.");

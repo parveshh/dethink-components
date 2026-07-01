@@ -18,7 +18,14 @@ export type SeparatorThickness = "1" | "2";
 export type SeparatorTone = "default" | "muted" | "strong";
 export type SeparatorSpacing = "none" | "1" | "2" | "3" | "4" | "6" | "8";
 
-type SeparatorBaseProps = {
+type SeparatorValueAttributes = {
+  "aria-valuemax"?: never;
+  "aria-valuemin"?: never;
+  "aria-valuenow"?: never;
+  "aria-valuetext"?: never;
+};
+
+type SeparatorBaseProps = SeparatorValueAttributes & {
   as?: SeparatorElement;
   asChild?: boolean;
   decorative?: boolean;
@@ -28,9 +35,19 @@ type SeparatorBaseProps = {
   tone?: SeparatorTone;
 };
 
+type SeparatorReservedAttribute =
+  | "aria-hidden"
+  | "aria-orientation"
+  | "aria-valuemax"
+  | "aria-valuemin"
+  | "aria-valuenow"
+  | "aria-valuetext"
+  | "role"
+  | "tabIndex";
+
 type SeparatorNativeAttributes = Omit<
   HTMLAttributes<HTMLElement>,
-  "aria-hidden" | "aria-orientation" | "children" | "role" | "tabIndex"
+  SeparatorReservedAttribute | "children"
 >;
 
 type NativeSeparatorProps = SeparatorNativeAttributes &
@@ -109,6 +126,20 @@ const separatorSpacingClasses: Record<
     6: "mx-6",
     8: "mx-8",
   },
+};
+
+const strippedSeparatorReservedAttributes: Record<
+  SeparatorReservedAttribute,
+  undefined
+> = {
+  "aria-hidden": undefined,
+  "aria-orientation": undefined,
+  "aria-valuemax": undefined,
+  "aria-valuemin": undefined,
+  "aria-valuenow": undefined,
+  "aria-valuetext": undefined,
+  role: undefined,
+  tabIndex: undefined,
 };
 
 export function separatorClassNames({
@@ -206,6 +237,24 @@ function composeSlotProps(
   return composedProps;
 }
 
+function stripSeparatorReservedAttributes<T extends object>(
+  props: T,
+): Omit<T, SeparatorReservedAttribute> {
+  const {
+    "aria-hidden": _ariaHidden,
+    "aria-orientation": _ariaOrientation,
+    "aria-valuemax": _ariaValueMax,
+    "aria-valuemin": _ariaValueMin,
+    "aria-valuenow": _ariaValueNow,
+    "aria-valuetext": _ariaValueText,
+    role: _role,
+    tabIndex: _tabIndex,
+    ...safeProps
+  } = props as Record<string, unknown>;
+
+  return safeProps as Omit<T, SeparatorReservedAttribute>;
+}
+
 function getSeparatorDataAttributes({
   as,
   asChild,
@@ -256,6 +305,7 @@ export const Separator = forwardRef<HTMLElement, SeparatorProps>(
     {
       as = "hr",
       asChild = false,
+      children,
       className,
       decorative = false,
       orientation = "horizontal",
@@ -266,6 +316,7 @@ export const Separator = forwardRef<HTMLElement, SeparatorProps>(
     },
     ref,
   ) => {
+    const safeProps = stripSeparatorReservedAttributes(props);
     const classes = separatorClassNames({
       className,
       orientation,
@@ -290,17 +341,19 @@ export const Separator = forwardRef<HTMLElement, SeparatorProps>(
     });
 
     if (asChild) {
-      const child = Children.only(props.children);
+      const child = Children.only(children);
 
       if (!isValidElement<SeparatorSlotProps>(child)) {
         throw new Error("Separator with asChild expects a single React element child.");
       }
 
       const childRef = getChildRef(child);
-      const composedProps = composeSlotProps(props, child.props);
+      const safeChildProps = stripSeparatorReservedAttributes(child.props);
+      const composedProps = composeSlotProps(safeProps, safeChildProps);
 
       return cloneElement(child, {
         ...composedProps,
+        ...strippedSeparatorReservedAttributes,
         ...dataAttributes,
         ...accessibilityAttributes,
         ref: composeRefs(ref as Ref<HTMLElement>, childRef),
@@ -309,7 +362,7 @@ export const Separator = forwardRef<HTMLElement, SeparatorProps>(
     }
 
     return createElement(as, {
-      ...props,
+      ...safeProps,
       ...dataAttributes,
       ...accessibilityAttributes,
       ref: ref as ForwardedRef<HTMLElement>,
