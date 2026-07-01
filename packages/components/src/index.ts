@@ -118,6 +118,18 @@ export {
   type GridRows,
 } from "./components/grid";
 export {
+  Divider,
+  Separator,
+  separatorClassNames,
+  type DividerProps,
+  type SeparatorElement,
+  type SeparatorOrientation,
+  type SeparatorProps,
+  type SeparatorSpacing,
+  type SeparatorThickness,
+  type SeparatorTone,
+} from "./components/separator";
+export {
   IconButton,
   iconButtonClassNames,
   type IconButtonAccessibleName,

@@ -82,6 +82,7 @@ const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
+const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
@@ -94,6 +95,7 @@ assert(iconButton.name === "icon-button", "icon-button registry item must be nam
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
+assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
@@ -132,6 +134,10 @@ assert(
 assert(
   link.registryDependencies?.includes("dethink-base"),
   "link registry item must depend on dethink-base.",
+);
+assert(
+  separator.registryDependencies?.includes("dethink-base"),
+  "separator registry item must depend on dethink-base.",
 );
 assert(
   stack.registryDependencies?.includes("dethink-base"),
@@ -178,6 +184,10 @@ assert(
   "link registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(separator.dependencies) && separator.dependencies.length === 0,
+  "separator registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
   "stack registry item must not add runtime dependencies.",
 );
@@ -207,6 +217,7 @@ for (const item of [
   flex,
   grid,
   link,
+  separator,
   stack,
   typography,
   dateTimePicker,
@@ -219,6 +230,7 @@ for (const item of [
 
 await assertRegistryRelativeImportsResolve(container);
 await assertRegistryRelativeImportsResolve(grid);
+await assertRegistryRelativeImportsResolve(separator);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");
@@ -250,6 +262,10 @@ const gridSource = await readFile(
 );
 const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
+  "utf8",
+);
+const separatorSource = await readFile(
+  join(root, "packages/components/src/components/separator/separator.tsx"),
   "utf8",
 );
 const stackSource = await readFile(
@@ -405,6 +421,38 @@ assert(linkSource.includes("noopener"), "link source must add new-tab noopener s
 assert(linkSource.includes("asChild"), "link source must expose router composition.");
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(
+  separatorSource.includes('"data-slot": "separator"'),
+  "separator source must expose stable slot data.",
+);
+assert(separatorSource.includes("Divider"), "separator source must expose Divider alias.");
+assert(separatorSource.includes("asChild"), "separator source must expose child composition.");
+assert(
+  separatorSource.includes("separatorClassNames"),
+  "separator source must expose class-name composition.",
+);
+assert(separatorSource.includes("aria-hidden"), "separator source must expose decorative mode.");
+assert(
+  separatorSource.includes("aria-orientation"),
+  "separator source must expose orientation semantics.",
+);
+assert(separatorSource.includes('role: asChild || as !== "hr" ? "separator" : undefined'), "separator source must preserve native hr semantics.");
+assert(separatorSource.includes("h-px"), "separator source must expose horizontal thickness utilities.");
+assert(separatorSource.includes("w-px"), "separator source must expose vertical thickness utilities.");
+assert(separatorSource.includes("bg-border"), "separator source must use tokenized border color utilities.");
+assert(separatorSource.includes("bg-muted-foreground/25"), "separator source must expose muted tone utilities.");
+assert(separatorSource.includes("bg-foreground/40"), "separator source must expose strong tone utilities.");
+assert(separatorSource.includes("my-4"), "separator source must expose horizontal spacing utilities.");
+assert(separatorSource.includes("mx-4"), "separator source must expose vertical spacing utilities.");
+assert(
+  separatorSource.includes('"aria-valuenow"?: never'),
+  "separator source must type-reject splitter value semantics.",
+);
+assert(
+  separatorSource.includes('"aria-valuenow": undefined'),
+  "separator source must strip splitter value semantics at runtime.",
+);
+assert(!separatorSource.includes("@radix-ui"), "separator source must remain dependency-free.");
 assert(stackSource.includes('"data-slot": "stack"'), "stack source must expose stable slot data.");
 assert(stackSource.includes("asChild"), "stack source must expose child composition.");
 assert(stackSource.includes("stackClassNames"), "stack source must expose class-name composition.");

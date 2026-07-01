@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "separator",
+  "type": "registry:ui",
+  "title": "Separator",
+  "description": "Static Separator and Divider primitive with semantic or decorative modes, horizontal and vertical orientation, token-backed tone, thickness, spacing, and asChild composition.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/separator/separator.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/separator/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}

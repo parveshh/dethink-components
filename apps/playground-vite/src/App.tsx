@@ -11,6 +11,8 @@ import {
   Heading,
   IconButton,
   Link,
+  Divider,
+  Separator,
   Stack,
   Text,
 } from "@dethink/components";
@@ -95,6 +97,17 @@ export function App() {
               </GridItem>
             ))}
           </Grid>
+          <Separator spacing="1" />
+          <Flex align="center" gap="3">
+            <Text size="sm" weight="medium">
+              Separator smoke
+            </Text>
+            <Separator as="div" orientation="vertical" decorative />
+            <Text size="sm" tone="muted">
+              Divider alias follows the same contract.
+            </Text>
+          </Flex>
+          <Divider decorative spacing="1" tone="muted" />
           <Box
             border="default"
             p="4"
