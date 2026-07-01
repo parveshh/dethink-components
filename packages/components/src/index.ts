@@ -98,6 +98,26 @@ export {
   type FlexWrap,
 } from "./components/flex";
 export {
+  Grid,
+  GridItem,
+  gridClassNames,
+  gridItemClassNames,
+  type GridAlign,
+  type GridColumns,
+  type GridContent,
+  type GridElement,
+  type GridGap,
+  type GridItemAlign,
+  type GridItemElement,
+  type GridItemJustify,
+  type GridItemMinInlineSize,
+  type GridItemProps,
+  type GridItemSpan,
+  type GridJustify,
+  type GridProps,
+  type GridRows,
+} from "./components/grid";
+export {
   IconButton,
   iconButtonClassNames,
   type IconButtonAccessibleName,

@@ -80,6 +80,7 @@ const button = await readJson(join(registryRoot, "button.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
+const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
@@ -91,6 +92,7 @@ assert(button.name === "button", "button registry item must be named button.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
+assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
@@ -122,6 +124,10 @@ assert(
 assert(
   flex.registryDependencies?.includes("dethink-base"),
   "flex registry item must depend on dethink-base.",
+);
+assert(
+  grid.registryDependencies?.includes("dethink-base"),
+  "grid registry item must depend on dethink-base.",
 );
 assert(
   link.registryDependencies?.includes("dethink-base"),
@@ -164,6 +170,10 @@ assert(
   "flex registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(grid.dependencies) && grid.dependencies.length === 0,
+  "grid registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(link.dependencies) && link.dependencies.length === 0,
   "link registry item must not add runtime dependencies.",
 );
@@ -195,6 +205,7 @@ for (const item of [
   container,
   iconButton,
   flex,
+  grid,
   link,
   stack,
   typography,
@@ -207,6 +218,7 @@ for (const item of [
 }
 
 await assertRegistryRelativeImportsResolve(container);
+await assertRegistryRelativeImportsResolve(grid);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");
@@ -230,6 +242,10 @@ const iconButtonSource = await readFile(
 );
 const flexSource = await readFile(
   join(root, "packages/components/src/components/flex/flex.tsx"),
+  "utf8",
+);
+const gridSource = await readFile(
+  join(root, "packages/components/src/components/grid/grid.tsx"),
   "utf8",
 );
 const linkSource = await readFile(
@@ -345,6 +361,44 @@ assert(flexSource.includes("basis-64"), "flex source must expose basis utilities
 assert(flexSource.includes("min-w-0"), "flex source must expose long-content shrink utilities.");
 assert(!flexSource.includes("reverse"), "flex source must not expose visual reverse ordering.");
 assert(!flexSource.includes("@radix-ui"), "flex source must remain dependency-free.");
+assert(gridSource.includes('"data-slot": "grid"'), "grid source must expose stable root slot data.");
+assert(
+  gridSource.includes('"data-slot": "grid-item"'),
+  "grid source must expose stable item slot data.",
+);
+assert(gridSource.includes("asChild"), "grid source must expose child composition.");
+assert(gridSource.includes("gridClassNames"), "grid source must expose class-name composition.");
+assert(
+  gridSource.includes("gridItemClassNames"),
+  "grid source must expose item class-name composition.",
+);
+assert(gridSource.includes("grid-cols-12"), "grid source must expose fixed grid columns.");
+assert(
+  gridSource.includes("repeat(auto-fit,minmax(min(16rem,100%),1fr))"),
+  "grid source must expose static auto-fit grid columns.",
+);
+assert(gridSource.includes("grid-rows-3"), "grid source must expose row utilities.");
+assert(gridSource.includes("gap-y-2"), "grid source must expose row gap utilities.");
+assert(gridSource.includes("gap-x-6"), "grid source must expose column gap utilities.");
+assert(gridSource.includes("items-center"), "grid source must expose item alignment utilities.");
+assert(
+  gridSource.includes("justify-items-end"),
+  "grid source must expose item justification utilities.",
+);
+assert(
+  gridSource.includes("content-between"),
+  "grid source must expose align-content utilities.",
+);
+assert(
+  gridSource.includes("justify-evenly"),
+  "grid source must expose justify-content utilities.",
+);
+assert(gridSource.includes("col-span-full"), "grid source must expose column span utilities.");
+assert(gridSource.includes("row-span-full"), "grid source must expose row span utilities.");
+assert(gridSource.includes("justify-self-end"), "grid source must expose item self justification utilities.");
+assert(gridSource.includes("min-w-0"), "grid source must expose long-content shrink utilities.");
+assert(!gridSource.includes("dense"), "grid source must not expose dense visual packing.");
+assert(!gridSource.includes("@radix-ui"), "grid source must remain dependency-free.");
 assert(linkSource.includes("data-slot=\"link\""), "link source must expose stable slot data.");
 assert(linkSource.includes("aria-current"), "link source must preserve aria-current state.");
 assert(linkSource.includes("noopener"), "link source must add new-tab noopener safety.");
