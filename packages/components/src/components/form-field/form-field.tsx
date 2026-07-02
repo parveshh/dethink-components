@@ -10,6 +10,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type ForwardedRef,
   type FieldsetHTMLAttributes,
@@ -117,6 +118,8 @@ type FieldControlSlotProps = Record<string, unknown> & {
 };
 
 type FieldContextValue = {
+  allocateDescriptionId: (id: string | undefined, hasContent: boolean) => string;
+  allocateErrorId: (id: string | undefined, hasContent: boolean) => string;
   controlId: string;
   descriptionIds: string[];
   disabled: boolean;
@@ -235,6 +238,106 @@ function getErrorMessage(error: FieldErrorItem) {
   }
 
   return error.message;
+}
+
+function hasRenderableContent(content: ReactNode) {
+  return content !== null && content !== undefined && content !== false;
+}
+
+function getDefaultDescriptionId(controlId: string, index: number) {
+  return index === 0
+    ? `${controlId}-description`
+    : `${controlId}-description-${index + 1}`;
+}
+
+function getDefaultErrorId(controlId: string, index: number) {
+  return index === 0 ? `${controlId}-error` : `${controlId}-error-${index + 1}`;
+}
+
+function getErrorContent({
+  children,
+  errors,
+}: Pick<FieldErrorProps, "children" | "errors">) {
+  const messages = (errors ?? [])
+    .map((error) => getErrorMessage(error))
+    .filter((message): message is ReactNode => message !== null && message !== undefined);
+
+  return {
+    content:
+      children ??
+      (messages.length === 0 ? null : messages.length === 1 ? (
+        messages[0]
+      ) : (
+        <ul className="list-disc ps-4">
+          {messages.map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul>
+      )),
+    messages,
+  };
+}
+
+function collectFieldRelationshipIds(children: ReactNode, controlId: string) {
+  const descriptionIds: string[] = [];
+  const errorIds: string[] = [];
+  let descriptionIndex = 0;
+  let errorIndex = 0;
+
+  function visit(node: ReactNode) {
+    Children.forEach(node, (child) => {
+      if (!isValidElement<{
+        children?: ReactNode;
+        errors?: FieldErrorItem[];
+        id?: string;
+      }>(child)) {
+        return;
+      }
+
+      if (child.type === FieldDescription) {
+        if (hasRenderableContent(child.props.children)) {
+          descriptionIds.push(
+            child.props.id ?? getDefaultDescriptionId(controlId, descriptionIndex),
+          );
+          descriptionIndex += 1;
+        }
+
+        return;
+      }
+
+      if (child.type === FieldError) {
+        if (hasRenderableContent(getErrorContent(child.props).content)) {
+          errorIds.push(child.props.id ?? getDefaultErrorId(controlId, errorIndex));
+          errorIndex += 1;
+        }
+
+        return;
+      }
+
+      if (child.type !== Field) {
+        visit(child.props.children);
+      }
+    });
+  }
+
+  visit(children);
+
+  return {
+    descriptionIds,
+    errorIds,
+  };
+}
+
+function mergeIdLists(...lists: string[][]) {
+  return lists.reduce<string[]>((mergedIds, ids) => {
+    for (const id of ids) {
+      if (!mergedIds.includes(id)) {
+        mergedIds.push(id);
+      }
+    }
+
+    return mergedIds;
+  }, []);
 }
 
 function useRegisteredId({
@@ -366,24 +469,72 @@ export const Field = forwardRef<HTMLElement, FieldProps>(
   ) => {
     const generatedId = useId();
     const controlId = id ?? generatedId;
-    const [descriptionIds, setDescriptionIds] = useState<string[]>([]);
-    const [errorIds, setErrorIds] = useState<string[]>([]);
+    const descriptionIndexRef = useRef(0);
+    const errorIndexRef = useRef(0);
+    descriptionIndexRef.current = 0;
+    errorIndexRef.current = 0;
+    const staticRelationshipIds = useMemo(
+      () => collectFieldRelationshipIds(children, controlId),
+      [children, controlId],
+    );
+    const [registeredDescriptionIds, setRegisteredDescriptionIds] = useState<string[]>([]);
+    const [registeredErrorIds, setRegisteredErrorIds] = useState<string[]>([]);
+    const descriptionIds = useMemo(
+      () =>
+        mergeIdLists(
+          staticRelationshipIds.descriptionIds,
+          registeredDescriptionIds,
+        ),
+      [registeredDescriptionIds, staticRelationshipIds.descriptionIds],
+    );
+    const errorIds = useMemo(
+      () => mergeIdLists(staticRelationshipIds.errorIds, registeredErrorIds),
+      [registeredErrorIds, staticRelationshipIds.errorIds],
+    );
+    const allocateDescriptionId = useCallback(
+      (descriptionId: string | undefined, hasContent: boolean) => {
+        if (!hasContent) {
+          return descriptionId ?? getDefaultDescriptionId(controlId, 0);
+        }
+
+        const index = descriptionIndexRef.current;
+        descriptionIndexRef.current += 1;
+
+        return descriptionId ?? getDefaultDescriptionId(controlId, index);
+      },
+      [controlId],
+    );
+    const allocateErrorId = useCallback(
+      (errorId: string | undefined, hasContent: boolean) => {
+        if (!hasContent) {
+          return errorId ?? getDefaultErrorId(controlId, 0);
+        }
+
+        const index = errorIndexRef.current;
+        errorIndexRef.current += 1;
+
+        return errorId ?? getDefaultErrorId(controlId, index);
+      },
+      [controlId],
+    );
     const registerDescription = useCallback((descriptionId: string) => {
-      setDescriptionIds((ids) => addUniqueId(ids, descriptionId));
+      setRegisteredDescriptionIds((ids) => addUniqueId(ids, descriptionId));
 
       return () => {
-        setDescriptionIds((ids) => removeId(ids, descriptionId));
+        setRegisteredDescriptionIds((ids) => removeId(ids, descriptionId));
       };
     }, []);
     const registerError = useCallback((errorId: string) => {
-      setErrorIds((ids) => addUniqueId(ids, errorId));
+      setRegisteredErrorIds((ids) => addUniqueId(ids, errorId));
 
       return () => {
-        setErrorIds((ids) => removeId(ids, errorId));
+        setRegisteredErrorIds((ids) => removeId(ids, errorId));
       };
     }, []);
     const contextValue = useMemo<FieldContextValue>(
       () => ({
+        allocateDescriptionId,
+        allocateErrorId,
         controlId,
         descriptionIds,
         disabled,
@@ -396,6 +547,8 @@ export const Field = forwardRef<HTMLElement, FieldProps>(
         required,
       }),
       [
+        allocateDescriptionId,
+        allocateErrorId,
         controlId,
         descriptionIds,
         disabled,
@@ -489,7 +642,7 @@ export const FieldControl = forwardRef<HTMLElement, FieldControlProps>(
     ref,
   ) => {
     const field = useFieldContext();
-    const resolvedId = id ?? field?.controlId;
+    const resolvedId = field?.controlId ?? id;
     const resolvedDisabled = Boolean(field?.disabled || disabled);
     const resolvedReadOnly = Boolean(field?.readOnly || readOnly);
     const resolvedRequired = Boolean(field?.required || required);
@@ -575,8 +728,11 @@ export const FieldDescription = forwardRef<HTMLElement, FieldDescriptionProps>(
   ) => {
     const field = useFieldContext();
     const generatedId = useId();
-    const resolvedId = id ?? `${field?.controlId ?? "field"}-${generatedId}-description`;
-    const hasContent = children !== null && children !== undefined;
+    const hasContent = hasRenderableContent(children);
+    const resolvedId =
+      field?.allocateDescriptionId(id, hasContent) ??
+      id ??
+      `field-${generatedId}-description`;
 
     useRegisteredId({
       id: resolvedId,
@@ -619,22 +775,10 @@ export const FieldError = forwardRef<HTMLElement, FieldErrorProps>(
   ) => {
     const field = useFieldContext();
     const generatedId = useId();
-    const resolvedId = id ?? `${field?.controlId ?? "field"}-${generatedId}-error`;
-    const messages = (errors ?? [])
-      .map((error) => getErrorMessage(error))
-      .filter((message): message is ReactNode => message !== null && message !== undefined);
-    const content =
-      children ??
-      (messages.length === 0 ? null : messages.length === 1 ? (
-        messages[0]
-      ) : (
-        <ul className="list-disc ps-4">
-          {messages.map((message, index) => (
-            <li key={index}>{message}</li>
-          ))}
-        </ul>
-      ));
-    const hasContent = content !== null && content !== undefined;
+    const { content } = getErrorContent({ children, errors });
+    const hasContent = hasRenderableContent(content);
+    const resolvedId =
+      field?.allocateErrorId(id, hasContent) ?? id ?? `field-${generatedId}-error`;
 
     useRegisteredId({
       id: resolvedId,

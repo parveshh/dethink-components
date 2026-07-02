@@ -177,9 +177,11 @@ export const GroupedFieldSet: Story = {
     <DethinkProvider theme="light" className="p-6">
       <Container size="sm">
         <Form>
-          <FieldSet>
+          <FieldSet aria-describedby="notification-channels-help">
             <FieldLegend>Notification channels</FieldLegend>
-            <FieldDescription>Choose every channel that should receive alerts.</FieldDescription>
+            <FieldDescription id="notification-channels-help">
+              Choose every channel that should receive alerts.
+            </FieldDescription>
             <FieldGroup>
               {["Email", "Slack", "Webhook"].map((label) => (
                 <Field key={label} id={`channel-${label.toLowerCase()}`} orientation="horizontal">

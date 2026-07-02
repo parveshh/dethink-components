@@ -91,6 +91,27 @@ describe("Field", () => {
     expect(input).toHaveFocus();
   });
 
+  it("uses Field IDs as the relationship source over control and child IDs", () => {
+    render(
+      <Field id="account-name">
+        <FieldLabel>Account name</FieldLabel>
+        <FieldControl asChild id="ignored-control-id">
+          <input id="ignored-child-id" />
+        </FieldControl>
+        <FieldDescription id="account-name-help">
+          This ID is stable for tests and form libraries.
+        </FieldDescription>
+      </Field>,
+    );
+
+    const label = screen.getByText("Account name");
+    const input = screen.getByLabelText("Account name");
+
+    expect(label).toHaveAttribute("for", "account-name");
+    expect(input).toHaveAttribute("id", "account-name");
+    expect(input).toHaveAttribute("aria-describedby", "account-name-help");
+  });
+
   it("composes description and error relationships for invalid controls", async () => {
     render(
       <Field id="email" invalid required>
@@ -232,9 +253,16 @@ describe("Field", () => {
     const fieldSetRef = createRef<HTMLFieldSetElement>();
 
     render(
-      <FieldSet ref={fieldSetRef} disabled className="custom-fieldset">
+      <FieldSet
+        ref={fieldSetRef}
+        disabled
+        aria-describedby="preferences-help"
+        className="custom-fieldset"
+      >
         <FieldLegend variant="label">Preferences</FieldLegend>
-        <FieldDescription>Choose every notification channel to enable.</FieldDescription>
+        <FieldDescription id="preferences-help">
+          Choose every notification channel to enable.
+        </FieldDescription>
         <FieldGroup gap="sm">
           <Field id="email-notifications">
             <FieldLabel>Email notifications</FieldLabel>
@@ -254,6 +282,7 @@ describe("Field", () => {
     const checkbox = screen.getByLabelText("Email notifications");
 
     expect(fieldset).toHaveAttribute("data-slot", "field-set");
+    expect(fieldset).toHaveAttribute("aria-describedby", "preferences-help");
     expect(fieldset).toHaveAttribute("data-disabled", "true");
     expect(fieldset).toHaveClass("custom-fieldset");
     expect(fieldSetRef.current).toBe(fieldset);

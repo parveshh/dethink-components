@@ -46,6 +46,12 @@ describe("Field SSR", () => {
     expect(markup).toContain('data-slot="field-description"');
     expect(markup).toContain('data-slot="field-error"');
     expect(markup).toContain('id="server-field"');
+    expect(markup).toContain('id="server-field-description"');
+    expect(markup).toContain('id="server-field-error"');
+    expect(markup).toContain(
+      'aria-describedby="server-field-description server-field-error"',
+    );
+    expect(markup).toContain('aria-errormessage="server-field-error"');
     expect(markup).toContain('aria-invalid="true"');
   });
 
@@ -69,6 +75,15 @@ describe("Field SSR", () => {
     );
 
     container.innerHTML = renderToString(field);
+
+    const inputBeforeHydration = container.querySelector("input");
+    const serverDescription = inputBeforeHydration?.getAttribute("aria-describedby");
+    const serverErrorMessage =
+      inputBeforeHydration?.getAttribute("aria-errormessage");
+
+    expect(serverDescription).toContain("-description");
+    expect(serverDescription).toContain("-error");
+    expect(serverErrorMessage).toContain("-error");
 
     await act(async () => {
       hydrateRoot(container, field);

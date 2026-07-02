@@ -48,9 +48,11 @@ describe("Field accessibility", () => {
     const { container } = render(
       <DethinkProvider theme="light">
         <main aria-label="Grouped field accessibility smoke">
-          <FieldSet>
+          <FieldSet aria-describedby="notifications-help">
             <FieldLegend>Notifications</FieldLegend>
-            <FieldDescription>Choose the channels to enable.</FieldDescription>
+            <FieldDescription id="notifications-help">
+              Choose the channels to enable.
+            </FieldDescription>
             <FieldGroup>
               <Field id="notify-email">
                 <FieldLabel>Email</FieldLabel>
@@ -73,6 +75,10 @@ describe("Field accessibility", () => {
     expect(screen.getByRole("group", { name: "Notifications" })).toHaveAttribute(
       "data-slot",
       "field-set",
+    );
+    expect(screen.getByRole("group", { name: "Notifications" })).toHaveAttribute(
+      "aria-describedby",
+      "notifications-help",
     );
     expect(screen.getByLabelText("Email")).toHaveAttribute("type", "checkbox");
     expect(screen.getByLabelText("Slack")).toHaveAttribute("type", "checkbox");

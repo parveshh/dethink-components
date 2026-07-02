@@ -91,10 +91,11 @@ and accessibility contract.
 - Form renders a native form element by default, supports native form attributes, forwards refs, and provides density-aware vertical spacing. It does not manage validation or submission state.
 - Field renders a non-widget structural container with generated ID context, state data attributes, orientation, and state props for invalid, disabled, required, and read-only fields.
 - FieldControl supports `asChild` composition with one direct control child. It injects or composes `id`, `aria-describedby`, `aria-invalid`, `aria-errormessage` when relevant, `disabled`, `required`, `readOnly`, data attributes, className, and refs without adding an unnecessary wrapper.
+- Field owns the control relationship ID while inside Field context. An explicit `Field id` takes precedence over `FieldControl id` and child control `id`, so labels, descriptions, and errors remain attached to the same control. Consumers needing custom control IDs should set them on Field, or explicitly wire `FieldLabel htmlFor` and ARIA attributes themselves outside the Field contract.
 - FieldLabel renders a native label by default and connects through `htmlFor`. It should render a required marker when Field is required unless consumers disable or override that marker.
-- FieldDescription and FieldError render stable IDs registered with the parent Field so FieldControl can compose `aria-describedby` accurately.
+- FieldDescription and FieldError render stable IDs exposed to the parent Field so FieldControl can compose `aria-describedby` accurately in server-rendered markup and after hydration. Default IDs derive from the Field control ID; explicit IDs remain the recommended path for form libraries, tests, and custom wrappers.
 - FieldError should support direct children and a small error-list shape for form-library error objects, but it should not require any form library.
-- FieldSet and FieldLegend use native fieldset and legend semantics for related controls. FieldGroup provides layout grouping without replacing fieldset semantics.
+- FieldSet and FieldLegend use native fieldset and legend semantics for related controls. FieldDescription inside FieldSet is visual supporting copy by default; consumers can make it the programmatic group description by setting an explicit description ID and passing that ID to `FieldSet aria-describedby`. FieldGroup provides layout grouping without replacing fieldset semantics.
 - FieldContent and FieldTitle support horizontal and option-like field rows, especially future checkbox, radio, and switch patterns.
 - Styling uses Tailwind CSS v4 utilities, token-backed colors, density spacing, logical properties, static class maps, shared class-name merging, and stable data attributes.
 - The primitives should support light, dark, density, RTL, responsive layout, and high-contrast-friendly invalid states through existing token conventions.
@@ -108,7 +109,7 @@ and accessibility contract.
 - Composition tests should cover FieldControl `asChild` with native input-like controls and should verify consumer props and refs are preserved.
 - FieldSet tests should cover native fieldset/legend output, grouped descriptions, disabled fieldsets, and field groups.
 - Accessibility tests should cover axe smoke, visible label examples, grouped controls, invalid field examples, and no misleading custom widget roles.
-- SSR tests should cover server rendering and hydration without generated ID mismatch warnings.
+- SSR tests should cover server-rendered label, description, error, `aria-describedby`, and `aria-errormessage` relationships, plus hydration without generated ID mismatch warnings.
 - Storybook should cover base field, required field, optional field, description, error state, disabled, read-only, horizontal layout, grouped controls, settings-row composition, Card composition, dark mode, density, RTL, and future-input placeholder examples using native controls.
 - Registry validation and smoke should verify files, exports, dependency-free behavior, tokenized classes, stable data attributes, and clean consumer install behavior.
 - Prior art in this repo includes Button and Card for `asChild`/class merging, Typography for label/helper text tone conventions, DateTimePicker for label/help/error visual language, Stack/Flex/Grid for density-aware layout, and existing registry validation/smoke scripts.

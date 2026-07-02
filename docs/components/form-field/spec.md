@@ -44,14 +44,23 @@ existing primitives, and public prop/state types.
   and future Dethink controls can receive `id`, `aria-describedby`,
   `aria-invalid`, `aria-errormessage`, state data attributes, className, and refs
   without an extra wrapper.
+- Field owns the relationship ID inside a Field context. An explicit `Field id`
+  takes precedence over a `FieldControl id` or child control `id` so the label,
+  description, and error relationships cannot drift apart. Without Field
+  context, `FieldControl id` and child IDs behave like normal element props.
 - `FieldLabel` renders a native label by default and connects to the active
   control ID.
-- `FieldDescription` and `FieldError` register stable IDs with the parent field
-  so the control can expose helpful instructions and relevant errors.
+- `FieldDescription` and `FieldError` expose stable IDs to the parent field so
+  the control can expose helpful instructions and relevant errors in server
+  markup and after hydration. Default IDs are derived from the Field control ID;
+  explicit IDs are supported for form libraries, tests, and custom composition.
 - `FieldError` only contributes error relationships when the field is invalid or
   the error is explicitly rendered as relevant.
 - `FieldSet` and `FieldLegend` use native fieldset/legend semantics for related
   controls.
+- `FieldDescription` inside `FieldSet` is visual supporting copy by default.
+  Consumers that need it as the programmatic group description should give the
+  description an explicit ID and pass that ID to `FieldSet aria-describedby`.
 - `FieldGroup` is layout-only and must not replace fieldset/legend semantics.
 - `FieldContent` and `FieldTitle` support horizontal and option-like rows for
   future checkbox, radio, and switch patterns.
@@ -94,7 +103,8 @@ existing primitives, and public prop/state types.
   horizontal rows, and layout-only grouping.
 - Accessibility tests for axe smoke, visible labels, grouped controls,
   invalid/error wiring, and no custom widget roles.
-- SSR tests for server rendering and hydration-safe generated IDs.
+- SSR tests for server rendering, server-visible description/error
+  relationships, and hydration-safe generated IDs.
 - Storybook stories for base, required, optional, description, error, disabled,
   read-only, horizontal, grouped, Card composition, dark mode, density, RTL, and
   native-control placeholder examples.

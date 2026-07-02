@@ -66,7 +66,7 @@ examples needed to clarify the contract.
 - [ ] The local PRD mirrors the published GitHub PRD decisions and links back to the parent PRD issue.
 - [ ] The local issue breakdown maps this PRD to the approved stacked child issues.
 - [ ] The docs define native-first label, description, error, fieldset, and legend semantics.
-- [ ] The docs define generated and explicit ID behavior, `asChild` FieldControl composition, `aria-describedby`, `aria-invalid`, `aria-errormessage`, and invalid/disabled/required/read-only state propagation.
+- [ ] The docs define generated and explicit ID behavior, Field-owned ID precedence, `asChild` FieldControl composition, `aria-describedby`, `aria-invalid`, `aria-errormessage`, SSR-visible relationship wiring, and invalid/disabled/required/read-only state propagation.
 - [ ] The docs define vertical and horizontal field layout, FieldGroup grouping, and FieldContent/FieldTitle use for future checkbox/radio/switch rows.
 - [ ] The docs clearly separate Form and Field primitives from Input, Textarea, NumberInput, Checkbox, RadioGroup, Switch, Select, Combobox, validation engines, schema libraries, async submit orchestration, and form-library adapters.
 - [ ] The docs list render, composition, accessibility, SSR, Storybook, registry, and playground smoke testing seams.
@@ -96,7 +96,7 @@ data-state, class-name, and ref behavior without depending on a form library.
 - [ ] The generated control wiring composes `aria-describedby`, `aria-invalid`, and `aria-errormessage` according to the contract without referencing hidden or irrelevant errors for valid fields.
 - [ ] Public components, class-name helpers, and prop/state types for this slice are exported from the package entry point.
 - [ ] Render and composition tests cover generated IDs, explicit IDs, label association, description association, error association, invalid/disabled/required/read-only state, orientation, class merging, refs, and `asChild` prop preservation.
-- [ ] Accessibility and SSR tests cover visible labels, invalid field wiring, axe smoke, and hydration without ID mismatch warnings.
+- [ ] Accessibility and SSR tests cover visible labels, invalid field wiring, server-visible description/error relationships, axe smoke, and hydration without ID mismatch warnings.
 
 ## Blocked by
 
@@ -150,7 +150,7 @@ RTL, and future native-control placeholders.
 - [ ] Storybook interaction coverage verifies label click focus, invalid field accessible attributes, and grouped field semantics where practical.
 - [ ] Playground smoke coverage exercises Form and every Field primitive through the package export path.
 - [ ] Accessibility tests cover axe smoke, visible labels, fieldset/legend grouping, invalid/error wiring, disabled/read-only examples, and no custom widget roles.
-- [ ] SSR tests cover the full component family and generated IDs without hydration mismatch warnings.
+- [ ] SSR tests cover the full component family, server-visible description/error relationships, and generated IDs without hydration mismatch warnings.
 - [ ] Documentation explains native-first usage, form-library compatibility, boundaries with future inputs, accessibility rules, theming, registry installation, examples, testing, and out-of-scope validation behavior.
 - [ ] Verification commands pass for the implemented slice: component typecheck, focused component tests, accessibility tests, package build, Storybook typecheck/build, registry validation, registry smoke, and diff whitespace checks.
 
