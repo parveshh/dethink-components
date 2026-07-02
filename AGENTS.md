@@ -36,13 +36,15 @@ For any new work:
 
 Branch workflow:
 
-1. Create a PRD branch from the current integration base, named for the PRD, for example `codex/prd-<prd-number>-<slug>`.
+1. Create a PRD branch from the current integration base using `feature/<work-item-name>`, for example `feature/prd-<prd-number>-<slug>`.
 2. Create stacked issue branches for the PRD in dependency order.
-3. Branch Issue 1 from the PRD branch, for example `codex/issue-<issue-number>-<slug>`.
+3. Branch Issue 1 from the PRD branch using `feature/<work-item-name>`, for example `feature/issue-<issue-number>-<slug>`.
 4. Branch Issue 2 from Issue 1, and continue stacking later issue branches from the previous issue branch unless the GitHub issue dependency graph says otherwise.
 5. Keep each issue branch scoped to its GitHub issue, including code, docs, registry metadata, tests, and verification needed for that vertical slice.
 6. When all issues under the PRD are complete, open the final stacked branch as a pull request targeting the PRD branch.
 7. Do not open the final PR to the repository default branch unless the user explicitly asks for that release/integration step.
+
+Branch names must be lowercase, hyphenated, and scoped to the work item, for example `feature/button-variants`, `feature/issue-123-button-a11y`, or `feature/prd-45-data-table`.
 
 Prefer thin vertical slices that include component code, docs, registry metadata, tests, and verification together. A local `docs/components/<component>/prd.md` or `issues.md` file can support the work, but it does not replace the GitHub PRD or GitHub issues.
 
@@ -206,3 +208,4 @@ Do not include secrets, API keys, passwords, or private credentials in Context7 
 - Use `rg` for searches.
 - Prefer `apply_patch` for manual edits.
 - Do not commit unless the user asks.
+- When committing, use Conventional Commits, for example `feat: add button variants`, `fix: correct focus ring state`, `docs: update component API`, `test: cover disabled state`, `chore: update registry metadata`, or `refactor: simplify variant map`.
