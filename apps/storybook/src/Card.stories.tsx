@@ -87,6 +87,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const elements: CardElement[] = ["div", "article", "section", "aside", "li"];
+const nonListElements = elements.filter((element) => element !== "li");
 const surfaces: CardSurface[] = ["default", "muted", "transparent"];
 const borders: CardBorder[] = ["default", "muted", "none"];
 const radii: CardRadius[] = ["md", "lg"];
@@ -581,7 +582,7 @@ export const PhotoCards: Story = {
               alt={alt}
               width="1200"
               height="675"
-              className="aspect-[16/9] w-full object-cover"
+              className="block aspect-[16/9] w-full rounded-t-[inherit] object-cover"
             />
             <CardHeader>
               <CardTitle as="h3" className="flex items-center gap-3">
@@ -677,16 +678,26 @@ export const CompositionAndAsChild: Story = {
 export const ElementModes: Story = {
   render: () => (
     <DethinkProvider theme="light" className="p-6">
-      <Grid columns="auto-fit-xs" gap="3">
-        {elements.map((element) => (
-          <Card key={element} as={element}>
+      <Stack gap="3">
+        <Grid columns="auto-fit-xs" gap="3">
+          {nonListElements.map((element) => (
+            <Card key={element} as={element}>
+              <CardHeader>
+                <CardTitle as="h3">as {element}</CardTitle>
+                <CardDescription>Card preserves the selected static element.</CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
+        </Grid>
+        <Grid as="ul" role="list" columns="auto-fit-xs" gap="3" className="list-none p-0">
+          <Card as="li">
             <CardHeader>
-              <CardTitle as="h3">as {element}</CardTitle>
-              <CardDescription>Card preserves the selected static element.</CardDescription>
+              <CardTitle as="h3">as li</CardTitle>
+              <CardDescription>List-item cards stay inside a semantic list.</CardDescription>
             </CardHeader>
           </Card>
-        ))}
-      </Grid>
+        </Grid>
+      </Stack>
     </DethinkProvider>
   ),
 };
