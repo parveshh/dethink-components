@@ -320,7 +320,7 @@ describe("Field", () => {
     expect(title.tagName).toBe("DIV");
   });
 
-  it("keeps horizontal option controls next to their labels", () => {
+  it("keeps horizontal option controls next to and aligned with their labels", () => {
     render(
       <Field id="updates" orientation="horizontal">
         <FieldControl asChild>
@@ -339,6 +339,9 @@ describe("Field", () => {
     expect(checkbox).toHaveAttribute("data-slot", "field-control");
     expect(field?.className).toContain(
       "data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child)]:grid-cols-[auto_minmax(0,1fr)]",
+    );
+    expect(field?.className).toContain(
+      "data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child+[data-slot=field-label])]:items-center",
     );
   });
 });
