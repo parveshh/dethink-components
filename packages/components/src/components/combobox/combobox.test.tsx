@@ -172,6 +172,26 @@ describe("Combobox", () => {
     expect(new FormData(form as HTMLFormElement).get("target")).toBe("Staging");
   });
 
+  it("does not submit disabled named values", () => {
+    render(
+      <form aria-label="Disabled value form">
+        <Combobox
+          disabled
+          label="Deployment target"
+          name="target"
+          defaultValue="staging"
+        >
+          <ComboboxItem value="production">Production</ComboboxItem>
+          <ComboboxItem value="staging">Staging</ComboboxItem>
+        </Combobox>
+      </form>,
+    );
+
+    const form = screen.getByRole("form", { name: "Disabled value form" });
+
+    expect(new FormData(form as HTMLFormElement).has("target")).toBe(false);
+  });
+
   it("supports user-driven open state changes", async () => {
     const user = userEvent.setup();
     const handleOpenChange = vi.fn();
@@ -186,11 +206,11 @@ describe("Combobox", () => {
     await user.click(screen.getByRole("button", { name: /Show options/ }));
 
     expect(await screen.findByRole("listbox")).toBeInTheDocument();
-    expect(handleOpenChange).toHaveBeenCalledWith(true);
+    expect(handleOpenChange).toHaveBeenCalledWith(true, "manual");
 
     await user.keyboard("{Escape}");
 
-    expect(handleOpenChange).toHaveBeenCalledWith(false);
+    expect(handleOpenChange).toHaveBeenCalledWith(false, undefined);
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
@@ -357,11 +377,15 @@ describe("Combobox", () => {
     expect(input).toHaveAttribute("readonly");
     expect(input).not.toBeDisabled();
 
+    handleInputValueChange.mockClear();
+
     await user.click(screen.getByRole("button", { name: /Show options/ }));
     await user.type(input, "Sandbox");
 
+    expect(input).toHaveValue("Production");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(handleOpenChange).not.toHaveBeenCalled();
+    expect(handleInputValueChange).not.toHaveBeenCalled();
     expect(handleValueChange).not.toHaveBeenCalled();
   });
 });

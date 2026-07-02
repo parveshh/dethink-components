@@ -87,7 +87,7 @@ export interface ComboboxProps<
   label?: ReactNode;
   menuTrigger?: ComboboxMenuTrigger;
   onInputValueChange?: (value: string) => void;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (open: boolean, trigger?: ComboboxMenuTrigger) => void;
   onValueChange?: (value: ComboboxValue | null) => void;
   placeholder?: string;
   readOnly?: boolean;
@@ -329,6 +329,7 @@ function ComboboxRoot<T extends ComboboxItemData = ComboboxItemData>(
     items,
     label,
     menuTrigger = "input",
+    name,
     onInputValueChange,
     onOpenChange,
     onValueChange,
@@ -417,12 +418,13 @@ function ComboboxRoot<T extends ComboboxItemData = ComboboxItemData>(
       ref={setComboboxRef}
       selectedKey={toSelectionKey(value)}
       defaultSelectedKey={toSelectionKey(defaultValue)}
+      name={disabled ? undefined : name}
       inputValue={inputValue}
       defaultInputValue={defaultInputValue}
       onInputChange={onInputValueChange}
-      onOpenChange={(isOpen) => {
+      onOpenChange={(isOpen, trigger) => {
         if (!readOnly) {
-          onOpenChange?.(isOpen);
+          onOpenChange?.(isOpen, trigger);
         }
       }}
       onSelectionChange={(key: Key | null) => {

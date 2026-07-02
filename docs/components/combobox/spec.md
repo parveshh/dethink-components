@@ -37,33 +37,31 @@ TagInput, and CommandPalette.
 
 ## Public API
 
-The v1 component family is:
+The current Issue #111 primitive export surface is:
 
 - `Combobox`
+- `ComboboxItem`
+
+- `ComboboxProps`
+- `ComboboxItemProps`
+- `ComboboxItemData`
+- `ComboboxValue`
+- `ComboboxControlSize`
+- `ComboboxFormValue`
+- `ComboboxMenuTrigger`
+- `comboboxClassNames`
+- `comboboxItemClassNames`
+
+The full PRD target may add separate anatomy exports where they are stable and
+needed by later slices:
+
 - `ComboboxInput`
 - `ComboboxButton`
-- `ComboboxItem`
 - `ComboboxGroup`
 - `ComboboxLabel`
 - `ComboboxSeparator`
 - `ComboboxEmpty`
-
-Exports should include each component, class-name helpers, and public prop/data
-types:
-
-- `ComboboxProps`
-- `ComboboxInputProps`
-- `ComboboxButtonProps`
-- `ComboboxItemProps`
-- `ComboboxGroupProps`
-- `ComboboxLabelProps`
-- `ComboboxSeparatorProps`
-- `ComboboxEmptyProps`
-- `ComboboxItemData`
-- `ComboboxValue`
-- `ComboboxControlSize`
-- `comboboxClassNames`
-- `comboboxItemClassNames`
+- Matching prop types for those anatomy exports.
 
 ## Prop Contract
 
