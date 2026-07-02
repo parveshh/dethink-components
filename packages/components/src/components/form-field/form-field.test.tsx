@@ -312,8 +312,36 @@ describe("Field", () => {
     const title = screen.getByText("Sync reports");
 
     expect(field).toHaveAttribute("data-orientation", "horizontal");
+    expect(field?.className).toContain(
+      "data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto]",
+    );
     expect(content).toHaveAttribute("data-slot", "field-content");
     expect(title).toHaveAttribute("data-slot", "field-title");
     expect(title.tagName).toBe("DIV");
+  });
+
+  it("keeps horizontal option controls next to and aligned with their labels", () => {
+    render(
+      <Field id="updates" orientation="horizontal">
+        <FieldControl asChild>
+          <input type="checkbox" />
+        </FieldControl>
+        <FieldLabel>Receive product updates</FieldLabel>
+      </Field>,
+    );
+
+    const field = screen
+      .getByText("Receive product updates")
+      .closest('[data-slot="field"]');
+    const checkbox = screen.getByLabelText("Receive product updates");
+
+    expect(field).toHaveAttribute("data-orientation", "horizontal");
+    expect(checkbox).toHaveAttribute("data-slot", "field-control");
+    expect(field?.className).toContain(
+      "data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child)]:grid-cols-[auto_minmax(0,1fr)]",
+    );
+    expect(field?.className).toContain(
+      "data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child+[data-slot=field-label])]:items-center",
+    );
   });
 });

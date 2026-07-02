@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "type": "registry:ui",
+  "title": "Checkbox",
+  "description": "Native-input-backed Checkbox primitive with token-backed checked, indeterminate, focus, invalid, disabled, read-only, density, dark mode, and FormField-compatible styling.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/checkbox/checkbox.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/checkbox/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}

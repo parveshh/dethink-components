@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardStack,
   CardTitle,
+  Checkbox,
   Container,
   DateTimePicker,
   DethinkProvider,
@@ -32,8 +33,11 @@ import {
   Link,
   Divider,
   NumberInput,
+  RadioGroup,
+  RadioGroupItem,
   Separator,
   Stack,
+  Switch,
   Text,
   Textarea,
 } from "@dethink/components";
@@ -263,11 +267,39 @@ export function App() {
                         <FieldDescription>Send operational reports.</FieldDescription>
                       </FieldContent>
                       <FieldControl asChild>
-                        <input className="mt-0.5 size-5 accent-primary" type="checkbox" />
+                        <Checkbox name="channels" value="email" defaultChecked />
                       </FieldControl>
                     </Field>
                   </FieldGroup>
                 </FieldSet>
+                <FieldSet>
+                  <FieldLegend>Response mode</FieldLegend>
+                  <RadioGroup name="responseMode" defaultValue="balanced">
+                    <FieldGroup>
+                      <Field id="playground-mode-fast" orientation="horizontal">
+                        <FieldControl asChild>
+                          <RadioGroupItem value="fast" />
+                        </FieldControl>
+                        <FieldLabel>Fast</FieldLabel>
+                      </Field>
+                      <Field id="playground-mode-balanced" orientation="horizontal">
+                        <FieldControl asChild>
+                          <RadioGroupItem value="balanced" />
+                        </FieldControl>
+                        <FieldLabel>Balanced</FieldLabel>
+                      </Field>
+                    </FieldGroup>
+                  </RadioGroup>
+                </FieldSet>
+                <Field id="playground-mfa" orientation="horizontal">
+                  <FieldContent>
+                    <FieldTitle>Multi-factor authentication</FieldTitle>
+                    <FieldDescription>Require a second verification step.</FieldDescription>
+                  </FieldContent>
+                  <FieldControl asChild>
+                    <Switch name="multiFactor" value="enabled" defaultChecked />
+                  </FieldControl>
+                </Field>
                 <Button type="submit" size="sm">
                   Save fields
                 </Button>

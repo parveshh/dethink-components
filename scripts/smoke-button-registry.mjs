@@ -97,6 +97,7 @@ const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
+const checkbox = await readJson(join(registryRoot, "checkbox.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const formField = await readJson(join(registryRoot, "form-field.json"));
 const input = await readJson(join(registryRoot, "input.json"));
@@ -105,8 +106,10 @@ const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
 const numberInput = await readJson(join(registryRoot, "number-input.json"));
+const radioGroup = await readJson(join(registryRoot, "radio-group.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
+const switchItem = await readJson(join(registryRoot, "switch.json"));
 const textarea = await readJson(join(registryRoot, "textarea.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
@@ -119,6 +122,7 @@ const registryItemsByName = new Map(
     button,
     card,
     cardStack,
+    checkbox,
     container,
     formField,
     input,
@@ -127,8 +131,10 @@ const registryItemsByName = new Map(
     grid,
     link,
     numberInput,
+    radioGroup,
     separator,
     stack,
+    switchItem,
     textarea,
     typography,
     dateTimePicker,
@@ -143,6 +149,7 @@ assert(
   cardStack.name === "card-stack",
   "card-stack registry item must be named card-stack.",
 );
+assert(checkbox.name === "checkbox", "checkbox registry item must be named checkbox.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(formField.name === "form-field", "form-field registry item must be named form-field.");
 assert(input.name === "input", "input registry item must be named input.");
@@ -151,8 +158,10 @@ assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
 assert(numberInput.name === "number-input", "number-input registry item must be named number-input.");
+assert(radioGroup.name === "radio-group", "radio-group registry item must be named radio-group.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
+assert(switchItem.name === "switch", "switch registry item must be named switch.");
 assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
@@ -183,6 +192,10 @@ assert(
 assert(
   cardStack.registryDependencies?.includes("icon-button"),
   "card-stack registry item must depend on icon-button.",
+);
+assert(
+  checkbox.registryDependencies?.includes("dethink-base"),
+  "checkbox registry item must depend on dethink-base.",
 );
 assert(
   container.registryDependencies?.includes("dethink-base"),
@@ -221,12 +234,20 @@ assert(
   "number-input registry item must depend on dethink-base.",
 );
 assert(
+  radioGroup.registryDependencies?.includes("dethink-base"),
+  "radio-group registry item must depend on dethink-base.",
+);
+assert(
   separator.registryDependencies?.includes("dethink-base"),
   "separator registry item must depend on dethink-base.",
 );
 assert(
   stack.registryDependencies?.includes("dethink-base"),
   "stack registry item must depend on dethink-base.",
+);
+assert(
+  switchItem.registryDependencies?.includes("dethink-base"),
+  "switch registry item must depend on dethink-base.",
 );
 assert(
   textarea.registryDependencies?.includes("dethink-base"),
@@ -261,6 +282,10 @@ assert(
   "card-stack registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(checkbox.dependencies) && checkbox.dependencies.length === 0,
+  "checkbox registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(container.dependencies) && container.dependencies.length === 0,
   "container registry item must not add runtime dependencies.",
 );
@@ -293,12 +318,20 @@ assert(
   "number-input registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(radioGroup.dependencies) && radioGroup.dependencies.length === 0,
+  "radio-group registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(separator.dependencies) && separator.dependencies.length === 0,
   "separator registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
   "stack registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(switchItem.dependencies) && switchItem.dependencies.length === 0,
+  "switch registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(textarea.dependencies) && textarea.dependencies.length === 0,
@@ -327,6 +360,7 @@ for (const item of [
   button,
   card,
   cardStack,
+  checkbox,
   container,
   formField,
   input,
@@ -335,8 +369,10 @@ for (const item of [
   grid,
   link,
   numberInput,
+  radioGroup,
   separator,
   stack,
+  switchItem,
   textarea,
   typography,
   dateTimePicker,
@@ -350,11 +386,14 @@ for (const item of [
 await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
+await assertRegistryRelativeImportsResolve(checkbox, registryItemsByName);
 await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
 await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
 await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
+await assertRegistryRelativeImportsResolve(radioGroup, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
+await assertRegistryRelativeImportsResolve(switchItem, registryItemsByName);
 await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
@@ -375,6 +414,10 @@ const cardSource = await readFile(
 );
 const cardStackSource = await readFile(
   join(root, "packages/components/src/components/card-stack/card-stack.tsx"),
+  "utf8",
+);
+const checkboxSource = await readFile(
+  join(root, "packages/components/src/components/checkbox/checkbox.tsx"),
   "utf8",
 );
 const containerSource = await readFile(
@@ -401,12 +444,20 @@ const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
   "utf8",
 );
+const radioGroupSource = await readFile(
+  join(root, "packages/components/src/components/radio-group/radio-group.tsx"),
+  "utf8",
+);
 const separatorSource = await readFile(
   join(root, "packages/components/src/components/separator/separator.tsx"),
   "utf8",
 );
 const stackSource = await readFile(
   join(root, "packages/components/src/components/stack/stack.tsx"),
+  "utf8",
+);
+const switchSource = await readFile(
+  join(root, "packages/components/src/components/switch/switch.tsx"),
   "utf8",
 );
 const typographySource = await readFile(
@@ -537,6 +588,55 @@ assert(
 assert(!cardStackSource.includes("framer-motion"), "card-stack source must not use Motion.");
 assert(!cardStackSource.includes("@radix-ui"), "card-stack source must remain Radix-free.");
 assert(
+  checkboxSource.includes('data-slot={dataSlot ?? "checkbox"}'),
+  "checkbox source must expose stable root slot data.",
+);
+assert(
+  checkboxSource.includes('data-slot="checkbox-input"'),
+  "checkbox source must expose stable input slot data.",
+);
+assert(
+  checkboxSource.includes('data-slot="checkbox-indicator"'),
+  "checkbox source must expose stable indicator slot data.",
+);
+assert(
+  checkboxSource.includes("CheckboxCheckedState"),
+  "checkbox source must expose checked state typing.",
+);
+assert(
+  checkboxSource.includes("indeterminate"),
+  "checkbox source must support indeterminate state.",
+);
+assert(
+  checkboxSource.includes('aria-checked={checkedState === "indeterminate" ? "mixed" : undefined}'),
+  "checkbox source must expose mixed state to assistive tech.",
+);
+assert(
+  checkboxSource.includes("onCheckedChange"),
+  "checkbox source must expose checked change callbacks.",
+);
+assert(
+  checkboxSource.includes("type=\"checkbox\""),
+  "checkbox source must preserve native checkbox input semantics.",
+);
+assert(
+  checkboxSource.includes("border-input"),
+  "checkbox source must use tokenized input border utilities.",
+);
+assert(
+  checkboxSource.includes("--choice-control-size"),
+  "checkbox source must use density-backed control sizing.",
+);
+assert(
+  checkboxSource.includes("group-disabled/field-set:opacity-60"),
+  "checkbox source must style inherited fieldset disabled state.",
+);
+assert(
+  checkboxSource.includes("focus-visible:ring-2"),
+  "checkbox source must include visible focus styling.",
+);
+assert(!checkboxSource.includes("@radix-ui"), "checkbox source must remain Radix-free.");
+assert(
   containerSource.includes('"data-slot": "container"'),
   "container source must expose stable slot data.",
 );
@@ -585,6 +685,10 @@ assert(
 assert(
   formFieldSource.includes('data-slot="field-set"'),
   "form-field source must expose stable fieldset slot data.",
+);
+assert(
+  formFieldSource.includes("group/field-set"),
+  "form-field source must expose fieldset group styling hooks.",
 );
 assert(
   formFieldSource.includes("aria-describedby"),
@@ -689,6 +793,55 @@ assert(linkSource.includes("asChild"), "link source must expose router compositi
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
 assert(
+  radioGroupSource.includes('data-slot="radio-group"'),
+  "radio-group source must expose stable group slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot={dataSlot ?? "radio-group-item"}'),
+  "radio-group source must expose stable item slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot="radio-group-item-input"'),
+  "radio-group source must expose stable input slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot="radio-group-item-indicator"'),
+  "radio-group source must expose stable indicator slot data.",
+);
+assert(
+  radioGroupSource.includes("onValueChange"),
+  "radio-group source must expose value change callbacks.",
+);
+assert(
+  radioGroupSource.includes("RadioGroupContext"),
+  "radio-group source must share group state through context.",
+);
+assert(
+  radioGroupSource.includes('role={resolvedRole}'),
+  "radio-group source must expose radiogroup semantics for labelled standalone groups.",
+);
+assert(
+  radioGroupSource.includes("type=\"radio\""),
+  "radio-group source must preserve native radio input semantics.",
+);
+assert(
+  radioGroupSource.includes("border-input"),
+  "radio-group source must use tokenized input border utilities.",
+);
+assert(
+  radioGroupSource.includes("--choice-control-size"),
+  "radio-group source must use density-backed item sizing.",
+);
+assert(
+  radioGroupSource.includes("group-disabled/field-set:opacity-60"),
+  "radio-group source must style inherited fieldset disabled state.",
+);
+assert(
+  radioGroupSource.includes("focus-visible:ring-2"),
+  "radio-group source must include visible focus styling.",
+);
+assert(!radioGroupSource.includes("@radix-ui"), "radio-group source must remain Radix-free.");
+assert(
   separatorSource.includes('"data-slot": "separator"'),
   "separator source must expose stable slot data.",
 );
@@ -731,6 +884,55 @@ assert(stackSource.includes("justify-between"), "stack source must expose justif
 assert(stackSource.includes("flex-wrap"), "stack source must expose wrapping utilities.");
 assert(!stackSource.includes("reverse"), "stack source must not expose visual reverse ordering.");
 assert(!stackSource.includes("@radix-ui"), "stack source must remain dependency-free.");
+assert(
+  switchSource.includes('data-slot={dataSlot ?? "switch"}'),
+  "switch source must expose stable root slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-input"'),
+  "switch source must expose stable input slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-track"'),
+  "switch source must expose stable track slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-thumb"'),
+  "switch source must expose stable thumb slot data.",
+);
+assert(
+  switchSource.includes("onCheckedChange"),
+  "switch source must expose checked change callbacks.",
+);
+assert(
+  switchSource.includes('role="switch"'),
+  "switch source must expose switch semantics.",
+);
+assert(
+  switchSource.includes("type=\"checkbox\""),
+  "switch source must preserve native checkbox input behavior.",
+);
+assert(
+  !switchSource.includes("indeterminate"),
+  "switch source must remain binary-only.",
+);
+assert(
+  switchSource.includes("border-input"),
+  "switch source must use tokenized input border utilities.",
+);
+assert(
+  switchSource.includes("--switch-height"),
+  "switch source must use density-backed track sizing.",
+);
+assert(
+  switchSource.includes("group-disabled/field-set:opacity-60"),
+  "switch source must style inherited fieldset disabled state.",
+);
+assert(
+  switchSource.includes("focus-visible:ring-2"),
+  "switch source must include visible focus styling.",
+);
+assert(!switchSource.includes("@radix-ui"), "switch source must remain Radix-free.");
 assert(
   typographySource.includes('"data-slot": "typography"'),
   "typography source must expose stable typography slot data.",

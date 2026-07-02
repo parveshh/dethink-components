@@ -233,6 +233,29 @@ export {
   type InputProps,
 } from "./components/input";
 export {
+  Checkbox,
+  checkboxClassNames,
+  type CheckboxCheckedState,
+  type CheckboxControlSize,
+  type CheckboxProps,
+} from "./components/checkbox";
+export {
+  RadioGroup,
+  RadioGroupItem,
+  radioGroupClassNames,
+  radioGroupItemClassNames,
+  type RadioGroupControlSize,
+  type RadioGroupItemProps,
+  type RadioGroupOrientation,
+  type RadioGroupProps,
+} from "./components/radio-group";
+export {
+  Switch,
+  switchClassNames,
+  type SwitchControlSize,
+  type SwitchProps,
+} from "./components/switch";
+export {
   Textarea,
   textareaClassNames,
   type TextareaControlSize,
