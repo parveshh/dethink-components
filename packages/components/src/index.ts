@@ -227,6 +227,26 @@ export {
   type FormSpacing,
 } from "./components/form-field";
 export {
+  Input,
+  inputClassNames,
+  type InputControlSize,
+  type InputProps,
+} from "./components/input";
+export {
+  Textarea,
+  textareaClassNames,
+  type TextareaControlSize,
+  type TextareaProps,
+  type TextareaResize,
+} from "./components/textarea";
+export {
+  NumberInput,
+  numberInputClassNames,
+  type NumberInputControlSize,
+  type NumberInputMode,
+  type NumberInputProps,
+} from "./components/number-input";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,

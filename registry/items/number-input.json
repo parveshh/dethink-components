@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "number-input",
+  "type": "registry:ui",
+  "title": "NumberInput",
+  "description": "Conservative native numeric-entry primitive that defaults to text input semantics with decimal input mode and token-backed FormField-compatible styling.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/number-input/number-input.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/number-input/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}
