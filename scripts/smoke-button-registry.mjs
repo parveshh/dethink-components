@@ -953,8 +953,9 @@ assert(
   "select source must expose stable item slot data.",
 );
 assert(
-  selectSource.includes("UNSTABLE_portalContainer={portalContainer ?? undefined}"),
-  "select source must use an explicit provider-aware portal container.",
+  selectSource.includes("return document.createElement(\"div\")") &&
+    selectSource.includes("UNSTABLE_portalContainer={portalContainer ?? undefined}"),
+  "select source must create an explicit provider-aware portal container before client popover rendering.",
 );
 assert(
   selectSource.includes("selectedText || defaultChildren"),

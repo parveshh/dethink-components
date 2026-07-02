@@ -61,6 +61,19 @@ export const Base: Story = {
     await expect(
       await page.findByRole("option", { name: "Production" }),
     ).toBeVisible();
+    await userEvent.click(page.getByRole("option", { name: "Production" }));
+    await expect(trigger).toHaveTextContent("Production");
+    await expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
+
+    await userEvent.keyboard("{Enter}");
+    await expect(
+      await page.findByRole("option", { name: "Staging" }),
+    ).toBeVisible();
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(trigger).toHaveTextContent("Staging");
+    await expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+    await expect(trigger).toHaveFocus();
   },
 };
 
@@ -171,6 +184,58 @@ export const DisabledAndReadOnly: Story = {
       </Container>
     </DethinkProvider>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const disabledTrigger = canvas.getByRole("button", {
+      name: /Billing workspace/,
+    });
+    const readOnlyTrigger = canvas.getByRole("button", {
+      name: /Inherited role/,
+    });
+
+    await expect(disabledTrigger).toBeDisabled();
+    await userEvent.click(disabledTrigger);
+    await expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+
+    await expect(readOnlyTrigger).not.toBeDisabled();
+    await userEvent.click(readOnlyTrigger);
+    await expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+  },
+};
+
+export const ThemeDensityAndRTL: Story = {
+  render: () => (
+    <DethinkProvider theme="dark" density="compact" dir="rtl" className="p-6">
+      <Container size="sm">
+        <Select
+          defaultOpen
+          defaultValue="staging"
+          label="Workspace direction"
+          name="workspaceDirection"
+        >
+          <SelectItem value="production">Production</SelectItem>
+          <SelectItem value="staging">Staging</SelectItem>
+          <SelectItem value="sandbox">Sandbox</SelectItem>
+        </Select>
+      </Container>
+    </DethinkProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    const listbox = await page.findByRole("listbox");
+    const portalHost = listbox.closest<HTMLElement>(
+      '[data-slot="select-portal-container"]',
+    );
+
+    if (!portalHost) {
+      throw new Error("Select story expected a provider-aware portal host.");
+    }
+
+    await expect(portalHost).toHaveAttribute("data-theme", "dark");
+    await expect(portalHost).toHaveAttribute("data-density", "compact");
+    await expect(portalHost).toHaveAttribute("dir", "rtl");
+  },
 };
 
 export const SettingsFilterCard: Story = {

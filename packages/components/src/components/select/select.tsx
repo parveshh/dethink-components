@@ -199,6 +199,22 @@ function syncSelectPortalContainer(
   }
 }
 
+function syncAriaInvalidAttribute(
+  element: HTMLElement | null,
+  value: SelectProps["aria-invalid"],
+) {
+  if (!element) {
+    return;
+  }
+
+  if (value === undefined) {
+    element.removeAttribute("aria-invalid");
+    return;
+  }
+
+  element.setAttribute("aria-invalid", String(value));
+}
+
 export function selectClassNames({
   className,
 }: Pick<SelectProps, "className"> = {}) {
@@ -298,31 +314,54 @@ function SelectRoot<T extends SelectItemData = SelectItemData>(
   ref: ForwardedRef<HTMLDivElement>,
 ) {
   const resolvedInvalid = invalid || isAriaInvalid(ariaInvalid);
+  const resolvedAriaInvalid = invalid ? true : ariaInvalid;
   const renderedChildren = renderSelectChildren({ children, items });
   const resolvedOpen = readOnly ? false : open;
   const resolvedDefaultOpen = readOnly ? false : defaultOpen;
   const selectRef = useRef<HTMLDivElement | null>(null);
-  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const [portalContainer] = useState<HTMLElement | null>(() => {
+    if (typeof document === "undefined") {
+      return null;
+    }
+
+    return document.createElement("div");
+  });
   const setSelectRef = useCallback(
     (node: HTMLDivElement | null) => {
       selectRef.current = node;
       assignForwardedRef(ref, node);
+
+      if (node && portalContainer && typeof document !== "undefined") {
+        const provider = node.closest<HTMLElement>("[data-dethink-provider]") ?? null;
+
+        syncSelectPortalContainer(portalContainer, provider);
+
+        if (!portalContainer.isConnected) {
+          document.body.appendChild(portalContainer);
+        }
+      }
     },
-    [ref],
+    [portalContainer, ref],
+  );
+  const setTriggerRef = useCallback(
+    (node: HTMLButtonElement | null) => {
+      triggerRef.current = node;
+      syncAriaInvalidAttribute(node, resolvedAriaInvalid);
+    },
+    [resolvedAriaInvalid],
   );
 
   useEffect(() => {
-    if (typeof document === "undefined") {
+    if (!portalContainer || typeof document === "undefined") {
       return undefined;
     }
 
-    const container = document.createElement("div");
     const provider = selectRef.current?.closest<HTMLElement>("[data-dethink-provider]") ?? null;
-    const syncContainer = () => syncSelectPortalContainer(container, provider);
+    const syncContainer = () => syncSelectPortalContainer(portalContainer, provider);
 
     syncContainer();
-    document.body.appendChild(container);
-    setPortalContainer(container);
+    document.body.appendChild(portalContainer);
 
     const observerTarget = provider ?? document.documentElement;
     const observer = new MutationObserver(syncContainer);
@@ -339,9 +378,13 @@ function SelectRoot<T extends SelectItemData = SelectItemData>(
 
     return () => {
       observer.disconnect();
-      container.remove();
+      portalContainer.remove();
     };
-  }, []);
+  }, [portalContainer]);
+
+  useEffect(() => {
+    syncAriaInvalidAttribute(triggerRef.current, resolvedAriaInvalid);
+  }, [resolvedAriaInvalid]);
 
   return (
     <AriaSelect
@@ -365,7 +408,7 @@ function SelectRoot<T extends SelectItemData = SelectItemData>(
       isDisabled={disabled}
       isRequired={required}
       isInvalid={resolvedInvalid}
-      aria-invalid={resolvedInvalid ? true : ariaInvalid}
+      aria-invalid={resolvedAriaInvalid}
       placeholder={placeholder}
       validationBehavior="aria"
       data-slot={dataSlot ?? "select"}
@@ -386,6 +429,8 @@ function SelectRoot<T extends SelectItemData = SelectItemData>(
         </Label>
       ) : null}
       <AriaButton
+        aria-invalid={resolvedAriaInvalid}
+        ref={setTriggerRef}
         data-slot="select-trigger"
         data-size={controlSize}
         data-invalid={resolvedInvalid ? "true" : undefined}

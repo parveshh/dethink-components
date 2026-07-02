@@ -203,9 +203,7 @@ describe("Select", () => {
     expect(valid).toBeTruthy();
   });
 
-  it("mirrors provider context onto the body portal host", async () => {
-    const user = userEvent.setup();
-
+  it("mirrors provider context onto the body portal host for initially open menus", () => {
     render(
       <DethinkProvider
         className="custom-provider"
@@ -214,14 +212,12 @@ describe("Select", () => {
         density="compact"
         dir="rtl"
       >
-        <Select label="Provider workspace" defaultValue="production">
+        <Select label="Provider workspace" defaultOpen defaultValue="production">
           <SelectItem value="production">Production</SelectItem>
           <SelectItem value="staging">Staging</SelectItem>
         </Select>
       </DethinkProvider>,
     );
-
-    await user.click(screen.getByRole("button", { name: /Provider workspace/ }));
 
     const popover = screen
       .getByRole("listbox")
@@ -243,6 +239,25 @@ describe("Select", () => {
     expect(portalHost).toHaveAttribute("dir", "rtl");
     expect(portalHost).toHaveClass("custom-provider");
   });
+
+  it.each(["grammar", "spelling"] as const)(
+    "preserves aria-invalid=%s while styling the invalid state",
+    (ariaInvalid) => {
+      const { container } = render(
+        <Select aria-invalid={ariaInvalid} label="Reviewed workspace">
+          <SelectItem value="production">Production</SelectItem>
+          <SelectItem value="staging">Staging</SelectItem>
+        </Select>,
+      );
+
+      const root = container.querySelector('[data-slot="select"]');
+      const trigger = screen.getByRole("button", { name: /Reviewed workspace/ });
+
+      expect(root).toHaveAttribute("data-invalid", "true");
+      expect(trigger).toHaveAttribute("aria-invalid", ariaInvalid);
+      expect(trigger).toHaveAttribute("data-invalid", "true");
+    },
+  );
 
   it("exposes disabled, read-only, required, and invalid states", async () => {
     const user = userEvent.setup();
