@@ -44,7 +44,7 @@ export const NativeFormComposition: Story = {
           </CardHeader>
           <CardContent>
             <Form action="/projects" method="post">
-              <div className="grid min-w-0 gap-4 md:grid-cols-2">
+              <div className="grid min-w-0 gap-4">
                 <Field id="project-name" className="min-w-0">
                   <FieldLabel>Project name</FieldLabel>
                   <FieldControl asChild>
@@ -58,7 +58,7 @@ export const NativeFormComposition: Story = {
                   </FieldControl>
                   <FieldDescription>Submitted as a string value.</FieldDescription>
                 </Field>
-                <Field id="project-summary" className="min-w-0 md:col-span-2">
+                <Field id="project-summary" className="min-w-0">
                   <FieldLabel>Summary</FieldLabel>
                   <FieldControl asChild>
                     <Textarea
@@ -68,7 +68,7 @@ export const NativeFormComposition: Story = {
                     />
                   </FieldControl>
                 </Field>
-                <Button type="submit" className="w-full md:col-span-2">
+                <Button type="submit" className="w-full">
                   Save project
                 </Button>
               </div>
