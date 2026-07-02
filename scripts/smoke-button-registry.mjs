@@ -106,6 +106,7 @@ const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
 const numberInput = await readJson(join(registryRoot, "number-input.json"));
+const radioGroup = await readJson(join(registryRoot, "radio-group.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
 const textarea = await readJson(join(registryRoot, "textarea.json"));
@@ -129,6 +130,7 @@ const registryItemsByName = new Map(
     grid,
     link,
     numberInput,
+    radioGroup,
     separator,
     stack,
     textarea,
@@ -154,6 +156,7 @@ assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
 assert(numberInput.name === "number-input", "number-input registry item must be named number-input.");
+assert(radioGroup.name === "radio-group", "radio-group registry item must be named radio-group.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
@@ -226,6 +229,10 @@ assert(
 assert(
   numberInput.registryDependencies?.includes("dethink-base"),
   "number-input registry item must depend on dethink-base.",
+);
+assert(
+  radioGroup.registryDependencies?.includes("dethink-base"),
+  "radio-group registry item must depend on dethink-base.",
 );
 assert(
   separator.registryDependencies?.includes("dethink-base"),
@@ -304,6 +311,10 @@ assert(
   "number-input registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(radioGroup.dependencies) && radioGroup.dependencies.length === 0,
+  "radio-group registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(separator.dependencies) && separator.dependencies.length === 0,
   "separator registry item must not add runtime dependencies.",
 );
@@ -347,6 +358,7 @@ for (const item of [
   grid,
   link,
   numberInput,
+  radioGroup,
   separator,
   stack,
   textarea,
@@ -367,6 +379,7 @@ await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
 await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
 await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
+await assertRegistryRelativeImportsResolve(radioGroup, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
 await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
@@ -416,6 +429,10 @@ const gridSource = await readFile(
 );
 const linkSource = await readFile(
   join(root, "packages/components/src/components/link/link.tsx"),
+  "utf8",
+);
+const radioGroupSource = await readFile(
+  join(root, "packages/components/src/components/radio-group/radio-group.tsx"),
   "utf8",
 );
 const separatorSource = await readFile(
@@ -746,6 +763,43 @@ assert(linkSource.includes("noopener"), "link source must add new-tab noopener s
 assert(linkSource.includes("asChild"), "link source must expose router composition.");
 assert(linkSource.includes("text-primary"), "link source must use tokenized primary utilities.");
 assert(!linkSource.includes("@radix-ui"), "link source must remain dependency-free.");
+assert(
+  radioGroupSource.includes('data-slot="radio-group"'),
+  "radio-group source must expose stable group slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot={dataSlot ?? "radio-group-item"}'),
+  "radio-group source must expose stable item slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot="radio-group-item-input"'),
+  "radio-group source must expose stable input slot data.",
+);
+assert(
+  radioGroupSource.includes('data-slot="radio-group-item-indicator"'),
+  "radio-group source must expose stable indicator slot data.",
+);
+assert(
+  radioGroupSource.includes("onValueChange"),
+  "radio-group source must expose value change callbacks.",
+);
+assert(
+  radioGroupSource.includes("RadioGroupContext"),
+  "radio-group source must share group state through context.",
+);
+assert(
+  radioGroupSource.includes("type=\"radio\""),
+  "radio-group source must preserve native radio input semantics.",
+);
+assert(
+  radioGroupSource.includes("border-input"),
+  "radio-group source must use tokenized input border utilities.",
+);
+assert(
+  radioGroupSource.includes("focus-visible:ring-2"),
+  "radio-group source must include visible focus styling.",
+);
+assert(!radioGroupSource.includes("@radix-ui"), "radio-group source must remain Radix-free.");
 assert(
   separatorSource.includes('"data-slot": "separator"'),
   "separator source must expose stable slot data.",

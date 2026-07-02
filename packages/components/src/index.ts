@@ -240,6 +240,16 @@ export {
   type CheckboxProps,
 } from "./components/checkbox";
 export {
+  RadioGroup,
+  RadioGroupItem,
+  radioGroupClassNames,
+  radioGroupItemClassNames,
+  type RadioGroupControlSize,
+  type RadioGroupItemProps,
+  type RadioGroupOrientation,
+  type RadioGroupProps,
+} from "./components/radio-group";
+export {
   Textarea,
   textareaClassNames,
   type TextareaControlSize,

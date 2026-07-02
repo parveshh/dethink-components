@@ -33,6 +33,8 @@ import {
   Link,
   Divider,
   NumberInput,
+  RadioGroup,
+  RadioGroupItem,
   Separator,
   Stack,
   Text,
@@ -268,6 +270,25 @@ export function App() {
                       </FieldControl>
                     </Field>
                   </FieldGroup>
+                </FieldSet>
+                <FieldSet>
+                  <FieldLegend>Response mode</FieldLegend>
+                  <RadioGroup name="responseMode" defaultValue="balanced">
+                    <FieldGroup>
+                      <Field id="playground-mode-fast" orientation="horizontal">
+                        <FieldControl asChild>
+                          <RadioGroupItem value="fast" />
+                        </FieldControl>
+                        <FieldLabel>Fast</FieldLabel>
+                      </Field>
+                      <Field id="playground-mode-balanced" orientation="horizontal">
+                        <FieldControl asChild>
+                          <RadioGroupItem value="balanced" />
+                        </FieldControl>
+                        <FieldLabel>Balanced</FieldLabel>
+                      </Field>
+                    </FieldGroup>
+                  </RadioGroup>
                 </FieldSet>
                 <Button type="submit" size="sm">
                   Save fields
