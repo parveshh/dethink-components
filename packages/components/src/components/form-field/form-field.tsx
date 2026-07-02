@@ -143,7 +143,7 @@ const formSpacingClasses: Record<FormSpacing, string> = {
 };
 
 const fieldBaseClasses =
-  "group/field grid min-w-0 gap-2 text-foreground data-[disabled=true]:opacity-60 data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto] data-[orientation=horizontal]:items-start data-[orientation=horizontal]:gap-x-density-gap data-[orientation=horizontal]:gap-y-1.5";
+  "group/field grid min-w-0 gap-2 text-foreground data-[disabled=true]:opacity-60 data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto] data-[orientation=horizontal]:items-start data-[orientation=horizontal]:gap-x-density-gap data-[orientation=horizontal]:gap-y-1.5 data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child)]:grid-cols-[auto_minmax(0,1fr)]";
 
 const fieldLabelBaseClasses =
   "text-sm font-medium leading-none text-foreground data-[disabled=true]:cursor-not-allowed data-[invalid=true]:text-destructive";
