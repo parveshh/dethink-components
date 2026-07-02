@@ -250,6 +250,12 @@ export {
   type RadioGroupProps,
 } from "./components/radio-group";
 export {
+  Switch,
+  switchClassNames,
+  type SwitchControlSize,
+  type SwitchProps,
+} from "./components/switch";
+export {
   Textarea,
   textareaClassNames,
   type TextareaControlSize,

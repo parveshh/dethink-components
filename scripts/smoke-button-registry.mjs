@@ -109,6 +109,7 @@ const numberInput = await readJson(join(registryRoot, "number-input.json"));
 const radioGroup = await readJson(join(registryRoot, "radio-group.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
+const switchItem = await readJson(join(registryRoot, "switch.json"));
 const textarea = await readJson(join(registryRoot, "textarea.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
@@ -133,6 +134,7 @@ const registryItemsByName = new Map(
     radioGroup,
     separator,
     stack,
+    switchItem,
     textarea,
     typography,
     dateTimePicker,
@@ -159,6 +161,7 @@ assert(numberInput.name === "number-input", "number-input registry item must be 
 assert(radioGroup.name === "radio-group", "radio-group registry item must be named radio-group.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
+assert(switchItem.name === "switch", "switch registry item must be named switch.");
 assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
@@ -243,6 +246,10 @@ assert(
   "stack registry item must depend on dethink-base.",
 );
 assert(
+  switchItem.registryDependencies?.includes("dethink-base"),
+  "switch registry item must depend on dethink-base.",
+);
+assert(
   textarea.registryDependencies?.includes("dethink-base"),
   "textarea registry item must depend on dethink-base.",
 );
@@ -323,6 +330,10 @@ assert(
   "stack registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(switchItem.dependencies) && switchItem.dependencies.length === 0,
+  "switch registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(textarea.dependencies) && textarea.dependencies.length === 0,
   "textarea registry item must not add runtime dependencies.",
 );
@@ -361,6 +372,7 @@ for (const item of [
   radioGroup,
   separator,
   stack,
+  switchItem,
   textarea,
   typography,
   dateTimePicker,
@@ -381,6 +393,7 @@ await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
 await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
 await assertRegistryRelativeImportsResolve(radioGroup, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
+await assertRegistryRelativeImportsResolve(switchItem, registryItemsByName);
 await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
@@ -441,6 +454,10 @@ const separatorSource = await readFile(
 );
 const stackSource = await readFile(
   join(root, "packages/components/src/components/stack/stack.tsx"),
+  "utf8",
+);
+const switchSource = await readFile(
+  join(root, "packages/components/src/components/switch/switch.tsx"),
   "utf8",
 );
 const typographySource = await readFile(
@@ -843,6 +860,47 @@ assert(stackSource.includes("justify-between"), "stack source must expose justif
 assert(stackSource.includes("flex-wrap"), "stack source must expose wrapping utilities.");
 assert(!stackSource.includes("reverse"), "stack source must not expose visual reverse ordering.");
 assert(!stackSource.includes("@radix-ui"), "stack source must remain dependency-free.");
+assert(
+  switchSource.includes('data-slot={dataSlot ?? "switch"}'),
+  "switch source must expose stable root slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-input"'),
+  "switch source must expose stable input slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-track"'),
+  "switch source must expose stable track slot data.",
+);
+assert(
+  switchSource.includes('data-slot="switch-thumb"'),
+  "switch source must expose stable thumb slot data.",
+);
+assert(
+  switchSource.includes("onCheckedChange"),
+  "switch source must expose checked change callbacks.",
+);
+assert(
+  switchSource.includes('role="switch"'),
+  "switch source must expose switch semantics.",
+);
+assert(
+  switchSource.includes("type=\"checkbox\""),
+  "switch source must preserve native checkbox input behavior.",
+);
+assert(
+  !switchSource.includes("indeterminate"),
+  "switch source must remain binary-only.",
+);
+assert(
+  switchSource.includes("border-input"),
+  "switch source must use tokenized input border utilities.",
+);
+assert(
+  switchSource.includes("focus-visible:ring-2"),
+  "switch source must include visible focus styling.",
+);
+assert(!switchSource.includes("@radix-ui"), "switch source must remain Radix-free.");
 assert(
   typographySource.includes('"data-slot": "typography"'),
   "typography source must expose stable typography slot data.",

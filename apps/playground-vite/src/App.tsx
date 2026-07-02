@@ -37,6 +37,7 @@ import {
   RadioGroupItem,
   Separator,
   Stack,
+  Switch,
   Text,
   Textarea,
 } from "@dethink/components";
@@ -290,6 +291,15 @@ export function App() {
                     </FieldGroup>
                   </RadioGroup>
                 </FieldSet>
+                <Field id="playground-mfa" orientation="horizontal">
+                  <FieldContent>
+                    <FieldTitle>Multi-factor authentication</FieldTitle>
+                    <FieldDescription>Require a second verification step.</FieldDescription>
+                  </FieldContent>
+                  <FieldControl asChild>
+                    <Switch name="multiFactor" value="enabled" defaultChecked />
+                  </FieldControl>
+                </Field>
                 <Button type="submit" size="sm">
                   Save fields
                 </Button>
