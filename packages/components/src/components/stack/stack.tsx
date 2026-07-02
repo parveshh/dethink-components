@@ -88,16 +88,16 @@ const stackDirectionClasses: Record<StackDirection, string> = {
 };
 
 const stackGapClasses: Record<StackGap, string> = {
-  none: "gap-0",
-  1: "gap-1",
-  2: "gap-2",
-  3: "gap-3",
-  4: "gap-4",
-  5: "gap-5",
-  6: "gap-6",
-  8: "gap-8",
-  10: "gap-10",
-  12: "gap-12",
+  none: "gap-[var(--dt-space-0)]",
+  1: "gap-[var(--dt-space-1)]",
+  2: "gap-[var(--dt-space-2)]",
+  3: "gap-[var(--dt-space-3)]",
+  4: "gap-[var(--dt-space-4)]",
+  5: "gap-[var(--dt-space-5)]",
+  6: "gap-[var(--dt-space-6)]",
+  8: "gap-[var(--dt-space-8)]",
+  10: "gap-[var(--dt-space-10)]",
+  12: "gap-[var(--dt-space-12)]",
 };
 
 const stackAlignClasses: Record<StackAlign, string> = {

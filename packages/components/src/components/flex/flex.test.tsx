@@ -130,15 +130,15 @@ const RouterAnchor = forwardRef<
 RouterAnchor.displayName = "RouterAnchor";
 
 function gapClass(gap: FlexGap) {
-  return `gap-${gap === "none" ? "0" : gap}`;
+  return `gap-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 function rowGapClass(gap: FlexGap) {
-  return `gap-y-${gap === "none" ? "0" : gap}`;
+  return `gap-y-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 function columnGapClass(gap: FlexGap) {
-  return `gap-x-${gap === "none" ? "0" : gap}`;
+  return `gap-x-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 describe("Flex", () => {
@@ -161,7 +161,13 @@ describe("Flex", () => {
     expect(flex).toHaveAttribute("data-align", "stretch");
     expect(flex).toHaveAttribute("data-justify", "start");
     expect(flex).toHaveAttribute("data-content", "stretch");
-    expect(flex).toHaveClass("flex", "flex-row", "flex-nowrap", "gap-0", "items-stretch");
+    expect(flex).toHaveClass(
+      "flex",
+      "flex-row",
+      "flex-nowrap",
+      "gap-[var(--dt-space-0)]",
+      "items-stretch",
+    );
   });
 
   it.each(elements)("renders a semantic %s element", (as) => {
@@ -268,9 +274,9 @@ describe("Flex", () => {
     expect(className).toContain("inline-flex");
     expect(className).toContain("flex-col");
     expect(className).toContain("flex-wrap");
-    expect(className).toContain("gap-4");
-    expect(className).toContain("gap-y-2");
-    expect(className).toContain("gap-x-6");
+    expect(className).toContain("gap-[var(--dt-space-4)]");
+    expect(className).toContain("gap-y-[var(--dt-space-2)]");
+    expect(className).toContain("gap-x-[var(--dt-space-6)]");
     expect(className).toContain("items-center");
     expect(className).toContain("justify-around");
     expect(className).toContain("content-between");

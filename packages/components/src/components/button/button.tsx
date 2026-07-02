@@ -48,11 +48,11 @@ const buttonVariantClasses: Record<ButtonVariant, string> = {
 };
 
 const buttonSizeClasses: Record<ButtonSize, string> = {
-  xs: "h-7 px-2 text-xs",
-  sm: "h-8 px-3 text-sm",
-  md: "h-density-control px-4 text-sm",
-  lg: "h-11 px-5 text-base",
-  xl: "h-12 px-6 text-base",
+  xs: "h-7 px-[var(--dt-space-2)] text-xs",
+  sm: "h-8 px-[var(--dt-space-3)] text-sm",
+  md: "h-density-control px-[var(--dt-space-4)] text-sm",
+  lg: "h-11 px-[var(--dt-space-5)] text-base",
+  xl: "h-12 px-[var(--dt-space-6)] text-base",
   icon: "h-density-control w-density-control p-0 text-sm",
 };
 

@@ -35,11 +35,27 @@ const sizeClasses: Record<ContainerSize, string> = {
 };
 
 const gutterClasses: Record<ContainerGutter, string[]> = {
-  none: ["[--container-gutter:0rem]", "px-0"],
-  sm: ["[--container-gutter:0.75rem]", "sm:[--container-gutter:1rem]", "px-3", "sm:px-4"],
-  md: ["[--container-gutter:1rem]", "sm:[--container-gutter:1.5rem]", "px-4", "sm:px-6"],
-  lg: ["[--container-gutter:1.25rem]", "sm:[--container-gutter:2rem]", "px-5", "sm:px-8"],
-  xl: ["[--container-gutter:1.5rem]", "sm:[--container-gutter:2.5rem]", "px-6", "sm:px-10"],
+  none: ["[--container-gutter:var(--dt-space-0)]", "px-[var(--dt-space-0)]"],
+  sm: [
+    "[--container-gutter:var(--dt-space-3)]",
+    "sm:[--container-gutter:var(--dt-space-4)]",
+    "px-[var(--container-gutter)]",
+  ],
+  md: [
+    "[--container-gutter:var(--dt-space-4)]",
+    "sm:[--container-gutter:var(--dt-space-6)]",
+    "px-[var(--container-gutter)]",
+  ],
+  lg: [
+    "[--container-gutter:var(--dt-space-5)]",
+    "sm:[--container-gutter:var(--dt-space-8)]",
+    "px-[var(--container-gutter)]",
+  ],
+  xl: [
+    "[--container-gutter:var(--dt-space-6)]",
+    "sm:[--container-gutter:var(--dt-space-10)]",
+    "px-[var(--container-gutter)]",
+  ],
 };
 
 const alignClasses: Record<ContainerAlign, string> = {
@@ -124,15 +140,15 @@ describe("Container", () => {
   it("uses safe-area padding classes without dropping the gutter variable", () => {
     const className = containerClassNames({ gutter: "lg", safeArea: true });
 
-    expect(className).toContain("[--container-gutter:1.25rem]");
-    expect(className).toContain("sm:[--container-gutter:2rem]");
+    expect(className).toContain("[--container-gutter:var(--dt-space-5)]");
+    expect(className).toContain("sm:[--container-gutter:var(--dt-space-8)]");
     expect(className).toContain(
       "pl-[max(var(--container-gutter),env(safe-area-inset-left))]",
     );
     expect(className).toContain(
       "pr-[max(var(--container-gutter),env(safe-area-inset-right))]",
     );
-    expect(className).not.toContain("px-5");
+    expect(className).not.toContain("px-[var(--container-gutter)]");
   });
 
   it("composes consumer classes after baseline classes", () => {

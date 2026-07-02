@@ -78,7 +78,7 @@ const RouterAnchor = forwardRef<
 RouterAnchor.displayName = "RouterAnchor";
 
 function spacingClass(prefix: string, spacing: BoxSpacing) {
-  return `${prefix}-${spacing === "none" ? "0" : spacing}`;
+  return `${prefix}-[var(--dt-space-${spacing === "none" ? "0" : spacing})]`;
 }
 
 describe("Box", () => {
@@ -166,8 +166,8 @@ describe("Box", () => {
   it("uses logical spacing utilities for start and end", () => {
     const className = boxClassNames({ me: "4", ps: "3" });
 
-    expect(className).toContain("ps-3");
-    expect(className).toContain("me-4");
+    expect(className).toContain("ps-[var(--dt-space-3)]");
+    expect(className).toContain("me-[var(--dt-space-4)]");
   });
 
   it.each(surfaces)("applies the %s surface", (surface) => {

@@ -60,11 +60,12 @@ type RadioGroupContextValue = {
 
 const RadioGroupContext = createContext<RadioGroupContextValue | null>(null);
 
-const radioGroupBaseClasses = "grid min-w-0 gap-2";
+const radioGroupBaseClasses = "grid min-w-0 gap-[var(--dt-space-2)]";
 
 const radioGroupOrientationClasses: Record<RadioGroupOrientation, string> = {
   vertical: "grid-cols-1",
-  horizontal: "grid-cols-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2",
+  horizontal:
+    "grid-cols-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-[var(--dt-space-4)] sm:gap-y-[var(--dt-space-2)]",
 };
 
 const radioGroupItemRootBaseClasses =

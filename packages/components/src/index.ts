@@ -1,10 +1,20 @@
 import "./styles.css";
 
-export { DethinkProvider } from "./foundation/dethink-provider";
+export {
+  DethinkProvider,
+  DethinkThemeScript,
+  defaultDethinkTheme,
+  defineDethinkTheme,
+} from "./foundation/dethink-provider";
 export type {
+  DethinkColorMode,
+  DethinkColorTokens,
   DethinkDensity,
   DethinkProviderProps,
+  DethinkSpacingToken,
   DethinkTheme,
+  DethinkThemeConfig,
+  DethinkThemeScriptProps,
 } from "./foundation/dethink-provider";
 export { cn } from "./utils/cn";
 export {

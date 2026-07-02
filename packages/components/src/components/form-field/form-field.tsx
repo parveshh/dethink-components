@@ -143,12 +143,12 @@ const formSpacingClasses: Record<FormSpacing, string> = {
 };
 
 const fieldBaseClasses =
-  "group/field grid min-w-0 gap-2 text-foreground data-[disabled=true]:opacity-60 data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto] data-[orientation=horizontal]:items-start data-[orientation=horizontal]:gap-x-density-gap data-[orientation=horizontal]:gap-y-1.5 data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child)]:grid-cols-[auto_minmax(0,1fr)] data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child+[data-slot=field-label])]:items-center";
+  "group/field grid min-w-0 gap-[var(--dt-space-2)] text-foreground data-[disabled=true]:opacity-60 data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto] data-[orientation=horizontal]:items-start data-[orientation=horizontal]:gap-x-density-gap data-[orientation=horizontal]:gap-y-[var(--dt-space-1-5)] data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child)]:grid-cols-[auto_minmax(0,1fr)] data-[orientation=horizontal]:[&:has(>[data-slot=field-control]:first-child+[data-slot=field-label])]:items-center";
 
 const fieldLabelBaseClasses =
   "text-sm font-medium leading-none text-foreground data-[disabled=true]:cursor-not-allowed data-[invalid=true]:text-destructive";
 
-const fieldRequiredMarkerClasses = "ms-1 text-destructive";
+const fieldRequiredMarkerClasses = "ms-[var(--dt-space-1)] text-destructive";
 
 const fieldControlBaseClasses =
   "min-w-0 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-60 data-[invalid=true]:border-destructive data-[invalid=true]:ring-destructive/15";
@@ -172,11 +172,11 @@ const fieldSetBaseClasses =
 const fieldLegendBaseClasses = "max-w-full text-foreground";
 
 const fieldLegendVariantClasses: Record<FieldLegendVariant, string> = {
-  legend: "mb-2 text-base font-semibold leading-6",
-  label: "mb-2 text-sm font-medium leading-none",
+  legend: "mb-[var(--dt-space-2)] font-heading text-base font-semibold leading-6",
+  label: "mb-[var(--dt-space-2)] text-sm font-medium leading-none",
 };
 
-const fieldContentBaseClasses = "grid min-w-0 gap-1.5";
+const fieldContentBaseClasses = "grid min-w-0 gap-[var(--dt-space-1-5)]";
 
 const fieldTitleBaseClasses = "text-sm font-medium leading-none text-foreground";
 
@@ -268,7 +268,7 @@ function getErrorContent({
       (messages.length === 0 ? null : messages.length === 1 ? (
         messages[0]
       ) : (
-        <ul className="list-disc ps-4">
+        <ul className="list-disc ps-[var(--dt-space-4)]">
           {messages.map((message, index) => (
             <li key={index}>{message}</li>
           ))}
