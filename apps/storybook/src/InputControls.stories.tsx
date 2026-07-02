@@ -44,21 +44,21 @@ export const NativeFormComposition: Story = {
           </CardHeader>
           <CardContent>
             <Form action="/projects" method="post">
-              <Grid columns="2" gap="4">
-                <Field id="project-name">
+              <div className="grid min-w-0 gap-4 md:grid-cols-2">
+                <Field id="project-name" className="min-w-0">
                   <FieldLabel>Project name</FieldLabel>
                   <FieldControl asChild>
                     <Input name="name" defaultValue="Operations Console" />
                   </FieldControl>
                 </Field>
-                <Field id="project-quota">
+                <Field id="project-quota" className="min-w-0">
                   <FieldLabel>Monthly quota</FieldLabel>
                   <FieldControl asChild>
                     <NumberInput name="quota" numberMode="numeric" defaultValue="250" />
                   </FieldControl>
                   <FieldDescription>Submitted as a string value.</FieldDescription>
                 </Field>
-                <Field id="project-summary" className="md:col-span-2">
+                <Field id="project-summary" className="min-w-0 md:col-span-2">
                   <FieldLabel>Summary</FieldLabel>
                   <FieldControl asChild>
                     <Textarea
@@ -68,8 +68,10 @@ export const NativeFormComposition: Story = {
                     />
                   </FieldControl>
                 </Field>
-              </Grid>
-              <Button type="submit">Save project</Button>
+                <Button type="submit" className="w-full md:col-span-2">
+                  Save project
+                </Button>
+              </div>
             </Form>
           </CardContent>
         </Card>
