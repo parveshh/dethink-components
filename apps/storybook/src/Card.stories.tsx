@@ -23,7 +23,25 @@ import {
   type CardSpacing,
   type CardSurface,
 } from "@dethink/components";
-import { forwardRef, type HTMLAttributes } from "react";
+import {
+  forwardRef,
+  type ComponentType,
+  type HTMLAttributes,
+  type SVGProps,
+} from "react";
+
+const workspacePlanningPhoto = new URL(
+  "./assets/card/workspace-planning.jpg",
+  import.meta.url,
+).href;
+const infrastructureRackPhoto = new URL(
+  "./assets/card/infrastructure-rack.jpg",
+  import.meta.url,
+).href;
+const analyticsDeskPhoto = new URL(
+  "./assets/card/analytics-desk.jpg",
+  import.meta.url,
+).href;
 
 const meta = {
   title: "Components/Card",
@@ -81,6 +99,70 @@ const RouterArticle = forwardRef<
 >(({ to: _to, ...props }, ref) => <article ref={ref} {...props} />);
 RouterArticle.displayName = "RouterArticle";
 
+function AnalyticsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.75"
+      {...props}
+    >
+      <path d="M4 19V5" />
+      <path d="M4 19h16" />
+      <path d="m7 15 3-3 3 2 5-7" />
+      <path d="M18 7h-4" />
+      <path d="M18 7v4" />
+    </svg>
+  );
+}
+
+function InfrastructureIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.75"
+      {...props}
+    >
+      <rect width="16" height="6" x="4" y="4" rx="2" />
+      <rect width="16" height="6" x="4" y="14" rx="2" />
+      <path d="M8 7h.01" />
+      <path d="M8 17h.01" />
+      <path d="M12 7h4" />
+      <path d="M12 17h4" />
+    </svg>
+  );
+}
+
+function WorkflowIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.75"
+      {...props}
+    >
+      <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+      <path d="M18 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+      <path d="M6 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+      <path d="M8.5 6.5 15.5 9.5" />
+      <path d="M8.5 17.5 15.5 13" />
+    </svg>
+  );
+}
+
 function MetricCard({
   detail,
   label,
@@ -102,6 +184,72 @@ function MetricCard({
         </Text>
       </CardContent>
     </Card>
+  );
+}
+
+const photoCards = [
+  {
+    alt: "Laptop, notebook, and coffee on a collaborative planning table.",
+    description: "A high-level brief for active roadmap and stakeholder work.",
+    image: workspacePlanningPhoto,
+    icon: WorkflowIcon,
+    meta: "Planning",
+    status: "Updated today",
+    title: "Workspace planning",
+  },
+  {
+    alt: "Network equipment with organized cables and soft status lights.",
+    description: "Infrastructure readiness, capacity, and incident context.",
+    image: infrastructureRackPhoto,
+    icon: InfrastructureIcon,
+    meta: "Operations",
+    status: "Healthy",
+    title: "Infrastructure health",
+  },
+  {
+    alt: "Analytics desk with printed charts, a tablet, and a small plant.",
+    description: "Product metrics and review summaries for weekly reporting.",
+    image: analyticsDeskPhoto,
+    icon: AnalyticsIcon,
+    meta: "Analytics",
+    status: "3 reports",
+    title: "Insights review",
+  },
+] as const;
+
+const iconHeaderCards = [
+  {
+    description: "Prioritize unanswered review requests before the weekly cutover.",
+    icon: WorkflowIcon,
+    label: "12 open",
+    title: "Review queue",
+  },
+  {
+    description: "Watch build health and error budgets across production regions.",
+    icon: InfrastructureIcon,
+    label: "99.98%",
+    title: "Runtime health",
+  },
+  {
+    description: "Compare adoption, retention, and expansion signals by segment.",
+    icon: AnalyticsIcon,
+    label: "+18%",
+    title: "Growth signals",
+  },
+] as const;
+
+function IconFrame({
+  icon: Icon,
+}: {
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+}) {
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground"
+    >
+      <Icon className="size-4" />
+    </span>
   );
 }
 
@@ -417,6 +565,81 @@ export const ResourceCards: Story = {
             </Card>
           ),
         )}
+      </Grid>
+    </DethinkProvider>
+  ),
+};
+
+export const PhotoCards: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Grid columns="auto-fit-sm" gap="4">
+        {photoCards.map(({ alt, description, icon, image, meta, status, title }) => (
+          <Card key={title} as="article">
+            <img
+              src={image}
+              alt={alt}
+              width="1200"
+              height="675"
+              className="aspect-[16/9] w-full object-cover"
+            />
+            <CardHeader>
+              <CardTitle as="h3" className="flex items-center gap-3">
+                <IconFrame icon={icon} />
+                <span>{title}</span>
+              </CardTitle>
+              <CardDescription>{description}</CardDescription>
+              <CardAction>
+                <Button size="sm" variant="outline">
+                  Open
+                </Button>
+              </CardAction>
+            </CardHeader>
+            <CardFooter justify="between">
+              <Text as="span" size="sm" tone="muted">
+                {meta}
+              </Text>
+              <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                {status}
+              </span>
+            </CardFooter>
+          </Card>
+        ))}
+      </Grid>
+    </DethinkProvider>
+  ),
+};
+
+export const IconHeaderCards: Story = {
+  render: () => (
+    <DethinkProvider theme="light" className="p-6">
+      <Grid columns="auto-fit-xs" gap="3">
+        {iconHeaderCards.map(({ description, icon, label, title }) => (
+          <Card key={title} as="article">
+            <CardHeader>
+              <CardTitle as="h3" className="flex items-center gap-3">
+                <IconFrame icon={icon} />
+                <span>{title}</span>
+              </CardTitle>
+              <CardDescription>{description}</CardDescription>
+              <CardAction>
+                <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  {label}
+                </span>
+              </CardAction>
+            </CardHeader>
+            <CardContent>
+              <Stack gap="2">
+                <div aria-hidden="true" className="h-2 rounded-full bg-muted">
+                  <div className="h-2 w-2/3 rounded-full bg-primary" />
+                </div>
+                <Text size="sm" tone="muted">
+                  Header icons are decorative and stay separate from action controls.
+                </Text>
+              </Stack>
+            </CardContent>
+          </Card>
+        ))}
       </Grid>
     </DethinkProvider>
   ),
