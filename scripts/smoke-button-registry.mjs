@@ -78,6 +78,7 @@ const base = await readJson(join(registryRoot, "base.json"));
 const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const card = await readJson(join(registryRoot, "card.json"));
+const cardStack = await readJson(join(registryRoot, "card-stack.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
@@ -92,6 +93,10 @@ const timeline = await readJson(join(registryRoot, "timeline.json"));
 assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
 assert(card.name === "card", "card registry item must be named card.");
+assert(
+  cardStack.name === "card-stack",
+  "card-stack registry item must be named card-stack.",
+);
 assert(container.name === "container", "container registry item must be named container.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
@@ -116,6 +121,18 @@ assert(
 assert(
   card.registryDependencies?.includes("dethink-base"),
   "card registry item must depend on dethink-base.",
+);
+assert(
+  cardStack.registryDependencies?.includes("dethink-base"),
+  "card-stack registry item must depend on dethink-base.",
+);
+assert(
+  cardStack.registryDependencies?.includes("card"),
+  "card-stack registry item must depend on card.",
+);
+assert(
+  cardStack.registryDependencies?.includes("icon-button"),
+  "card-stack registry item must depend on icon-button.",
 );
 assert(
   container.registryDependencies?.includes("dethink-base"),
@@ -174,6 +191,10 @@ assert(
   "card registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(cardStack.dependencies) && cardStack.dependencies.length === 0,
+  "card-stack registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(container.dependencies) && container.dependencies.length === 0,
   "container registry item must not add runtime dependencies.",
 );
@@ -223,6 +244,7 @@ for (const item of [
   box,
   button,
   card,
+  cardStack,
   container,
   iconButton,
   flex,
@@ -258,6 +280,10 @@ const buttonSource = await readFile(
 );
 const cardSource = await readFile(
   join(root, "packages/components/src/components/card/card.tsx"),
+  "utf8",
+);
+const cardStackSource = await readFile(
+  join(root, "packages/components/src/components/card-stack/card-stack.tsx"),
   "utf8",
 );
 const containerSource = await readFile(
@@ -368,6 +394,53 @@ assert(cardSource.includes("--card-gap"), "card source must expose density-backe
 assert(cardSource.includes("ms-4"), "card source must use logical action spacing.");
 assert(cardSource.includes("justify-between"), "card source must expose footer distribution utilities.");
 assert(!cardSource.includes("@radix-ui"), "card source must remain dependency-free.");
+assert(
+  cardStackSource.includes('data-slot="card-stack"'),
+  "card-stack source must expose stable root slot data.",
+);
+assert(
+  cardStackSource.includes('data-slot="card-stack-item"'),
+  "card-stack source must expose item slot data.",
+);
+assert(
+  cardStackSource.includes('data-slot="card-stack-controls"'),
+  "card-stack source must expose controls slot data.",
+);
+assert(
+  cardStackSource.includes("CardStackMode"),
+  "card-stack source must expose mode typing.",
+);
+assert(
+  cardStackSource.includes("activeIndex"),
+  "card-stack source must expose controlled active index support.",
+);
+assert(
+  cardStackSource.includes("defaultActiveIndex"),
+  "card-stack source must expose uncontrolled active index support.",
+);
+assert(
+  cardStackSource.includes("onActiveIndexChange"),
+  "card-stack source must expose active index change callbacks.",
+);
+assert(cardStackSource.includes("inert"), "card-stack source must make inactive cards inert.");
+assert(
+  cardStackSource.includes("aria-hidden"),
+  "card-stack source must hide inactive cards from assistive tech.",
+);
+assert(
+  cardStackSource.includes("IconButton"),
+  "card-stack source must use IconButton for navigation controls.",
+);
+assert(
+  cardStackSource.includes("[translate:var(--card-stack-translate)]"),
+  "card-stack source must use transform custom properties.",
+);
+assert(
+  cardStackSource.includes("motion-safe:transition"),
+  "card-stack source must use reduced-motion-aware transitions.",
+);
+assert(!cardStackSource.includes("framer-motion"), "card-stack source must not use Motion.");
+assert(!cardStackSource.includes("@radix-ui"), "card-stack source must remain Radix-free.");
 assert(
   containerSource.includes('"data-slot": "container"'),
   "container source must expose stable slot data.",
