@@ -77,10 +77,8 @@ internals:
 | `onValueChange` | Called with the next selected string value or `null` when cleared. |
 | `inputValue` | Controlled visible typed text. |
 | `defaultInputValue` | Uncontrolled initial visible typed text. |
-| `onInputValueChange` | Called as the user types or when selection updates visible text. |
-| `open` | Controlled menu open state. |
-| `defaultOpen` | Uncontrolled initial menu open state. |
-| `onOpenChange` | Called when the menu opens or closes. |
+| `onInputValueChange` | Called as the user types. Consumers controlling both `value` and `inputValue` should update visible text from `onValueChange` when needed. |
+| `onOpenChange` | Called when the menu opens or closes through supported React Aria interactions. |
 | `name` | Native form field name. |
 | `formValue` | Whether form submission uses selected key or visible text where supported. |
 | `placeholder` | Empty input text. |
@@ -107,8 +105,11 @@ through `items`, but item identity and form submission use the string value.
 - `value` and `inputValue` are related but separate state channels.
 - V1 is single-value only. Multi-value state belongs to future MultiSelect or
   TagInput.
-- `Combobox` supports controlled and uncontrolled selected value, input text,
-  and open state.
+- `Combobox` supports controlled and uncontrolled selected value and input
+  text. Menu opening is driven by React Aria interactions, `menuTrigger`, and
+  `onOpenChange`; controlled `open`/`defaultOpen` are not exposed in the v1
+  wrapper because React Aria Components ComboBox does not currently expose a
+  controlled open prop.
 - `Combobox` supports static children and data-driven collections through
   `items` plus render-function children.
 - `ComboboxItem` requires a string `value` and should expose a text value for
@@ -127,9 +128,10 @@ through `items`, but item identity and form submission use the string value.
 - `Combobox` should compose with Form and Field primitives for labels,
   descriptions, errors, required markers, disabled/read-only state, generated
   IDs, explicit IDs, and ARIA relationships.
-- `Combobox` should expose stable data attributes for slot, open, selected,
-  placeholder, invalid, disabled, read-only, required, focused, focus-visible,
-  hovered, pressed, size, placement, empty, and value where relevant.
+- `Combobox` should expose stable data attributes for slot, open where React
+  Aria exposes it, selected, placeholder, invalid, disabled, read-only,
+  required, focused, focus-visible, hovered, pressed, size, placement, empty,
+  and value where relevant.
 
 ## Implementation Substrate
 
@@ -213,8 +215,8 @@ The implementation should support:
 - Rendered component tests for public props, controlled/uncontrolled state,
   disabled/read-only/required/invalid states, filtering, custom values, and form
   submission.
-- Interaction tests for typing, filtering, selecting, keyboard navigation,
-  closing, disabled options, focus restoration, and empty results.
+- Interaction tests for typing, filtering, opening, selecting, keyboard
+  navigation, closing, disabled options, focus restoration, and empty results.
 - Accessibility tests with axe for labeled, invalid, read-only/disabled, and
   empty result examples.
 - SSR render/hydration smoke tests.

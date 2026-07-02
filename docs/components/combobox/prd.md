@@ -45,8 +45,8 @@ Dethink API aligned with the existing Input, Select, Form/Field, and
 provider-token contracts.
 
 Combobox should support controlled and uncontrolled selected value, controlled
-and uncontrolled input text, controlled and uncontrolled open state, local
-filtering, optional custom text values, empty result states,
+and uncontrolled input text, user-driven menu opening with `menuTrigger` and
+`onOpenChange`, local filtering, optional custom text values, empty result states,
 disabled/read-only/required/invalid state, placeholder text, data-driven and
 static items, disabled options, native form participation, stable data
 attributes, Storybook interaction coverage, SSR smoke tests, and shadcn-style
@@ -62,7 +62,7 @@ are out of scope.
 2. As a form builder, I want Combobox to compose with Field and Form primitives, so that labels, descriptions, errors, required state, and submitted values match the rest of Dethink.
 3. As a package consumer, I want `value`, `defaultValue`, and `onValueChange`, so that selected item state can be controlled or uncontrolled.
 4. As a package consumer, I want `inputValue`, `defaultInputValue`, and `onInputValueChange`, so that typed query text can be controlled or uncontrolled separately from selected value.
-5. As a package consumer, I want `open`, `defaultOpen`, and `onOpenChange`, so that advanced flows can control the popover when needed.
+5. As a package consumer, I want `menuTrigger` and `onOpenChange`, so that supported React Aria menu opening and closing behavior can be observed and configured.
 6. As a package consumer, I want `items` and render-function children, so that option collections can come from data arrays.
 7. As a package consumer, I want static `ComboboxItem` children, so that simple lists remain readable in JSX.
 8. As a package consumer, I want `disabledKeys` and item-level disabled state, so that unavailable options remain visible but cannot be selected.
@@ -99,8 +99,8 @@ are out of scope.
   keyboard behavior, filtering hooks, selection, and form participation.
 - Keep public API names consistent with Dethink Input and Select where
   practical: `value`, `defaultValue`, `onValueChange`, `inputValue`,
-  `defaultInputValue`, `onInputValueChange`, `open`, `defaultOpen`,
-  `onOpenChange`, `name`, `disabled`, `readOnly`, `required`, `invalid`,
+  `defaultInputValue`, `onInputValueChange`, `onOpenChange`, `name`,
+  `disabled`, `readOnly`, `required`, `invalid`,
   `placeholder`, `items`, `disabledKeys`, `controlSize`, and `className`.
 - Treat `value` as the selected string key and `inputValue` as the visible typed
   text. These are related but separate states.
@@ -162,7 +162,7 @@ comfortable, nested provider scope, custom `themeConfig`, and RTL examples.
   interactions, native form submission, provider-token behavior, and stable
   slots rather than private implementation details.
 - Render tests should cover controlled/uncontrolled selected value,
-  controlled/uncontrolled input text, controlled/uncontrolled open state,
+  controlled/uncontrolled input text, user-driven open state,
   placeholder, disabled, read-only, required, invalid, `name`, `formValue`,
   `items`, static children, disabled options, custom values, empty results,
   className composition, refs, and stable data slots.

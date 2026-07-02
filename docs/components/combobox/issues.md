@@ -70,7 +70,7 @@ examples needed to clarify the contract.
 - [ ] The local issue breakdown maps this PRD to the approved stacked child issues after publication.
 - [ ] The docs define selected value state with `value`, `defaultValue`, and `onValueChange`.
 - [ ] The docs define input text state with `inputValue`, `defaultInputValue`, and `onInputValueChange`.
-- [ ] The docs define controlled and uncontrolled menu state with `open`, `defaultOpen`, and `onOpenChange`.
+- [ ] The docs define supported menu behavior with `menuTrigger` and `onOpenChange`.
 - [ ] The docs define `name`, `formValue`, `required`, `disabled`, `readOnly`, `invalid`, `placeholder`, `items`, `disabledKeys`, `controlSize`, `allowsCustomValue`, `defaultFilter`, `menuTrigger`, refs, className composition, and native form participation.
 - [ ] The docs define React Aria internals while keeping the public API familiar to Dethink Input, Select, and shadcn-style consumers.
 - [ ] The docs define provider-level theming through existing theme, density, direction, and `themeConfig` context without a component-level theme prop.
@@ -90,7 +90,7 @@ examples needed to clarify the contract.
 Build the core Combobox primitive path for searchable single selection. The
 completed slice should provide the root Combobox and item components backed by
 React Aria ComboBox/ListBox behavior, support controlled and uncontrolled
-selected value, input text, and open state, preserve native form participation,
+selected value, input text, and user-driven open state, preserve native form participation,
 expose stable slots, use provider-level theme and density tokens, and include
 focused tests, Storybook examples, registry metadata, and package exports for
 the base path.
@@ -98,7 +98,7 @@ the base path.
 ## Acceptance criteria
 
 - [ ] Combobox and item components are exported with public prop/data types and class-name helpers.
-- [ ] Combobox supports `value`, `defaultValue`, `onValueChange`, `inputValue`, `defaultInputValue`, `onInputValueChange`, `open`, `defaultOpen`, `onOpenChange`, `name`, `formValue`, `placeholder`, `controlSize`, `disabled`, `readOnly`, `required`, and `invalid`.
+- [ ] Combobox supports `value`, `defaultValue`, `onValueChange`, `inputValue`, `defaultInputValue`, `onInputValueChange`, `onOpenChange`, `name`, `formValue`, `placeholder`, `controlSize`, `disabled`, `readOnly`, `required`, and `invalid`.
 - [ ] Combobox maps string values to React Aria selected keys and keeps visible typed text separate from selected value.
 - [ ] Combobox exposes submitted values through `name` and verifies key/text behavior through `formValue` where supported.
 - [ ] Combobox supports static children and a basic data-driven `items` render function for simple option lists.
@@ -106,7 +106,7 @@ the base path.
 - [ ] Combobox styles input, button, icon, popover, listbox, item, selected item, focus-visible, hover, invalid, disabled, read-only, required, density, dark mode, and RTL states using provider-level tokens only.
 - [ ] Combobox popovers inherit provider theme, density, direction, and custom token context without a component-level theme prop.
 - [ ] Registry metadata declares the React Aria runtime dependency and the Dethink base registry dependency accurately.
-- [ ] Render tests cover controlled/uncontrolled selected value, controlled/uncontrolled input value, controlled/uncontrolled open state, placeholder, submitted name/value, disabled, read-only, required, invalid, refs, className composition, static options, and basic data-driven options.
+- [ ] Render tests cover controlled/uncontrolled selected value, controlled/uncontrolled input value, user-driven open state, placeholder, submitted name/value, disabled, read-only, required, invalid, refs, className composition, static options, and basic data-driven options.
 - [ ] Accessibility and SSR tests cover visible labels, no missing accessible names in examples, axe smoke, data-driven SSR, and hydration without mismatch warnings.
 - [ ] Storybook examples cover base Combobox, controlled selected value, controlled input text, placeholder, invalid/required, disabled/read-only, and basic settings/filter usage.
 - [ ] Playground smoke coverage exercises Combobox through the package export path.

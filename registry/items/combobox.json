@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "combobox",
+  "type": "registry:ui",
+  "title": "Combobox",
+  "description": "React Aria backed autocomplete primitive with token-backed input, button, popover, item, form, invalid, disabled, read-only, density, dark mode, and provider-theme styling.",
+  "dependencies": ["react-aria-components"],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/combobox/combobox.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/combobox/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}

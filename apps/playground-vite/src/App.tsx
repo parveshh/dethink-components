@@ -9,6 +9,8 @@ import {
   CardStack,
   CardTitle,
   Checkbox,
+  Combobox,
+  ComboboxItem,
   Container,
   DateTimePicker,
   DethinkProvider,
@@ -214,6 +216,16 @@ export function App() {
             <SelectItem value="staging">Staging</SelectItem>
             <SelectItem value="sandbox">Sandbox</SelectItem>
           </Select>
+          <Combobox
+            description="Verifies the Combobox package export and React Aria autocomplete path."
+            label="Smoke searchable workspace"
+            name="smokeSearchableWorkspace"
+            defaultValue="production"
+          >
+            <ComboboxItem value="production">Production</ComboboxItem>
+            <ComboboxItem value="staging">Staging</ComboboxItem>
+            <ComboboxItem value="sandbox">Sandbox</ComboboxItem>
+          </Combobox>
           <Card as="section">
             <CardHeader>
               <CardTitle>Form field smoke</CardTitle>
