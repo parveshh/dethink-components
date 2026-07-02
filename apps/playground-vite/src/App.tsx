@@ -35,6 +35,8 @@ import {
   NumberInput,
   RadioGroup,
   RadioGroupItem,
+  Select,
+  SelectItem,
   Separator,
   Stack,
   Switch,
@@ -202,6 +204,16 @@ export function App() {
             label="Smoke date and time"
             name="smokeDateTime"
           />
+          <Select
+            description="Verifies the Select package export and React Aria dependency path."
+            label="Smoke workspace"
+            name="smokeWorkspace"
+            defaultValue="production"
+          >
+            <SelectItem value="production">Production</SelectItem>
+            <SelectItem value="staging">Staging</SelectItem>
+            <SelectItem value="sandbox">Sandbox</SelectItem>
+          </Select>
           <Card as="section">
             <CardHeader>
               <CardTitle>Form field smoke</CardTitle>

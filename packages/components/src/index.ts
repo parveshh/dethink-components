@@ -280,6 +280,17 @@ export {
   type NumberInputProps,
 } from "./components/number-input";
 export {
+  Select,
+  SelectItem,
+  selectClassNames,
+  selectItemClassNames,
+  type SelectControlSize,
+  type SelectItemData,
+  type SelectItemProps,
+  type SelectProps,
+  type SelectValue,
+} from "./components/select";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,
