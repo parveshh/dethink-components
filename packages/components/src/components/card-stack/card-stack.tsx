@@ -265,8 +265,12 @@ export const CardStack = forwardRef<HTMLDivElement, CardStackProps>(
     const [uncontrolledActiveIndex, setUncontrolledActiveIndex] = useState(() =>
       normalizeIndex(defaultActiveIndex, cardCount, loop),
     );
+    const seededUncontrolledActiveIndex =
+      uncontrolledActiveIndex === -1 && cardCount > 0
+        ? normalizeIndex(defaultActiveIndex, cardCount, loop)
+        : uncontrolledActiveIndex;
     const resolvedActiveIndex = normalizeIndex(
-      isControlled ? activeIndex : uncontrolledActiveIndex,
+      isControlled ? activeIndex : seededUncontrolledActiveIndex,
       cardCount,
       loop,
     );
@@ -282,12 +286,21 @@ export const CardStack = forwardRef<HTMLDivElement, CardStackProps>(
         return;
       }
 
-      const normalizedIndex = normalizeIndex(uncontrolledActiveIndex, cardCount, loop);
+      const normalizedIndex =
+        uncontrolledActiveIndex === -1
+          ? normalizeIndex(defaultActiveIndex, cardCount, loop)
+          : normalizeIndex(uncontrolledActiveIndex, cardCount, loop);
 
       if (normalizedIndex !== uncontrolledActiveIndex) {
         setUncontrolledActiveIndex(normalizedIndex);
       }
-    }, [cardCount, isControlled, loop, uncontrolledActiveIndex]);
+    }, [
+      cardCount,
+      defaultActiveIndex,
+      isControlled,
+      loop,
+      uncontrolledActiveIndex,
+    ]);
 
     const setActiveIndex = useCallback(
       (nextIndex: number) => {

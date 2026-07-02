@@ -234,4 +234,24 @@ describe("CardStack", () => {
     );
     expect(screen.queryByRole("button", { name: "Show next card" })).toBeNull();
   });
+
+  it("uses the default active index when cards are added after an empty render", () => {
+    const { rerender } = render(<CardStack />);
+
+    rerender(
+      <CardStack>
+        {createExampleCard({ title: "First" })}
+        {createExampleCard({ title: "Second" })}
+        {createExampleCard({ title: "Third" })}
+      </CardStack>,
+    );
+
+    const stack = screen.getByRole("group", { name: "Card stack" });
+    const firstCard = screen.getByText("First").closest('[data-slot="card"]');
+    const thirdCard = screen.getByText("Third").closest('[data-slot="card"]');
+
+    expect(stack).toHaveAttribute("data-active-index", "0");
+    expect(firstCard).toHaveAttribute("data-card-stack-active", "true");
+    expect(thirdCard).toHaveAttribute("data-card-stack-active", "false");
+  });
 });

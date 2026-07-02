@@ -21,11 +21,11 @@ async function assertFileExists(path) {
 
 async function resolveExistingSourcePath(pathWithoutExtension) {
   const candidates = [
-    pathWithoutExtension,
     `${pathWithoutExtension}.ts`,
     `${pathWithoutExtension}.tsx`,
     join(pathWithoutExtension, "index.ts"),
     join(pathWithoutExtension, "index.tsx"),
+    pathWithoutExtension,
   ];
 
   for (const candidate of candidates) {
@@ -40,8 +40,26 @@ async function resolveExistingSourcePath(pathWithoutExtension) {
   return undefined;
 }
 
-async function assertRegistryRelativeImportsResolve(item) {
+function collectRegistryFilePaths(item, registryItemsByName) {
   const registryFilePaths = new Set((item.files ?? []).map((file) => normalize(file.path)));
+
+  for (const dependencyName of item.registryDependencies ?? []) {
+    const dependency = registryItemsByName.get(dependencyName);
+
+    if (!dependency) {
+      continue;
+    }
+
+    for (const file of dependency.files ?? []) {
+      registryFilePaths.add(normalize(file.path));
+    }
+  }
+
+  return registryFilePaths;
+}
+
+async function assertRegistryRelativeImportsResolve(item, registryItemsByName) {
+  const registryFilePaths = collectRegistryFilePaths(item, registryItemsByName);
   const importPattern =
     /\b(?:import|export)\b(?:[\s\S]*?)\bfrom\s*["'](\.{1,2}\/[^"']+)["']/g;
 
@@ -68,7 +86,7 @@ async function assertRegistryRelativeImportsResolve(item) {
 
       assert(
         registryFilePaths.has(relativeResolvedPath),
-        `${item.name} registry source ${file.path} imports ${relativeResolvedPath}, but that file is not declared in the registry item.`,
+        `${item.name} registry source ${file.path} imports ${relativeResolvedPath}, but that file is not declared in the registry item or its registryDependencies.`,
       );
     }
   }
@@ -89,6 +107,26 @@ const stack = await readJson(join(registryRoot, "stack.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
+
+const registryItemsByName = new Map(
+  [
+    base,
+    box,
+    button,
+    card,
+    cardStack,
+    container,
+    iconButton,
+    flex,
+    grid,
+    link,
+    separator,
+    stack,
+    typography,
+    dateTimePicker,
+    timeline,
+  ].map((item) => [item.name, item]),
+);
 
 assert(box.name === "box", "box registry item must be named box.");
 assert(button.name === "button", "button registry item must be named button.");
@@ -261,10 +299,11 @@ for (const item of [
   }
 }
 
-await assertRegistryRelativeImportsResolve(container);
-await assertRegistryRelativeImportsResolve(card);
-await assertRegistryRelativeImportsResolve(grid);
-await assertRegistryRelativeImportsResolve(separator);
+await assertRegistryRelativeImportsResolve(container, registryItemsByName);
+await assertRegistryRelativeImportsResolve(card, registryItemsByName);
+await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
+await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
+await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");

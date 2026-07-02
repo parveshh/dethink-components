@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, within } from "storybook/test";
 import { useState, type ReactNode, type SVGProps } from "react";
 import {
   Button,
@@ -266,6 +267,22 @@ export const BaseStack: Story = {
       </Container>
     </DethinkProvider>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const stack = canvas.getByRole("group", { name: "Card stack" });
+
+    await expect(stack).toHaveAttribute("data-active-index", "0");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Show next card" }));
+    await expect(stack).toHaveAttribute("data-active-index", "1");
+
+    stack.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(stack).toHaveAttribute("data-active-index", "2");
+
+    await userEvent.click(canvas.getByRole("button", { name: "Show previous card" }));
+    await expect(stack).toHaveAttribute("data-active-index", "1");
+  },
 };
 
 export const OpenFan: Story = {
@@ -290,6 +307,20 @@ export const OpenFan: Story = {
       </Container>
     </DethinkProvider>
   ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const stack = canvas.getByRole("group", { name: "Card stack" });
+    const secondCardItem = canvas
+      .getByText("Production readiness")
+      .closest('[data-slot="card-stack-item"]');
+
+    await expect(stack).toHaveAttribute("data-active-index", "0");
+    await expect(secondCardItem).not.toBeNull();
+
+    await userEvent.click(secondCardItem as HTMLElement);
+
+    await expect(stack).toHaveAttribute("data-active-index", "1");
+  },
 };
 
 export const AngleTuning: Story = {
