@@ -34,6 +34,7 @@ import {
   Separator,
   Stack,
   Text,
+  Textarea,
 } from "@dethink/components";
 
 function ArrowRightIcon() {
@@ -225,6 +226,19 @@ export function App() {
                     />
                   </FieldControl>
                   <FieldError>Enter a valid owner email.</FieldError>
+                </Field>
+                <Field id="playground-summary">
+                  <FieldLabel>Summary</FieldLabel>
+                  <FieldControl asChild>
+                    <Textarea
+                      name="summary"
+                      defaultValue="Textarea smoke through the package export path."
+                      rows={3}
+                    />
+                  </FieldControl>
+                  <FieldDescription>
+                    Multiline controls share the same Field wiring.
+                  </FieldDescription>
                 </Field>
                 <FieldSet>
                   <FieldLegend>Channels</FieldLegend>

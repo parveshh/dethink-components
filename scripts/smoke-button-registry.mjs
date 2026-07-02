@@ -106,6 +106,7 @@ const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
+const textarea = await readJson(join(registryRoot, "textarea.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
@@ -126,6 +127,7 @@ const registryItemsByName = new Map(
     link,
     separator,
     stack,
+    textarea,
     typography,
     dateTimePicker,
     timeline,
@@ -148,6 +150,7 @@ assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
+assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
   dateTimePicker.name === "date-time-picker",
@@ -219,6 +222,10 @@ assert(
   "stack registry item must depend on dethink-base.",
 );
 assert(
+  textarea.registryDependencies?.includes("dethink-base"),
+  "textarea registry item must depend on dethink-base.",
+);
+assert(
   typography.registryDependencies?.includes("dethink-base"),
   "typography registry item must depend on dethink-base.",
 );
@@ -281,6 +288,10 @@ assert(
 assert(
   Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
   "stack registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(textarea.dependencies) && textarea.dependencies.length === 0,
+  "textarea registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(typography.dependencies) && typography.dependencies.length === 0,

@@ -233,6 +233,13 @@ export {
   type InputProps,
 } from "./components/input";
 export {
+  Textarea,
+  textareaClassNames,
+  type TextareaControlSize,
+  type TextareaProps,
+  type TextareaResize,
+} from "./components/textarea";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,
