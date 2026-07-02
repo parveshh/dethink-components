@@ -98,6 +98,7 @@ const button = await readJson(join(registryRoot, "button.json"));
 const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
 const container = await readJson(join(registryRoot, "container.json"));
+const formField = await readJson(join(registryRoot, "form-field.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
@@ -116,6 +117,7 @@ const registryItemsByName = new Map(
     card,
     cardStack,
     container,
+    formField,
     iconButton,
     flex,
     grid,
@@ -136,6 +138,7 @@ assert(
   "card-stack registry item must be named card-stack.",
 );
 assert(container.name === "container", "container registry item must be named container.");
+assert(formField.name === "form-field", "form-field registry item must be named form-field.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
@@ -175,6 +178,10 @@ assert(
 assert(
   container.registryDependencies?.includes("dethink-base"),
   "container registry item must depend on dethink-base.",
+);
+assert(
+  formField.registryDependencies?.includes("dethink-base"),
+  "form-field registry item must depend on dethink-base.",
 );
 assert(
   iconButton.registryDependencies?.includes("dethink-base"),
@@ -237,6 +244,10 @@ assert(
   "container registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(formField.dependencies) && formField.dependencies.length === 0,
+  "form-field registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
 );
@@ -284,6 +295,7 @@ for (const item of [
   card,
   cardStack,
   container,
+  formField,
   iconButton,
   flex,
   grid,
@@ -302,6 +314,7 @@ for (const item of [
 await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
+await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
 
@@ -327,6 +340,10 @@ const cardStackSource = await readFile(
 );
 const containerSource = await readFile(
   join(root, "packages/components/src/components/container/container.tsx"),
+  "utf8",
+);
+const formFieldSource = await readFile(
+  join(root, "packages/components/src/components/form-field/form-field.tsx"),
   "utf8",
 );
 const iconButtonSource = await readFile(
@@ -502,6 +519,51 @@ assert(containerSource.includes("mx-auto"), "container source must default to ce
 assert(containerSource.includes("me-auto"), "container source must support logical start alignment.");
 assert(containerSource.includes("ms-auto"), "container source must support logical end alignment.");
 assert(!containerSource.includes("@radix-ui"), "container source must remain dependency-free.");
+assert(
+  formFieldSource.includes('data-slot="form"'),
+  "form-field source must expose stable form slot data.",
+);
+assert(
+  formFieldSource.includes('data-slot": "field"') ||
+    formFieldSource.includes('data-slot="field"'),
+  "form-field source must expose stable field slot data.",
+);
+assert(
+  formFieldSource.includes('"data-slot": "field-control"') ||
+    formFieldSource.includes('data-slot="field-control"'),
+  "form-field source must expose stable control slot data.",
+);
+assert(
+  formFieldSource.includes('"data-slot": "field-description"') ||
+    formFieldSource.includes('data-slot="field-description"'),
+  "form-field source must expose stable description slot data.",
+);
+assert(
+  formFieldSource.includes('"data-slot": "field-error"') ||
+    formFieldSource.includes('data-slot="field-error"'),
+  "form-field source must expose stable error slot data.",
+);
+assert(
+  formFieldSource.includes('data-slot="field-set"'),
+  "form-field source must expose stable fieldset slot data.",
+);
+assert(
+  formFieldSource.includes("aria-describedby"),
+  "form-field source must wire descriptions to controls.",
+);
+assert(
+  formFieldSource.includes("aria-invalid"),
+  "form-field source must expose invalid state to controls.",
+);
+assert(
+  formFieldSource.includes("aria-errormessage"),
+  "form-field source must expose error messages to controls.",
+);
+assert(
+  formFieldSource.includes("useId"),
+  "form-field source must generate hydration-safe accessibility ids.",
+);
+assert(!formFieldSource.includes("@radix-ui"), "form-field source must remain Radix-free.");
 assert(
   iconButtonSource.includes("IconButtonAccessibleName"),
   "icon-button source must expose accessible-name typing.",

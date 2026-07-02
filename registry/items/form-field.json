@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "form-field",
+  "type": "registry:ui",
+  "title": "FormField",
+  "description": "Native-first Form and Field primitives for labels, descriptions, errors, invalid state, fieldsets, legends, and dependency-free form composition.",
+  "dependencies": [],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/form-field/form-field.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/form-field/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}
