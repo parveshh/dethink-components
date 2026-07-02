@@ -41,18 +41,18 @@ The strongest demand clusters are forms, selects and comboboxes, overlays, data 
 
 ## Recommended Next Development Order
 
-The repository already has Button, IconButton, Link, Typography, Box, Container, DateTimePicker, and Timeline. The next practical sequence is:
+Status as of 2 July 2026: the repository has Button, IconButton, Link, Typography, Box, Container, Stack, Flex, Grid, Separator, Card, CardStack, FormField, Input, Textarea, NumberInput, Checkbox, RadioGroup, Switch, Select, DateTimePicker, and Timeline. Combobox planning is underway (PRD-109). The sequence with current status:
 
-1. Stack
-2. Flex
-3. Grid
-4. Separator / Divider
-5. Card
-6. Form + Field primitives
-7. Input + Textarea + NumberInput
-8. Checkbox + RadioGroup + Switch
-9. Select
-10. Combobox
+1. Stack — done
+2. Flex — done
+3. Grid — done
+4. Separator / Divider — done
+5. Card — done
+6. Form + Field primitives — done (FormField)
+7. Input + Textarea + NumberInput — done
+8. Checkbox + RadioGroup + Switch — done
+9. Select — done
+10. Combobox — in progress (PRD-109)
 11. Dialog + AlertDialog
 12. Popover + Tooltip + DropdownMenu
 13. Table
@@ -63,6 +63,18 @@ The repository already has Button, IconButton, Link, Typography, Box, Container,
 18. Toast + feedback states
 19. Chart + Stat/KPI
 20. FileUpload / Dropzone
+
+## Review Suggestions (2 July 2026)
+
+Findings from a validation pass against the PRD (Draft v1.1, Appendix C) and the current repository state:
+
+1. **Extract a shared overlay/positioning foundation before Dialog.** Select already carries its own portal and positioning logic, and Combobox will need the same. Before starting item 11, pull that logic into a shared floating/overlay primitive so Popover, Tooltip, DropdownMenu, Dialog, and future pickers consume one implementation instead of three diverging copies. This may justify swapping items 11 and 12, since Popover is the natural home for the extracted layer.
+2. **Pull minimal feedback states ahead of DataTable.** DataTable (item 14) requires polished loading, empty, and error states. Schedule Spinner, Skeleton, and EmptyState before items 13–14 rather than waiting for the full Toast system at item 18; the full toast/notification work can stay where it is.
+3. **Reuse Combobox internals for MultiSelect.** MultiSelect, AsyncSelect, and TagInput (item 16) share the option model, filtering, and listbox behavior being built for Combobox now. If overlays slip, consider advancing item 16 while the Combobox context is fresh — it is the PRD's flagship differentiator.
+4. **Decompose DateTimePicker when the date suite starts.** DateTimePicker shipped before Calendar, Popover, or DatePicker existed. Item 15 should begin by extracting a shared calendar core and overlay usage from the existing DateTimePicker, not by building a parallel implementation.
+5. **Missing high-frequency primitives to slot into the groups table:** Toggle/ToggleGroup (group 3 territory — toolbars, view switchers, segmented controls), Toolbar (prerequisite for DataTable filter bars and RichTextEditor), SkipLink (group 7 — required by every app shell), a shared LiveRegion/Announcer utility (needed by Toast, Combobox results, DataTable sort announcements), and Meter (group 6 — quota/capacity display distinct from Progress).
+6. **Refresh the AI-chat group (rank 13) with 2026 patterns:** streaming markdown Response renderer, ReasoningDisclosure for thinking traces, ApprovalCard for human-in-the-loop tool approval, SuggestionChips, and BranchNavigator for regenerated variants. These now matter as much as the original list.
+7. **Keep this document dated and statused.** The demand signals were checked 30 June 2026; re-check npm/shadcn-issue demand quarterly, and update the status annotations above as components land so this stays the operative overlay the PRD now points to.
 
 ## Operating Rules
 

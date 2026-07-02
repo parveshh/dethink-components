@@ -98,6 +98,7 @@ const button = await readJson(join(registryRoot, "button.json"));
 const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
 const checkbox = await readJson(join(registryRoot, "checkbox.json"));
+const combobox = await readJson(join(registryRoot, "combobox.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const formField = await readJson(join(registryRoot, "form-field.json"));
 const input = await readJson(join(registryRoot, "input.json"));
@@ -124,6 +125,7 @@ const registryItemsByName = new Map(
     card,
     cardStack,
     checkbox,
+    combobox,
     container,
     formField,
     input,
@@ -152,6 +154,7 @@ assert(
   "card-stack registry item must be named card-stack.",
 );
 assert(checkbox.name === "checkbox", "checkbox registry item must be named checkbox.");
+assert(combobox.name === "combobox", "combobox registry item must be named combobox.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(formField.name === "form-field", "form-field registry item must be named form-field.");
 assert(input.name === "input", "input registry item must be named input.");
@@ -199,6 +202,10 @@ assert(
 assert(
   checkbox.registryDependencies?.includes("dethink-base"),
   "checkbox registry item must depend on dethink-base.",
+);
+assert(
+  combobox.registryDependencies?.includes("dethink-base"),
+  "combobox registry item must depend on dethink-base.",
 );
 assert(
   container.registryDependencies?.includes("dethink-base"),
@@ -293,6 +300,10 @@ assert(
   "checkbox registry item must not add runtime dependencies.",
 );
 assert(
+  combobox.dependencies?.includes("react-aria-components"),
+  "combobox registry item must include react-aria-components.",
+);
+assert(
   Array.isArray(container.dependencies) && container.dependencies.length === 0,
   "container registry item must not add runtime dependencies.",
 );
@@ -372,6 +383,7 @@ for (const item of [
   card,
   cardStack,
   checkbox,
+  combobox,
   container,
   formField,
   input,
@@ -399,6 +411,7 @@ await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
 await assertRegistryRelativeImportsResolve(checkbox, registryItemsByName);
+await assertRegistryRelativeImportsResolve(combobox, registryItemsByName);
 await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
 await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
@@ -431,6 +444,10 @@ const cardStackSource = await readFile(
 );
 const checkboxSource = await readFile(
   join(root, "packages/components/src/components/checkbox/checkbox.tsx"),
+  "utf8",
+);
+const comboboxSource = await readFile(
+  join(root, "packages/components/src/components/combobox/combobox.tsx"),
   "utf8",
 );
 const containerSource = await readFile(
@@ -662,6 +679,88 @@ assert(
   "checkbox source must include visible focus styling.",
 );
 assert(!checkboxSource.includes("@radix-ui"), "checkbox source must remain Radix-free.");
+assert(
+  comboboxSource.includes("react-aria-components"),
+  "combobox source must use React Aria Components.",
+);
+assert(
+  comboboxSource.includes('data-slot={dataSlot ?? "combobox"}'),
+  "combobox source must expose stable root slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-control"'),
+  "combobox source must expose stable control slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-input"'),
+  "combobox source must expose stable input slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-button"'),
+  "combobox source must expose stable button slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-popover"'),
+  "combobox source must expose stable popover slot data.",
+);
+assert(
+  comboboxSource.includes('container.setAttribute("data-slot", "combobox-portal-container")'),
+  "combobox source must expose stable portal host slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-listbox"'),
+  "combobox source must expose stable listbox slot data.",
+);
+assert(
+  comboboxSource.includes('data-slot="combobox-item"'),
+  "combobox source must expose stable item slot data.",
+);
+assert(
+  comboboxSource.includes("return document.createElement(\"div\")") &&
+    comboboxSource.includes("UNSTABLE_portalContainer={portalContainer ?? undefined}"),
+  "combobox source must create an explicit provider-aware portal container before client popover rendering.",
+);
+assert(
+  comboboxSource.includes("selectedKey={toSelectionKey(value)}"),
+  "combobox source must map public values to React Aria selected keys.",
+);
+assert(
+  comboboxSource.includes("onInputChange={onInputValueChange}"),
+  "combobox source must expose input value change callbacks.",
+);
+assert(
+  comboboxSource.includes("formValue={formValue}"),
+  "combobox source must expose formValue submission mode.",
+);
+assert(
+  comboboxSource.includes("isReadOnly={readOnly}"),
+  "combobox source must expose read-only state.",
+);
+assert(
+  comboboxSource.includes("type ComboboxComponent = (<T extends ComboboxItemData"),
+  "combobox source must preserve generic item typing.",
+);
+assert(
+  comboboxSource.includes("bg-background"),
+  "combobox source must use tokenized background utilities.",
+);
+assert(
+  comboboxSource.includes("border-input"),
+  "combobox source must use tokenized input border utilities.",
+);
+assert(
+  comboboxSource.includes("ring-ring"),
+  "combobox source must use tokenized focus ring utilities.",
+);
+assert(
+  comboboxSource.includes("text-destructive"),
+  "combobox source must use tokenized destructive utilities.",
+);
+assert(
+  comboboxSource.includes("h-density-control"),
+  "combobox source must use provider density control utilities.",
+);
+assert(!comboboxSource.includes("@radix-ui"), "combobox source must remain Radix-free.");
 assert(
   containerSource.includes('"data-slot": "container"'),
   "container source must expose stable slot data.",
