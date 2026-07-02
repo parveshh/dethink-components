@@ -57,4 +57,23 @@ describe("Select SSR", () => {
 
     consoleError.mockRestore();
   });
+
+  it("renders data-driven items on the server", () => {
+    const html = renderToString(
+      <Select
+        defaultValue="sandbox"
+        label="Workspace"
+        items={[
+          { label: "Production", value: "production" },
+          { label: "Sandbox", value: "sandbox" },
+        ]}
+      >
+        {(item) => <SelectItem value={item.value}>{item.label}</SelectItem>}
+      </Select>,
+    );
+
+    expect(html).toContain("Workspace");
+    expect(html).toContain("Sandbox");
+    expect(html).toContain('data-slot="select-trigger"');
+  });
 });

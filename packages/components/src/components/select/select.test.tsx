@@ -5,6 +5,7 @@ import {
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { DethinkProvider } from "../../foundation/dethink-provider";
 import {
   Select,
   SelectItem,
@@ -16,6 +17,19 @@ const workspaceItems = [
   { label: "Production", value: "production" },
   { label: "Staging", value: "staging" },
   { label: "Sandbox", value: "sandbox" },
+];
+
+const richWorkspaceItems = [
+  {
+    description: "Receives production deploys.",
+    label: "Production",
+    value: "production",
+  },
+  {
+    description: "Mirrors release candidates.",
+    label: "Staging",
+    value: "staging",
+  },
 ];
 
 describe("Select", () => {
@@ -87,13 +101,16 @@ describe("Select", () => {
     await user.click(screen.getByRole("button", { name: /Environment/ }));
     await user.click(screen.getByRole("option", { name: "Production" }));
 
-    expect(screen.getByRole("button", { name: /Environment/ })).toHaveTextContent(
-      "Production",
-    );
+    const trigger = screen.getByRole("button", { name: /Environment/ });
+
+    expect(trigger).toHaveTextContent("Production");
+    expect(trigger.querySelector('[data-slot="select-item-indicator"]')).toBeNull();
+    expect(trigger.querySelector('[data-slot="select-item-content"]')).toBeNull();
     expect(screen.getByText("production")).toBeInTheDocument();
   });
 
-  it("supports uncontrolled values and native form data", () => {
+  it("supports uncontrolled values and native form data", async () => {
+    const user = userEvent.setup();
     render(
       <form aria-label="Select form">
         <Select label="Region" name="region" defaultValue="eu">
@@ -109,12 +126,31 @@ describe("Select", () => {
 
     expect(trigger).toHaveTextContent("EU");
     expect(formData.get("region")).toBe("eu");
+
+    await user.click(trigger);
+    await user.click(screen.getByRole("option", { name: "US" }));
+
+    expect(new FormData(form as HTMLFormElement).get("region")).toBe("us");
   });
 
-  it("supports controlled open state", () => {
+  it("supports controlled and uncontrolled open state", async () => {
+    const user = userEvent.setup();
     const handleOpenChange = vi.fn();
 
-    render(
+    const { rerender } = render(
+      <Select label="Open workspace" defaultOpen onOpenChange={handleOpenChange}>
+        <SelectItem value="production">Production</SelectItem>
+        <SelectItem value="staging">Staging</SelectItem>
+      </Select>,
+    );
+
+    expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+    await user.keyboard("{Escape}");
+
+    expect(handleOpenChange).toHaveBeenCalledWith(false);
+
+    rerender(
       <Select label="Open workspace" open onOpenChange={handleOpenChange}>
         <SelectItem value="production">Production</SelectItem>
         <SelectItem value="staging">Staging</SelectItem>
@@ -151,6 +187,61 @@ describe("Select", () => {
     await user.click(screen.getByRole("option", { name: "Production" }));
 
     expect(handleValueChange).toHaveBeenCalledWith("production");
+  });
+
+  it("preserves extra fields in data-driven item typing", () => {
+    const valid = (
+      <Select label="Rich workspace" items={richWorkspaceItems}>
+        {(item) => (
+          <SelectItem value={item.value} textValue={item.description}>
+            {item.label}
+          </SelectItem>
+        )}
+      </Select>
+    );
+
+    expect(valid).toBeTruthy();
+  });
+
+  it("mirrors provider context onto the body portal host", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <DethinkProvider
+        className="custom-provider"
+        data-testid="select-provider"
+        theme="dark"
+        density="compact"
+        dir="rtl"
+      >
+        <Select label="Provider workspace" defaultValue="production">
+          <SelectItem value="production">Production</SelectItem>
+          <SelectItem value="staging">Staging</SelectItem>
+        </Select>
+      </DethinkProvider>,
+    );
+
+    await user.click(screen.getByRole("button", { name: /Provider workspace/ }));
+
+    const popover = screen
+      .getByRole("listbox")
+      .closest<HTMLElement>('[data-slot="select-popover"]');
+    const portalHost = popover?.closest<HTMLElement>(
+      '[data-slot="select-portal-container"]',
+    );
+    const provider = screen.getByTestId("select-provider");
+
+    if (!popover || !portalHost) {
+      throw new Error("Select popover should render inside a portal host.");
+    }
+
+    expect(document.body).toContainElement(portalHost);
+    expect(provider).not.toContainElement(popover);
+    expect(portalHost).toHaveAttribute("data-dethink-provider", "");
+    expect(portalHost).toHaveAttribute("data-theme", "dark");
+    expect(portalHost).toHaveAttribute("data-density", "compact");
+    expect(portalHost).toHaveAttribute("dir", "rtl");
+    expect(portalHost).toHaveClass("custom-provider");
   });
 
   it("exposes disabled, read-only, required, and invalid states", async () => {
@@ -216,5 +307,19 @@ describe("Select", () => {
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(handleOpenChange).not.toHaveBeenCalled();
     expect(handleValueChange).not.toHaveBeenCalled();
+  });
+
+  it("forces controlled read-only open state closed", () => {
+    render(
+      <Select readOnly open label="Read-only open workspace" defaultValue="production">
+        <SelectItem value="production">Production</SelectItem>
+        <SelectItem value="staging">Staging</SelectItem>
+      </Select>,
+    );
+
+    expect(
+      screen.queryByRole("listbox", { name: /Read-only open workspace/ }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 });

@@ -941,12 +941,28 @@ assert(
   "select source must expose stable popover slot data.",
 );
 assert(
+  selectSource.includes('container.setAttribute("data-slot", "select-portal-container")'),
+  "select source must expose stable portal host slot data.",
+);
+assert(
   selectSource.includes('data-slot="select-listbox"'),
   "select source must expose stable listbox slot data.",
 );
 assert(
   selectSource.includes('data-slot="select-item"'),
   "select source must expose stable item slot data.",
+);
+assert(
+  selectSource.includes("UNSTABLE_portalContainer={portalContainer ?? undefined}"),
+  "select source must use an explicit provider-aware portal container.",
+);
+assert(
+  selectSource.includes("selectedText || defaultChildren"),
+  "select source must render selected item text without item chrome.",
+);
+assert(
+  selectSource.includes("type SelectComponent = (<T extends SelectItemData"),
+  "select source must preserve generic item typing.",
 );
 assert(
   selectSource.includes("bg-background"),

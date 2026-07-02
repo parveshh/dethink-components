@@ -54,10 +54,13 @@ export const Base: Story = {
   ),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole("button", { name: /Workspace/ });
 
     await userEvent.click(trigger);
-    await expect(canvas.getByRole("option", { name: "Production" })).toBeVisible();
+    await expect(
+      await page.findByRole("option", { name: "Production" }),
+    ).toBeVisible();
   },
 };
 

@@ -14,9 +14,16 @@ import {
 } from "react-aria-components";
 import {
   cloneElement,
+  type ForwardedRef,
   forwardRef,
   isValidElement,
+  type ReactElement,
   type ReactNode,
+  type RefAttributes,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
 } from "react";
 import { cn } from "../../utils/cn";
 
@@ -122,6 +129,16 @@ const selectItemIndicatorClasses =
   "flex size-4 items-center justify-center text-current";
 
 const selectItemContentClasses = "min-w-0 truncate";
+const selectPortalDefaultClasses = "bg-background font-sans text-foreground";
+const selectPortalMirroredAttributes = [
+  "data-theme",
+  "data-density",
+  "dir",
+] as const;
+
+type SelectComponent = (<T extends SelectItemData = SelectItemData>(
+  props: SelectProps<T> & RefAttributes<HTMLDivElement>,
+) => ReactElement | null) & { displayName?: string };
 
 function isAriaInvalid(value: SelectProps["aria-invalid"]) {
   return value === true || value === "true" || value === "grammar" || value === "spelling";
@@ -133,6 +150,53 @@ function toSelectionKey(value: SelectValue | undefined) {
 
 function toDisabledKeys(disabledKeys: Iterable<SelectValue> | undefined) {
   return disabledKeys ? Array.from(disabledKeys) : undefined;
+}
+
+function assignForwardedRef<T>(ref: ForwardedRef<T>, value: T | null) {
+  if (typeof ref === "function") {
+    ref(value);
+  } else if (ref) {
+    ref.current = value;
+  }
+}
+
+function fallbackProviderAttribute(name: (typeof selectPortalMirroredAttributes)[number]) {
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  if (name === "data-density") {
+    return "default";
+  }
+
+  if (name === "data-theme") {
+    return document.documentElement.getAttribute(name) ?? "system";
+  }
+
+  return document.documentElement.getAttribute("dir") ?? document.dir ?? "ltr";
+}
+
+function syncSelectPortalContainer(
+  container: HTMLElement,
+  provider: HTMLElement | null,
+) {
+  const source = provider ?? (typeof document === "undefined" ? null : document.documentElement);
+
+  container.setAttribute("data-slot", "select-portal-container");
+  container.setAttribute("data-dethink-provider", "");
+  container.className = provider?.className || selectPortalDefaultClasses;
+  container.style.cssText = provider?.getAttribute("style") ?? "";
+  container.style.display = "contents";
+
+  for (const attribute of selectPortalMirroredAttributes) {
+    const value = source?.getAttribute(attribute) ?? fallbackProviderAttribute(attribute);
+
+    if (value) {
+      container.setAttribute(attribute, value);
+    } else {
+      container.removeAttribute(attribute);
+    }
+  }
 }
 
 export function selectClassNames({
@@ -206,127 +270,171 @@ function renderSelectChildren<T extends SelectItemData>({
   return children as ReactNode;
 }
 
-export const Select = forwardRef<HTMLDivElement, SelectProps>(
-  (
-    {
-      "aria-invalid": ariaInvalid,
-      "data-slot": dataSlot,
-      children,
-      className,
-      controlSize = "md",
-      defaultOpen,
-      defaultValue,
-      description,
-      disabled = false,
-      disabledKeys,
-      errorMessage,
-      invalid = false,
-      items,
-      label,
-      onOpenChange,
-      onValueChange,
-      open,
-      placeholder = "Select an option",
-      readOnly = false,
-      required = false,
-      value,
-      ...props
+function SelectRoot<T extends SelectItemData = SelectItemData>(
+  {
+    "aria-invalid": ariaInvalid,
+    "data-slot": dataSlot,
+    children,
+    className,
+    controlSize = "md",
+    defaultOpen,
+    defaultValue,
+    description,
+    disabled = false,
+    disabledKeys,
+    errorMessage,
+    invalid = false,
+    items,
+    label,
+    onOpenChange,
+    onValueChange,
+    open,
+    placeholder = "Select an option",
+    readOnly = false,
+    required = false,
+    value,
+    ...props
+  }: SelectProps<T>,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
+  const resolvedInvalid = invalid || isAriaInvalid(ariaInvalid);
+  const renderedChildren = renderSelectChildren({ children, items });
+  const resolvedOpen = readOnly ? false : open;
+  const resolvedDefaultOpen = readOnly ? false : defaultOpen;
+  const selectRef = useRef<HTMLDivElement | null>(null);
+  const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+  const setSelectRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      selectRef.current = node;
+      assignForwardedRef(ref, node);
     },
-    ref,
-  ) => {
-    const resolvedInvalid = invalid || isAriaInvalid(ariaInvalid);
-    const renderedChildren = renderSelectChildren({ children, items });
-    const resolvedOpen = readOnly ? false : open;
-    const resolvedDefaultOpen = readOnly ? false : defaultOpen;
+    [ref],
+  );
 
-    return (
-      <AriaSelect
-        {...props}
-        ref={ref}
-        selectedKey={toSelectionKey(value)}
-        defaultSelectedKey={toSelectionKey(defaultValue)}
-        isOpen={resolvedOpen}
-        defaultOpen={resolvedDefaultOpen}
-        onOpenChange={(isOpen) => {
-          if (!readOnly) {
-            onOpenChange?.(isOpen);
-          }
-        }}
-        onSelectionChange={(key: Key | null) => {
-          if (key !== null && !readOnly) {
-            onValueChange?.(String(key));
-          }
-        }}
-        disabledKeys={toDisabledKeys(disabledKeys)}
-        isDisabled={disabled}
-        isRequired={required}
-        isInvalid={resolvedInvalid}
-        aria-invalid={resolvedInvalid ? true : ariaInvalid}
-        placeholder={placeholder}
-        validationBehavior="aria"
-        data-slot={dataSlot ?? "select"}
+  useEffect(() => {
+    if (typeof document === "undefined") {
+      return undefined;
+    }
+
+    const container = document.createElement("div");
+    const provider = selectRef.current?.closest<HTMLElement>("[data-dethink-provider]") ?? null;
+    const syncContainer = () => syncSelectPortalContainer(container, provider);
+
+    syncContainer();
+    document.body.appendChild(container);
+    setPortalContainer(container);
+
+    const observerTarget = provider ?? document.documentElement;
+    const observer = new MutationObserver(syncContainer);
+    observer.observe(observerTarget, {
+      attributeFilter: [
+        "class",
+        "data-density",
+        "data-theme",
+        "dir",
+        "style",
+      ],
+      attributes: true,
+    });
+
+    return () => {
+      observer.disconnect();
+      container.remove();
+    };
+  }, []);
+
+  return (
+    <AriaSelect
+      {...props}
+      ref={setSelectRef}
+      selectedKey={toSelectionKey(value)}
+      defaultSelectedKey={toSelectionKey(defaultValue)}
+      isOpen={resolvedOpen}
+      defaultOpen={resolvedDefaultOpen}
+      onOpenChange={(isOpen) => {
+        if (!readOnly) {
+          onOpenChange?.(isOpen);
+        }
+      }}
+      onSelectionChange={(key: Key | null) => {
+        if (key !== null && !readOnly) {
+          onValueChange?.(String(key));
+        }
+      }}
+      disabledKeys={toDisabledKeys(disabledKeys)}
+      isDisabled={disabled}
+      isRequired={required}
+      isInvalid={resolvedInvalid}
+      aria-invalid={resolvedInvalid ? true : ariaInvalid}
+      placeholder={placeholder}
+      validationBehavior="aria"
+      data-slot={dataSlot ?? "select"}
+      data-size={controlSize}
+      data-readonly={readOnly ? "true" : undefined}
+      className={selectClassNames({ className })}
+    >
+      {label ? (
+        <Label
+          data-slot="select-label"
+          data-disabled={disabled ? "true" : undefined}
+          data-invalid={resolvedInvalid ? "true" : undefined}
+          data-required={required ? "true" : undefined}
+          className={selectLabelClasses}
+        >
+          {label}
+          {required ? <span aria-hidden="true"> *</span> : null}
+        </Label>
+      ) : null}
+      <AriaButton
+        data-slot="select-trigger"
         data-size={controlSize}
-        data-disabled={disabled ? "true" : undefined}
         data-invalid={resolvedInvalid ? "true" : undefined}
         data-readonly={readOnly ? "true" : undefined}
         data-required={required ? "true" : undefined}
-        className={selectClassNames({ className })}
+        className={cn(selectTriggerBaseClasses, selectControlSizeClasses[controlSize])}
       >
-        {label ? (
-          <Label
-            data-slot="select-label"
-            data-disabled={disabled ? "true" : undefined}
-            data-invalid={resolvedInvalid ? "true" : undefined}
-            data-required={required ? "true" : undefined}
-            className={selectLabelClasses}
-          >
-            {label}
-            {required ? <span aria-hidden="true"> *</span> : null}
-          </Label>
-        ) : null}
-        <AriaButton
-          data-slot="select-trigger"
-          data-size={controlSize}
-          data-invalid={resolvedInvalid ? "true" : undefined}
-          data-readonly={readOnly ? "true" : undefined}
-          data-required={required ? "true" : undefined}
-          className={cn(selectTriggerBaseClasses, selectControlSizeClasses[controlSize])}
+        <AriaSelectValue data-slot="select-value" className={selectValueClasses}>
+          {({ selectedText, defaultChildren }) => selectedText || defaultChildren}
+        </AriaSelectValue>
+        <span
+          aria-hidden="true"
+          data-slot="select-icon"
+          className={selectIconClasses}
         >
-          <AriaSelectValue data-slot="select-value" className={selectValueClasses} />
-          <span
-            aria-hidden="true"
-            data-slot="select-icon"
-            className={selectIconClasses}
-          >
-            <ChevronDownIcon />
-          </span>
-        </AriaButton>
-        {description ? (
-          <Text
-            slot="description"
-            data-slot="select-description"
-            className={selectHelpClasses}
-          >
-            {description}
-          </Text>
-        ) : null}
-        {errorMessage ? (
-          <FieldError data-slot="select-error" className={selectErrorClasses}>
-            {errorMessage}
-          </FieldError>
-        ) : null}
-        <Popover data-slot="select-popover" className={selectPopoverClasses}>
-          <ListBox
-            data-slot="select-listbox"
-            className={selectListBoxClasses}
-          >
-            {renderedChildren}
-          </ListBox>
-        </Popover>
-      </AriaSelect>
-    );
-  },
-);
+          <ChevronDownIcon />
+        </span>
+      </AriaButton>
+      {description ? (
+        <Text
+          slot="description"
+          data-slot="select-description"
+          className={selectHelpClasses}
+        >
+          {description}
+        </Text>
+      ) : null}
+      {errorMessage ? (
+        <FieldError data-slot="select-error" className={selectErrorClasses}>
+          {errorMessage}
+        </FieldError>
+      ) : null}
+      <Popover
+        data-slot="select-popover"
+        UNSTABLE_portalContainer={portalContainer ?? undefined}
+        className={selectPopoverClasses}
+      >
+        <ListBox
+          data-slot="select-listbox"
+          className={selectListBoxClasses}
+        >
+          {renderedChildren}
+        </ListBox>
+      </Popover>
+    </AriaSelect>
+  );
+}
+
+export const Select = forwardRef(SelectRoot) as SelectComponent;
 
 Select.displayName = "Select";
 
