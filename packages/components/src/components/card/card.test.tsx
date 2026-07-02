@@ -78,7 +78,6 @@ describe("Card", () => {
       "flex",
       "min-w-0",
       "flex-col",
-      "overflow-hidden",
       "text-foreground",
       "bg-background",
       "border",
@@ -89,7 +88,15 @@ describe("Card", () => {
   });
 
   it.each(elements)("renders a supported %s root element", (as) => {
-    render(<Card as={as}>Semantic {as}</Card>);
+    render(
+      as === "li" ? (
+        <ul>
+          <Card as={as}>Semantic {as}</Card>
+        </ul>
+      ) : (
+        <Card as={as}>Semantic {as}</Card>
+      ),
+    );
 
     expect(screen.getByText(`Semantic ${as}`).tagName).toBe(as.toUpperCase());
   });

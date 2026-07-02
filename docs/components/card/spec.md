@@ -62,17 +62,29 @@ export interface CardProps extends React.HTMLAttributes<HTMLElement> {
   surface?: CardSurface;
 }
 
-export interface CardSlotProps extends React.HTMLAttributes<HTMLElement> {
-  as?: "div" | "header" | "footer" | "section";
-  spacing?: CardSpacing;
-}
-
 export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
   as?: "div" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 export interface CardDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   as?: "p" | "div" | "span";
+}
+
+export interface CardHeaderProps extends React.HTMLAttributes<HTMLElement> {
+  as?: "div" | "header" | "section";
+}
+
+export interface CardActionProps extends React.HTMLAttributes<HTMLElement> {
+  as?: "div" | "span";
+}
+
+export interface CardContentProps extends React.HTMLAttributes<HTMLElement> {
+  as?: "div" | "section";
+}
+
+export interface CardFooterProps extends React.HTMLAttributes<HTMLElement> {
+  as?: "div" | "footer" | "section";
+  justify?: "start" | "between" | "end";
 }
 ```
 

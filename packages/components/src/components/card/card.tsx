@@ -94,8 +94,7 @@ type CardElementWithRef = ReactElement<CardSlotProps> & {
 
 type EventHandler = (...args: unknown[]) => void;
 
-const cardBaseClasses =
-  "box-border flex min-w-0 flex-col overflow-hidden text-foreground";
+const cardBaseClasses = "box-border flex min-w-0 flex-col text-foreground";
 
 const cardSurfaceClasses: Record<CardSurface, string> = {
   default: "bg-background",
