@@ -23,6 +23,26 @@ Registry consumers should be able to install each primitive independently:
 Each registry item should depend on `dethink-base` and add no runtime
 dependencies. Form examples may also install `form-field`.
 
+Use the package export path when consuming the library directly:
+
+```tsx
+import {
+  Checkbox,
+  RadioGroup,
+  RadioGroupItem,
+  Switch,
+} from "@dethink/components";
+```
+
+The public package surface includes:
+
+- `Checkbox`, `CheckboxProps`, `CheckboxCheckedState`, `CheckboxControlSize`,
+  and `checkboxClassNames`.
+- `RadioGroup`, `RadioGroupItem`, `RadioGroupProps`, `RadioGroupItemProps`,
+  `RadioGroupControlSize`, `RadioGroupOrientation`, `radioGroupClassNames`,
+  and `radioGroupItemClassNames`.
+- `Switch`, `SwitchProps`, `SwitchControlSize`, and `switchClassNames`.
+
 ## Native-First Usage
 
 Use the controls with visible labels in plain forms when the surrounding app
@@ -68,6 +88,25 @@ Use existing FormField grouping primitives for multiple checkboxes:
 
 V1 does not include a value-managing `CheckboxGroup`.
 
+## Checkbox State
+
+`Checkbox` accepts `checked`, `defaultChecked`, and `onCheckedChange`.
+Checked state can be `true`, `false`, or `"indeterminate"`.
+
+Indeterminate state is exposed through `aria-checked="mixed"` and the native
+`indeterminate` input property. It is a visual and accessibility state, not a
+third submitted form value. Use a real checked checkbox or separate hidden
+field when an app needs to submit a partial-selection marker.
+
+## RadioGroup Value
+
+`RadioGroup` owns the shared `name`, `value`, `defaultValue`, `onValueChange`,
+`orientation`, `disabled`, `readOnly`, `invalid`, and `required` state for its
+items. `RadioGroupItem` renders a native radio input for each option.
+
+Use controlled `value` when app state owns the selection. Use `defaultValue`
+for native form flows where the browser can submit the selected value.
+
 ## Switch Boundaries
 
 Use `Switch` when on/off semantics are clearer than checked/unchecked
@@ -86,6 +125,11 @@ semantics. Keep the visible label stable when state changes.
 ```
 
 `Switch` is binary-only and does not support indeterminate state.
+
+`Switch` accepts boolean `checked`, `defaultChecked`, and `onCheckedChange`
+values. It renders a native checkbox input with `role="switch"` so forms keep
+normal checkbox submission behavior while assistive technology receives on/off
+semantics.
 
 ## Accessibility
 
@@ -126,6 +170,13 @@ The suite should be verified with:
 - Storybook typecheck/build.
 - Playground build.
 - Registry validation and smoke.
+
+Current suite-level coverage lives in:
+
+- `packages/components/src/components/choice-controls/choice-controls.test.tsx`
+- `packages/components/src/components/choice-controls/choice-controls.a11y.test.tsx`
+- `packages/components/src/components/choice-controls/choice-controls.ssr.test.tsx`
+- `apps/storybook/src/ChoiceControls.stories.tsx`
 
 ## Out Of Scope
 
