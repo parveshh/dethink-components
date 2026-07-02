@@ -102,6 +102,9 @@ describe("Choice controls suite SSR", () => {
       hydrateRoot(container, fixture);
     });
 
+    const mixedCheckbox = container.querySelector("[aria-checked='mixed']");
+
+    expect((mixedCheckbox as HTMLInputElement | null)?.indeterminate).toBe(true);
     expect(
       consoleError.mock.calls.some(([message]) =>
         String(message).toLowerCase().includes("hydration"),

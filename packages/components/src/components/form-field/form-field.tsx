@@ -167,7 +167,7 @@ const fieldGroupGapClasses: Record<FieldGroupGap, string> = {
 };
 
 const fieldSetBaseClasses =
-  "min-w-0 border-0 p-0 text-foreground disabled:opacity-60";
+  "group/field-set min-w-0 border-0 p-0 text-foreground disabled:opacity-60";
 
 const fieldLegendBaseClasses = "max-w-full text-foreground";
 

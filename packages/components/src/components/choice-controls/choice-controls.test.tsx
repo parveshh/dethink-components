@@ -50,10 +50,16 @@ describe("Choice controls suite", () => {
     expect(RadioGroup).toBeTypeOf("object");
     expect(RadioGroupItem).toBeTypeOf("object");
     expect(Switch).toBeTypeOf("object");
-    expect(checkboxClassNames({ controlSize: checkboxSize })).toContain("size-5");
+    expect(checkboxClassNames({ controlSize: checkboxSize })).toContain(
+      "--choice-control-size",
+    );
     expect(radioGroupClassNames(radioProps)).toContain("sm:flex");
-    expect(radioGroupItemClassNames({ controlSize: radioSize })).toContain("size-4");
-    expect(switchClassNames({ controlSize: switchSize })).toContain("h-7");
+    expect(radioGroupItemClassNames({ controlSize: radioSize })).toContain(
+      "--choice-control-size",
+    );
+    expect(switchClassNames({ controlSize: switchSize })).toContain(
+      "--switch-height",
+    );
     expect(checkboxState).toBe("indeterminate");
     expect(radioItemProps.value).toBe("balanced");
     expect(switchProps.checked).toBe(true);
@@ -151,5 +157,6 @@ describe("Choice controls suite", () => {
     await user.click(browserTool);
 
     expect(screen.getByRole("switch", { name: "Browser tool" })).not.toBeChecked();
+    expect(new FormData(form as HTMLFormElement).get("browserTool")).toBeNull();
   });
 });

@@ -624,6 +624,14 @@ assert(
   "checkbox source must use tokenized input border utilities.",
 );
 assert(
+  checkboxSource.includes("--choice-control-size"),
+  "checkbox source must use density-backed control sizing.",
+);
+assert(
+  checkboxSource.includes("group-disabled/field-set:opacity-60"),
+  "checkbox source must style inherited fieldset disabled state.",
+);
+assert(
   checkboxSource.includes("focus-visible:ring-2"),
   "checkbox source must include visible focus styling.",
 );
@@ -677,6 +685,10 @@ assert(
 assert(
   formFieldSource.includes('data-slot="field-set"'),
   "form-field source must expose stable fieldset slot data.",
+);
+assert(
+  formFieldSource.includes("group/field-set"),
+  "form-field source must expose fieldset group styling hooks.",
 );
 assert(
   formFieldSource.includes("aria-describedby"),
@@ -805,12 +817,24 @@ assert(
   "radio-group source must share group state through context.",
 );
 assert(
+  radioGroupSource.includes('role={resolvedRole}'),
+  "radio-group source must expose radiogroup semantics for labelled standalone groups.",
+);
+assert(
   radioGroupSource.includes("type=\"radio\""),
   "radio-group source must preserve native radio input semantics.",
 );
 assert(
   radioGroupSource.includes("border-input"),
   "radio-group source must use tokenized input border utilities.",
+);
+assert(
+  radioGroupSource.includes("--choice-control-size"),
+  "radio-group source must use density-backed item sizing.",
+);
+assert(
+  radioGroupSource.includes("group-disabled/field-set:opacity-60"),
+  "radio-group source must style inherited fieldset disabled state.",
 );
 assert(
   radioGroupSource.includes("focus-visible:ring-2"),
@@ -895,6 +919,14 @@ assert(
 assert(
   switchSource.includes("border-input"),
   "switch source must use tokenized input border utilities.",
+);
+assert(
+  switchSource.includes("--switch-height"),
+  "switch source must use density-backed track sizing.",
+);
+assert(
+  switchSource.includes("group-disabled/field-set:opacity-60"),
+  "switch source must style inherited fieldset disabled state.",
 );
 assert(
   switchSource.includes("focus-visible:ring-2"),

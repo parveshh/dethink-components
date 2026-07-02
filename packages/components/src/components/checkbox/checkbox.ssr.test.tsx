@@ -57,6 +57,9 @@ describe("Checkbox SSR", () => {
       hydrateRoot(container, field);
     });
 
+    const checkbox = container.querySelector("[data-slot='checkbox-input']");
+
+    expect((checkbox as HTMLInputElement | null)?.indeterminate).toBe(true);
     expect(
       consoleError.mock.calls.some(([message]) =>
         String(message).toLowerCase().includes("hydration"),

@@ -178,6 +178,28 @@ describe("Switch", () => {
     expect(switchInput).toBeChecked();
   });
 
+  it("preserves native onChange before emitting checked changes", async () => {
+    const user = userEvent.setup();
+    const handleChange = vi.fn();
+    const handleCheckedChange = vi.fn();
+
+    render(
+      <>
+        <label htmlFor="change-switch">Change switch</label>
+        <Switch
+          id="change-switch"
+          onChange={handleChange}
+          onCheckedChange={handleCheckedChange}
+        />
+      </>,
+    );
+
+    await user.click(screen.getByRole("switch", { name: "Change switch" }));
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleCheckedChange).toHaveBeenCalledWith(true);
+  });
+
   it("composes with FieldControl relationships", () => {
     render(
       <Field id="two-factor" invalid required orientation="horizontal">

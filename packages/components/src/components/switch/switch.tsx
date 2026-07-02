@@ -29,22 +29,22 @@ const switchRootBaseClasses =
   "group/switch relative inline-flex shrink-0 items-center align-middle";
 
 const switchControlSizeClasses: Record<SwitchControlSize, string> = {
-  sm: "h-5 w-9",
-  md: "h-6 w-11",
-  lg: "h-7 w-14",
+  sm: "[--switch-height:calc(var(--dt-density-control)*0.5)] [--switch-thumb-size:calc(var(--switch-height)-0.25rem)] [--switch-width:calc(var(--dt-density-control)*0.9)] h-[var(--switch-height)] w-[var(--switch-width)]",
+  md: "[--switch-height:calc(var(--dt-density-control)*0.6)] [--switch-thumb-size:calc(var(--switch-height)-0.25rem)] [--switch-width:calc(var(--dt-density-control)*1.1)] h-[var(--switch-height)] w-[var(--switch-width)]",
+  lg: "[--switch-height:calc(var(--dt-density-control)*0.7)] [--switch-thumb-size:calc(var(--switch-height)-0.25rem)] [--switch-width:calc(var(--dt-density-control)*1.3)] h-[var(--switch-height)] w-[var(--switch-width)]",
 };
 
 const switchThumbSizeClasses: Record<SwitchControlSize, string> = {
-  sm: "size-4",
-  md: "size-5",
-  lg: "size-6",
+  sm: "size-[var(--switch-thumb-size)]",
+  md: "size-[var(--switch-thumb-size)]",
+  lg: "size-[var(--switch-thumb-size)]",
 };
 
 const switchInputClasses =
   "peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed";
 
 const switchTrackBaseClasses =
-  "pointer-events-none flex size-full items-center rounded-full border border-input bg-muted p-0.5 shadow-sm outline-none motion-safe:transition-[background-color,border-color,box-shadow,opacity] motion-safe:duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[invalid=true]:border-destructive data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/15 data-[disabled=true]:opacity-60 data-[readonly=true]:bg-muted/40";
+  "pointer-events-none flex size-full items-center rounded-full border border-input bg-muted p-0.5 shadow-sm outline-none motion-safe:transition-[background-color,border-color,box-shadow,opacity] motion-safe:duration-150 peer-disabled:opacity-60 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background group-disabled/field-set:opacity-60 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[invalid=true]:border-destructive data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/15 data-[disabled=true]:opacity-60 data-[readonly=true]:bg-muted/40";
 
 const switchThumbBaseClasses =
   "rounded-full bg-background text-background shadow-sm motion-safe:transition-[margin,background-color] motion-safe:duration-150 data-[state=checked]:ms-auto data-[state=checked]:bg-primary-foreground data-[readonly=true]:bg-muted-foreground/70";

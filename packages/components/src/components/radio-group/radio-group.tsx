@@ -71,16 +71,16 @@ const radioGroupItemRootBaseClasses =
   "group/radio relative inline-flex shrink-0 items-center justify-center align-middle";
 
 const radioGroupControlSizeClasses: Record<RadioGroupControlSize, string> = {
-  sm: "size-4",
-  md: "size-5",
-  lg: "size-6",
+  sm: "[--choice-control-size:calc(var(--dt-density-control)*0.4)] size-[var(--choice-control-size)]",
+  md: "[--choice-control-size:calc(var(--dt-density-control)*0.5)] size-[var(--choice-control-size)]",
+  lg: "[--choice-control-size:calc(var(--dt-density-control)*0.6)] size-[var(--choice-control-size)]",
 };
 
 const radioGroupItemInputClasses =
   "peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed";
 
 const radioGroupItemIndicatorBaseClasses =
-  "pointer-events-none flex size-full items-center justify-center rounded-full border border-input bg-background text-transparent shadow-sm outline-none motion-safe:transition-[background-color,border-color,box-shadow,color,opacity] motion-safe:duration-150 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[invalid=true]:border-destructive data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/15 data-[disabled=true]:opacity-60 data-[readonly=true]:bg-muted/40 data-[readonly=true]:text-muted-foreground";
+  "pointer-events-none flex size-full items-center justify-center rounded-full border border-input bg-background text-transparent shadow-sm outline-none motion-safe:transition-[background-color,border-color,box-shadow,color,opacity] motion-safe:duration-150 peer-disabled:opacity-60 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background group-disabled/field-set:opacity-60 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[invalid=true]:border-destructive data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/15 data-[disabled=true]:opacity-60 data-[readonly=true]:bg-muted/40 data-[readonly=true]:text-muted-foreground";
 
 const radioGroupItemDotClasses = "size-2 rounded-full bg-current";
 
@@ -136,6 +136,11 @@ export function radioGroupItemClassNames({
 export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
   (
     {
+      "aria-invalid": ariaInvalid,
+      "aria-label": ariaLabel,
+      "aria-labelledby": ariaLabelledBy,
+      "aria-orientation": ariaOrientation,
+      "aria-required": ariaRequired,
       children,
       className,
       controlSize = "md",
@@ -147,6 +152,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
       orientation = "vertical",
       readOnly = false,
       required = false,
+      role,
       value,
       ...props
     },
@@ -157,6 +163,12 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
     const isControlled = value !== undefined;
     const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
     const selectedValue = isControlled ? value : uncontrolledValue;
+    const hasAccessibleName = ariaLabel !== undefined || ariaLabelledBy !== undefined;
+    const resolvedRole = role ?? (hasAccessibleName ? "radiogroup" : undefined);
+    const resolvedAriaInvalid = invalid ? true : ariaInvalid;
+    const resolvedAriaRequired = required ? true : ariaRequired;
+    const resolvedAriaOrientation =
+      ariaOrientation ?? (resolvedRole === "radiogroup" ? orientation : undefined);
 
     const handleItemChange = (
       nextValue: string,
@@ -190,6 +202,11 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
         <div
           {...props}
           ref={ref}
+          aria-invalid={resolvedRole ? resolvedAriaInvalid : ariaInvalid}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          aria-orientation={resolvedAriaOrientation}
+          aria-required={resolvedRole === "radiogroup" ? resolvedAriaRequired : ariaRequired}
           data-slot="radio-group"
           data-disabled={disabled ? "true" : undefined}
           data-invalid={invalid ? "true" : undefined}
@@ -197,6 +214,7 @@ export const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(
           data-readonly={readOnly ? "true" : undefined}
           data-required={required ? "true" : undefined}
           data-size={controlSize}
+          role={resolvedRole}
           className={radioGroupClassNames({ className, orientation })}
         >
           {children}

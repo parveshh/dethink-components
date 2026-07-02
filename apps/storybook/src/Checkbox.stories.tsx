@@ -153,15 +153,15 @@ export const InvalidRequired: Story = {
         <FieldSet aria-describedby="channels-error">
           <FieldLegend variant="label">Notification channels</FieldLegend>
           <FieldGroup>
-            <Field id="channel-email" orientation="horizontal" invalid required>
+            <Field id="channel-email" orientation="horizontal" invalid>
               <FieldControl asChild>
-                <Checkbox name="channels" value="email" />
+                <Checkbox name="channels" value="email" aria-invalid="true" />
               </FieldControl>
               <FieldLabel>Email</FieldLabel>
             </Field>
-            <Field id="channel-slack" orientation="horizontal" invalid required>
+            <Field id="channel-slack" orientation="horizontal" invalid>
               <FieldControl asChild>
-                <Checkbox name="channels" value="slack" />
+                <Checkbox name="channels" value="slack" aria-invalid="true" />
               </FieldControl>
               <FieldLabel>Slack</FieldLabel>
             </Field>

@@ -48,6 +48,8 @@ describe("RadioGroup", () => {
     const proRoot = pro.closest("[data-slot='radio-group-item']");
     const indicator = proRoot?.querySelector("[data-slot='radio-group-item-indicator']");
 
+    expect(group).toHaveAttribute("role", "radiogroup");
+    expect(group).toHaveAttribute("aria-orientation", "horizontal");
     expect(group).toHaveAttribute("data-slot", "radio-group");
     expect(group).toHaveAttribute("data-orientation", "horizontal");
     expect(group).toHaveClass("custom-group");
@@ -132,7 +134,10 @@ describe("RadioGroup", () => {
 
     const radio = screen.getByLabelText("US");
     const root = radio.closest("[data-slot='radio-group-item']");
+    const group = screen.getByRole("radiogroup", { name: "Region" });
 
+    expect(group).toHaveAttribute("aria-invalid", "true");
+    expect(group).toHaveAttribute("aria-required", "true");
     expect(radio).toBeDisabled();
     expect(radio).toBeRequired();
     expect(radio).toHaveAttribute("readonly");
@@ -192,6 +197,33 @@ describe("RadioGroup", () => {
     await user.keyboard("[Space]");
 
     expect(comfortable).toBeChecked();
+  });
+
+  it("preserves item onChange before group value changes", async () => {
+    const user = userEvent.setup();
+    const handleChange = vi.fn();
+    const handleValueChange = vi.fn();
+
+    render(
+      <RadioGroup name="delivery" defaultValue="standard" onValueChange={handleValueChange}>
+        <label htmlFor="delivery-standard">Standard</label>
+        <RadioGroupItem id="delivery-standard" value="standard" />
+        <label htmlFor="delivery-priority">Priority</label>
+        <RadioGroupItem
+          id="delivery-priority"
+          value="priority"
+          onChange={handleChange}
+        />
+      </RadioGroup>,
+    );
+
+    const priority = screen.getByLabelText("Priority");
+
+    await user.click(priority);
+
+    expect(priority).toBeChecked();
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleValueChange).toHaveBeenCalledWith("priority");
   });
 
   it("composes with FieldSet, FieldControl, and error relationships", () => {

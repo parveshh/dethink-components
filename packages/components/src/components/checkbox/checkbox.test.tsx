@@ -85,6 +85,46 @@ describe("Checkbox", () => {
     expect(screen.getByText("enabled")).toBeInTheDocument();
   });
 
+  it("supports keyboard toggling through the native input", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <>
+        <label htmlFor="keyboard-checkbox">Keyboard checkbox</label>
+        <Checkbox id="keyboard-checkbox" />
+      </>,
+    );
+
+    const checkbox = screen.getByLabelText("Keyboard checkbox");
+
+    checkbox.focus();
+    await user.keyboard("[Space]");
+
+    expect(checkbox).toBeChecked();
+  });
+
+  it("preserves native onChange before emitting checked changes", async () => {
+    const user = userEvent.setup();
+    const handleChange = vi.fn();
+    const handleCheckedChange = vi.fn();
+
+    render(
+      <>
+        <label htmlFor="change-checkbox">Change checkbox</label>
+        <Checkbox
+          id="change-checkbox"
+          onChange={handleChange}
+          onCheckedChange={handleCheckedChange}
+        />
+      </>,
+    );
+
+    await user.click(screen.getByLabelText("Change checkbox"));
+
+    expect(handleChange).toHaveBeenCalledTimes(1);
+    expect(handleCheckedChange).toHaveBeenCalledWith(true);
+  });
+
   it("exposes indeterminate state and resolves to checked on user change", async () => {
     const user = userEvent.setup();
     const handleCheckedChange = vi.fn();
