@@ -99,12 +99,15 @@ const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const formField = await readJson(join(registryRoot, "form-field.json"));
+const input = await readJson(join(registryRoot, "input.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
+const numberInput = await readJson(join(registryRoot, "number-input.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
+const textarea = await readJson(join(registryRoot, "textarea.json"));
 const typography = await readJson(join(registryRoot, "typography.json"));
 const dateTimePicker = await readJson(join(registryRoot, "date-time-picker.json"));
 const timeline = await readJson(join(registryRoot, "timeline.json"));
@@ -118,12 +121,15 @@ const registryItemsByName = new Map(
     cardStack,
     container,
     formField,
+    input,
     iconButton,
     flex,
     grid,
     link,
+    numberInput,
     separator,
     stack,
+    textarea,
     typography,
     dateTimePicker,
     timeline,
@@ -139,12 +145,15 @@ assert(
 );
 assert(container.name === "container", "container registry item must be named container.");
 assert(formField.name === "form-field", "form-field registry item must be named form-field.");
+assert(input.name === "input", "input registry item must be named input.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
+assert(numberInput.name === "number-input", "number-input registry item must be named number-input.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
+assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
 assert(typography.name === "typography", "typography registry item must be named typography.");
 assert(
   dateTimePicker.name === "date-time-picker",
@@ -184,6 +193,10 @@ assert(
   "form-field registry item must depend on dethink-base.",
 );
 assert(
+  input.registryDependencies?.includes("dethink-base"),
+  "input registry item must depend on dethink-base.",
+);
+assert(
   iconButton.registryDependencies?.includes("dethink-base"),
   "icon-button registry item must depend on dethink-base.",
 );
@@ -204,12 +217,20 @@ assert(
   "link registry item must depend on dethink-base.",
 );
 assert(
+  numberInput.registryDependencies?.includes("dethink-base"),
+  "number-input registry item must depend on dethink-base.",
+);
+assert(
   separator.registryDependencies?.includes("dethink-base"),
   "separator registry item must depend on dethink-base.",
 );
 assert(
   stack.registryDependencies?.includes("dethink-base"),
   "stack registry item must depend on dethink-base.",
+);
+assert(
+  textarea.registryDependencies?.includes("dethink-base"),
+  "textarea registry item must depend on dethink-base.",
 );
 assert(
   typography.registryDependencies?.includes("dethink-base"),
@@ -248,6 +269,10 @@ assert(
   "form-field registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(input.dependencies) && input.dependencies.length === 0,
+  "input registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,
   "icon-button registry item must not add runtime dependencies.",
 );
@@ -264,12 +289,20 @@ assert(
   "link registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(numberInput.dependencies) && numberInput.dependencies.length === 0,
+  "number-input registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(separator.dependencies) && separator.dependencies.length === 0,
   "separator registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
   "stack registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(textarea.dependencies) && textarea.dependencies.length === 0,
+  "textarea registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(typography.dependencies) && typography.dependencies.length === 0,
@@ -296,12 +329,15 @@ for (const item of [
   cardStack,
   container,
   formField,
+  input,
   iconButton,
   flex,
   grid,
   link,
+  numberInput,
   separator,
   stack,
+  textarea,
   typography,
   dateTimePicker,
   timeline,
@@ -315,8 +351,11 @@ await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
 await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
+await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
+await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
+await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");

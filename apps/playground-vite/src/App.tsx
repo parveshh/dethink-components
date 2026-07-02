@@ -28,11 +28,14 @@ import {
   GridItem,
   Heading,
   IconButton,
+  Input,
   Link,
   Divider,
+  NumberInput,
   Separator,
   Stack,
   Text,
+  Textarea,
 } from "@dethink/components";
 
 function ArrowRightIcon() {
@@ -180,9 +183,9 @@ export function App() {
             <label className="block text-sm font-medium" htmlFor="smoke-input">
               Smoke input
             </label>
-            <input
+            <Input
               id="smoke-input"
-              className="mt-2 h-density-control rounded-md border border-input bg-background px-3"
+              className="mt-2"
               placeholder="Token-backed field"
             />
           </Box>
@@ -208,8 +211,7 @@ export function App() {
                 <Field id="playground-workspace" required>
                   <FieldLabel>Workspace</FieldLabel>
                   <FieldControl asChild>
-                    <input
-                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    <Input
                       name="workspace"
                       placeholder="Acme Ops"
                     />
@@ -219,13 +221,38 @@ export function App() {
                 <Field id="playground-owner" invalid>
                   <FieldLabel>Owner email</FieldLabel>
                   <FieldControl asChild>
-                    <input
-                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm aria-[invalid=true]:border-destructive"
+                    <Input
                       name="owner"
                       defaultValue="owner"
                     />
                   </FieldControl>
                   <FieldError>Enter a valid owner email.</FieldError>
+                </Field>
+                <Field id="playground-summary">
+                  <FieldLabel>Summary</FieldLabel>
+                  <FieldControl asChild>
+                    <Textarea
+                      name="summary"
+                      defaultValue="Textarea smoke through the package export path."
+                      rows={3}
+                    />
+                  </FieldControl>
+                  <FieldDescription>
+                    Multiline controls share the same Field wiring.
+                  </FieldDescription>
+                </Field>
+                <Field id="playground-quota">
+                  <FieldLabel>Quota</FieldLabel>
+                  <FieldControl asChild>
+                    <NumberInput
+                      name="quota"
+                      numberMode="numeric"
+                      defaultValue="25"
+                    />
+                  </FieldControl>
+                  <FieldDescription>
+                    Numeric-entry controls keep string values until app validation.
+                  </FieldDescription>
                 </Field>
                 <FieldSet>
                   <FieldLegend>Channels</FieldLegend>
