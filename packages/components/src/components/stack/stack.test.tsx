@@ -63,7 +63,7 @@ const RouterAnchor = forwardRef<
 RouterAnchor.displayName = "RouterAnchor";
 
 function gapClass(gap: StackGap) {
-  return `gap-${gap === "none" ? "0" : gap}`;
+  return `gap-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 describe("Stack", () => {
@@ -84,7 +84,12 @@ describe("Stack", () => {
     expect(stack).toHaveAttribute("data-align", "stretch");
     expect(stack).toHaveAttribute("data-justify", "start");
     expect(stack).toHaveAttribute("data-wrap", "nowrap");
-    expect(stack).toHaveClass("flex", "flex-col", "gap-4", "items-stretch");
+    expect(stack).toHaveClass(
+      "flex",
+      "flex-col",
+      "gap-[var(--dt-space-4)]",
+      "items-stretch",
+    );
   });
 
   it.each(elements)("renders a semantic %s element", (as) => {
@@ -153,7 +158,7 @@ describe("Stack", () => {
 
     expect(className).toContain("flex");
     expect(className).toContain("flex-row");
-    expect(className).toContain("gap-6");
+    expect(className).toContain("gap-[var(--dt-space-6)]");
     expect(className).toContain("items-center");
     expect(className).toContain("justify-between");
     expect(className).toContain("flex-wrap");

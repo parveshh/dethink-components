@@ -110,21 +110,21 @@ const separatorSpacingClasses: Record<
 > = {
   horizontal: {
     none: undefined,
-    1: "my-1",
-    2: "my-2",
-    3: "my-3",
-    4: "my-4",
-    6: "my-6",
-    8: "my-8",
+    1: "my-[var(--dt-space-1)]",
+    2: "my-[var(--dt-space-2)]",
+    3: "my-[var(--dt-space-3)]",
+    4: "my-[var(--dt-space-4)]",
+    6: "my-[var(--dt-space-6)]",
+    8: "my-[var(--dt-space-8)]",
   },
   vertical: {
     none: undefined,
-    1: "mx-1",
-    2: "mx-2",
-    3: "mx-3",
-    4: "mx-4",
-    6: "mx-6",
-    8: "mx-8",
+    1: "mx-[var(--dt-space-1)]",
+    2: "mx-[var(--dt-space-2)]",
+    3: "mx-[var(--dt-space-3)]",
+    4: "mx-[var(--dt-space-4)]",
+    6: "mx-[var(--dt-space-6)]",
+    8: "mx-[var(--dt-space-8)]",
   },
 };
 

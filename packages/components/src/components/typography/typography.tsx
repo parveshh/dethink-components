@@ -85,12 +85,12 @@ export interface TextProps extends HTMLAttributes<HTMLElement> {
   weight?: TypographyWeight;
 }
 
-const typographyBaseClasses = "min-w-0 max-w-full text-foreground";
+const typographyBaseClasses = "min-w-0 max-w-full font-sans text-foreground";
 
 const typographyVariantClasses: Record<TypographyVariant, string> = {
-  display: "text-4xl font-semibold leading-tight",
-  heading: "text-2xl font-semibold leading-tight",
-  title: "text-lg font-semibold leading-snug",
+  display: "font-heading text-4xl font-semibold leading-tight",
+  heading: "font-heading text-2xl font-semibold leading-tight",
+  title: "font-heading text-lg font-semibold leading-snug",
   subtitle: "text-base font-medium leading-6",
   body: "text-base font-normal leading-7",
   caption: "text-xs font-normal leading-5",
@@ -133,12 +133,12 @@ const typographyAlignClasses: Record<TypographyAlign, string> = {
 };
 
 const headingVisualLevelClasses: Record<HeadingVisualLevel, string> = {
-  1: "text-4xl font-semibold leading-tight",
-  2: "text-3xl font-semibold leading-tight",
-  3: "text-2xl font-semibold leading-tight",
-  4: "text-xl font-semibold leading-snug",
-  5: "text-lg font-semibold leading-snug",
-  6: "text-base font-semibold leading-6",
+  1: "font-heading text-4xl font-semibold leading-tight",
+  2: "font-heading text-3xl font-semibold leading-tight",
+  3: "font-heading text-2xl font-semibold leading-tight",
+  4: "font-heading text-xl font-semibold leading-snug",
+  5: "font-heading text-lg font-semibold leading-snug",
+  6: "font-heading text-base font-semibold leading-6",
 };
 
 const headingToneClasses: Record<NonNullable<HeadingProps["tone"]>, string> = {

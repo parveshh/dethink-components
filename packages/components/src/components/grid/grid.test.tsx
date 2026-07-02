@@ -151,15 +151,15 @@ const RouterAnchor = forwardRef<
 RouterAnchor.displayName = "RouterAnchor";
 
 function gapClass(gap: GridGap) {
-  return `gap-${gap === "none" ? "0" : gap}`;
+  return `gap-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 function rowGapClass(gap: GridGap) {
-  return `gap-y-${gap === "none" ? "0" : gap}`;
+  return `gap-y-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 function columnGapClass(gap: GridGap) {
-  return `gap-x-${gap === "none" ? "0" : gap}`;
+  return `gap-x-[var(--dt-space-${gap === "none" ? "0" : gap})]`;
 }
 
 function rowClass(row: GridRows) {
@@ -189,7 +189,7 @@ describe("Grid", () => {
     expect(grid).toHaveClass(
       "grid",
       "grid-cols-1",
-      "gap-0",
+      "gap-[var(--dt-space-0)]",
       "items-stretch",
       "justify-items-stretch",
       "content-start",
@@ -307,9 +307,9 @@ describe("Grid", () => {
     expect(className).toContain("grid");
     expect(className).toContain("grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))]");
     expect(className).toContain("grid-rows-3");
-    expect(className).toContain("gap-4");
-    expect(className).toContain("gap-y-2");
-    expect(className).toContain("gap-x-6");
+    expect(className).toContain("gap-[var(--dt-space-4)]");
+    expect(className).toContain("gap-y-[var(--dt-space-2)]");
+    expect(className).toContain("gap-x-[var(--dt-space-6)]");
     expect(className).toContain("items-center");
     expect(className).toContain("justify-items-end");
     expect(className).toContain("content-between");

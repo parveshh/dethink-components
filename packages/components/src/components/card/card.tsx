@@ -126,16 +126,16 @@ const cardSpacingClasses: Record<CardSpacing, string> = {
 };
 
 const cardHeaderBaseClasses =
-  "grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-density-gap gap-y-1.5 px-[var(--card-padding)] pt-[var(--card-padding)] last:pb-[var(--card-padding)]";
+  "grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-x-density-gap gap-y-[var(--dt-space-1-5)] px-[var(--card-padding)] pt-[var(--card-padding)] last:pb-[var(--card-padding)]";
 
 const cardTitleBaseClasses =
-  "col-start-1 min-w-0 text-lg font-semibold leading-snug tracking-normal text-foreground";
+  "col-start-1 min-w-0 font-heading text-lg font-semibold leading-snug tracking-normal text-foreground";
 
 const cardDescriptionBaseClasses =
   "col-start-1 min-w-0 text-sm leading-6 text-muted-foreground";
 
 const cardActionBaseClasses =
-  "col-start-2 row-span-2 row-start-1 ms-4 flex shrink-0 items-center justify-self-end";
+  "col-start-2 row-span-2 row-start-1 ms-[var(--dt-space-4)] flex shrink-0 items-center justify-self-end";
 
 const cardContentBaseClasses =
   "min-w-0 px-[var(--card-padding)] first:pt-[var(--card-padding)] last:pb-[var(--card-padding)]";

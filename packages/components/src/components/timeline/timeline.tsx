@@ -139,7 +139,8 @@ const timelineViewportClasses =
 const timelineViewportContentClasses =
   "absolute left-0 top-0 origin-top-left motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-out motion-reduce:transition-none data-[dragging=true]:transition-none";
 
-const timelineListClasses = "absolute left-0 top-0 m-0 list-none p-0";
+const timelineListClasses =
+  "absolute left-0 top-0 m-[var(--dt-space-0)] list-none p-[var(--dt-space-0)]";
 
 const timelineRailClasses =
   "absolute rounded-full bg-timeline-rail forced-colors:bg-[CanvasText]";
@@ -147,7 +148,7 @@ const timelineRailClasses =
 const timelineItemClasses = "absolute left-0 top-0";
 
 const timelineCardBaseClasses =
-  "absolute w-80 rounded-md border border-timeline-border bg-background p-4 text-left text-foreground shadow-sm motion-safe:transition-[border-color,background-color,box-shadow] motion-safe:duration-200 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background data-[disabled=true]:opacity-55 data-[interactive=true]:cursor-pointer data-[interactive=true]:hover:shadow-md data-[selected=true]:border-ring data-[selected=true]:bg-muted/40 data-[selected=true]:shadow-md data-[selected=true]:ring-1 data-[selected=true]:ring-ring/35";
+  "absolute w-80 rounded-md border border-timeline-border bg-background p-[var(--dt-space-4)] text-left text-foreground shadow-sm motion-safe:transition-[border-color,background-color,box-shadow] motion-safe:duration-200 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background data-[disabled=true]:opacity-55 data-[interactive=true]:cursor-pointer data-[interactive=true]:hover:shadow-md data-[selected=true]:border-ring data-[selected=true]:bg-muted/40 data-[selected=true]:shadow-md data-[selected=true]:ring-1 data-[selected=true]:ring-ring/35";
 
 const timelineMarkerBaseClasses =
   "absolute z-10 flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 text-xs font-medium shadow-sm motion-safe:transition-[border-color,background-color,box-shadow,transform] motion-safe:duration-200 data-[selected=true]:scale-110 data-[selected=true]:shadow-md data-[selected=true]:ring-4 data-[selected=true]:ring-ring/20";
@@ -430,8 +431,8 @@ function TimelineItemInner<
   const cardContent = renderItem ? (
     renderItem(item)
   ) : (
-    <div className="space-y-3">
-      <div className="space-y-1">
+    <div className="space-y-[var(--dt-space-3)]">
+      <div className="space-y-[var(--dt-space-1)]">
         {renderItemDate(item)}
         <h3 id={titleId} className="text-sm font-semibold leading-6 text-foreground">
           {itemTitle}
@@ -535,7 +536,7 @@ export function TimelineControls({
       data-visibility={visibility}
       data-visible={visibility === "always" || visible ? "true" : "false"}
       className={cn(
-        "absolute right-3 top-3 z-20 flex items-center gap-1 rounded-md border border-timeline-border bg-background/95 p-1 shadow-md backdrop-blur motion-safe:transition-[opacity,transform] motion-safe:duration-200 motion-safe:ease-out motion-reduce:transition-none",
+        "absolute right-[var(--dt-space-3)] top-[var(--dt-space-3)] z-20 flex items-center gap-[var(--dt-space-1)] rounded-md border border-timeline-border bg-background/95 p-[var(--dt-space-1)] shadow-md backdrop-blur motion-safe:transition-[opacity,transform] motion-safe:duration-200 motion-safe:ease-out motion-reduce:transition-none",
         timelineControlsVisibilityClasses[visibility],
         className,
       )}

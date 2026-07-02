@@ -70,19 +70,19 @@ const containerSizeClasses: Record<ContainerSize, string> = {
 };
 
 const containerGutterVariableClasses: Record<ContainerGutter, string> = {
-  none: "[--container-gutter:0rem]",
-  sm: "[--container-gutter:0.75rem] sm:[--container-gutter:1rem]",
-  md: "[--container-gutter:1rem] sm:[--container-gutter:1.5rem]",
-  lg: "[--container-gutter:1.25rem] sm:[--container-gutter:2rem]",
-  xl: "[--container-gutter:1.5rem] sm:[--container-gutter:2.5rem]",
+  none: "[--container-gutter:var(--dt-space-0)]",
+  sm: "[--container-gutter:var(--dt-space-3)] sm:[--container-gutter:var(--dt-space-4)]",
+  md: "[--container-gutter:var(--dt-space-4)] sm:[--container-gutter:var(--dt-space-6)]",
+  lg: "[--container-gutter:var(--dt-space-5)] sm:[--container-gutter:var(--dt-space-8)]",
+  xl: "[--container-gutter:var(--dt-space-6)] sm:[--container-gutter:var(--dt-space-10)]",
 };
 
 const containerGutterPaddingClasses: Record<ContainerGutter, string> = {
-  none: "px-0",
-  sm: "px-3 sm:px-4",
-  md: "px-4 sm:px-6",
-  lg: "px-5 sm:px-8",
-  xl: "px-6 sm:px-10",
+  none: "px-[var(--dt-space-0)]",
+  sm: "px-[var(--container-gutter)]",
+  md: "px-[var(--container-gutter)]",
+  lg: "px-[var(--container-gutter)]",
+  xl: "px-[var(--container-gutter)]",
 };
 
 const containerSafeAreaPaddingClasses =

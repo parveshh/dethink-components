@@ -489,8 +489,14 @@ assert(
 assert(boxSource.includes('"data-slot": "box"'), "box source must expose stable slot data.");
 assert(boxSource.includes("asChild"), "box source must expose child composition.");
 assert(boxSource.includes("boxClassNames"), "box source must expose class-name composition.");
-assert(boxSource.includes("ps-4"), "box source must use logical start spacing utilities.");
-assert(boxSource.includes("me-4"), "box source must use logical end margin utilities.");
+assert(
+  boxSource.includes("ps-[var(--dt-space-4)]"),
+  "box source must use tokenized logical start spacing utilities.",
+);
+assert(
+  boxSource.includes("me-[var(--dt-space-4)]"),
+  "box source must use tokenized logical end margin utilities.",
+);
 assert(boxSource.includes("bg-primary"), "box source must use tokenized primary surface utilities.");
 assert(boxSource.includes("border-input"), "box source must use tokenized input border utilities.");
 assert(boxSource.includes("rounded-md"), "box source must use tokenized radius utilities.");
@@ -537,7 +543,10 @@ assert(cardSource.includes("rounded-lg"), "card source must use tokenized radius
 assert(cardSource.includes("shadow-sm"), "card source must expose shadow utilities.");
 assert(cardSource.includes("--card-padding"), "card source must expose density-backed card padding.");
 assert(cardSource.includes("--card-gap"), "card source must expose density-backed card gap.");
-assert(cardSource.includes("ms-4"), "card source must use logical action spacing.");
+assert(
+  cardSource.includes("ms-[var(--dt-space-4)]"),
+  "card source must use tokenized logical action spacing.",
+);
 assert(cardSource.includes("justify-between"), "card source must expose footer distribution utilities.");
 assert(!cardSource.includes("@radix-ui"), "card source must remain dependency-free.");
 assert(
@@ -649,7 +658,10 @@ assert(
   containerSource.includes("max-w-[80rem]"),
   "container source must use static max-width utilities.",
 );
-assert(containerSource.includes("px-4"), "container source must use static gutter utilities.");
+assert(
+  containerSource.includes("px-[var(--container-gutter)]"),
+  "container source must use tokenized gutter utilities.",
+);
 assert(
   containerSource.includes("safe-area-inset-left"),
   "container source must support safe-area gutters.",
@@ -737,8 +749,14 @@ assert(flexSource.includes("inline-flex"), "flex source must expose inline-flex 
 assert(flexSource.includes("flex-row"), "flex source must expose row direction utilities.");
 assert(flexSource.includes("flex-col"), "flex source must expose column direction utilities.");
 assert(flexSource.includes("flex-wrap"), "flex source must expose wrapping utilities.");
-assert(flexSource.includes("gap-y-2"), "flex source must expose row gap utilities.");
-assert(flexSource.includes("gap-x-6"), "flex source must expose column gap utilities.");
+assert(
+  flexSource.includes("gap-y-[var(--dt-space-2)]"),
+  "flex source must expose tokenized row gap utilities.",
+);
+assert(
+  flexSource.includes("gap-x-[var(--dt-space-6)]"),
+  "flex source must expose tokenized column gap utilities.",
+);
 assert(flexSource.includes("items-center"), "flex source must expose alignment utilities.");
 assert(flexSource.includes("justify-evenly"), "flex source must expose distribution utilities.");
 assert(flexSource.includes("content-between"), "flex source must expose align-content utilities.");
@@ -765,8 +783,14 @@ assert(
   "grid source must expose static auto-fit grid columns.",
 );
 assert(gridSource.includes("grid-rows-3"), "grid source must expose row utilities.");
-assert(gridSource.includes("gap-y-2"), "grid source must expose row gap utilities.");
-assert(gridSource.includes("gap-x-6"), "grid source must expose column gap utilities.");
+assert(
+  gridSource.includes("gap-y-[var(--dt-space-2)]"),
+  "grid source must expose tokenized row gap utilities.",
+);
+assert(
+  gridSource.includes("gap-x-[var(--dt-space-6)]"),
+  "grid source must expose tokenized column gap utilities.",
+);
 assert(gridSource.includes("items-center"), "grid source must expose item alignment utilities.");
 assert(
   gridSource.includes("justify-items-end"),
@@ -862,8 +886,14 @@ assert(separatorSource.includes("w-px"), "separator source must expose vertical 
 assert(separatorSource.includes("bg-border"), "separator source must use tokenized border color utilities.");
 assert(separatorSource.includes("bg-muted-foreground/25"), "separator source must expose muted tone utilities.");
 assert(separatorSource.includes("bg-foreground/40"), "separator source must expose strong tone utilities.");
-assert(separatorSource.includes("my-4"), "separator source must expose horizontal spacing utilities.");
-assert(separatorSource.includes("mx-4"), "separator source must expose vertical spacing utilities.");
+assert(
+  separatorSource.includes("my-[var(--dt-space-4)]"),
+  "separator source must expose tokenized horizontal spacing utilities.",
+);
+assert(
+  separatorSource.includes("mx-[var(--dt-space-4)]"),
+  "separator source must expose tokenized vertical spacing utilities.",
+);
 assert(
   separatorSource.includes('"aria-valuenow"?: never'),
   "separator source must type-reject splitter value semantics.",
@@ -878,7 +908,10 @@ assert(stackSource.includes("asChild"), "stack source must expose child composit
 assert(stackSource.includes("stackClassNames"), "stack source must expose class-name composition.");
 assert(stackSource.includes("flex-col"), "stack source must expose vertical direction utilities.");
 assert(stackSource.includes("flex-row"), "stack source must expose horizontal direction utilities.");
-assert(stackSource.includes("gap-4"), "stack source must expose tokenized gap utilities.");
+assert(
+  stackSource.includes("gap-[var(--dt-space-4)]"),
+  "stack source must expose tokenized gap utilities.",
+);
 assert(stackSource.includes("items-center"), "stack source must expose alignment utilities.");
 assert(stackSource.includes("justify-between"), "stack source must expose justification utilities.");
 assert(stackSource.includes("flex-wrap"), "stack source must expose wrapping utilities.");

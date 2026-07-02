@@ -17,9 +17,9 @@ const textareaBaseClasses =
   "w-full min-w-0 rounded-md border border-input bg-background text-foreground shadow-sm outline-none motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-150 placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-muted/40 read-only:text-muted-foreground aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-destructive/15 data-[invalid=true]:border-destructive data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/15";
 
 const textareaControlSizeClasses: Record<TextareaControlSize, string> = {
-  sm: "min-h-20 px-2.5 py-2 text-base sm:text-sm",
-  md: "min-h-28 px-3 py-2 text-base sm:text-sm",
-  lg: "min-h-36 px-4 py-3 text-base",
+  sm: "min-h-20 px-[var(--dt-space-2-5)] py-[var(--dt-space-2)] text-base sm:text-sm",
+  md: "min-h-28 px-[var(--dt-space-3)] py-[var(--dt-space-2)] text-base sm:text-sm",
+  lg: "min-h-36 px-[var(--dt-space-4)] py-[var(--dt-space-3)] text-base",
 };
 
 const textareaResizeClasses: Record<TextareaResize, string> = {

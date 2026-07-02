@@ -74,7 +74,7 @@ export interface DateTimePickerProps {
 }
 
 const dateTimePickerRootClasses =
-  "group/date-time-picker grid w-full max-w-md gap-2 text-foreground";
+  "group/date-time-picker grid w-full max-w-md gap-[var(--dt-space-2)] text-foreground";
 
 const dateTimePickerLabelClasses =
   "text-sm font-medium leading-none text-foreground data-[disabled=true]:opacity-60";
@@ -83,26 +83,26 @@ const dateTimePickerControlClasses =
   "flex min-h-density-control items-center rounded-md border border-input bg-background text-sm text-foreground shadow-sm motion-safe:transition-[border-color,box-shadow,background-color] motion-safe:duration-150 data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-60 data-[focus-within=true]:border-ring data-[focus-within=true]:ring-2 data-[focus-within=true]:ring-ring/20 data-[invalid=true]:border-destructive data-[invalid=true]:ring-destructive/15";
 
 const dateTimePickerInputClasses =
-  "flex min-w-0 flex-1 items-center gap-0.5 px-3 py-2";
+  "flex min-w-0 flex-1 items-center gap-[var(--dt-space-0-5)] px-[var(--dt-space-3)] py-[var(--dt-space-2)]";
 
 const dateTimePickerSegmentClasses =
-  "rounded-sm px-0.5 tabular-nums outline-none motion-safe:transition-colors motion-safe:duration-150 data-[focused]:bg-primary data-[focused]:text-primary-foreground data-[placeholder]:text-muted-foreground data-[disabled]:text-muted-foreground data-[readonly]:text-muted-foreground data-[invalid]:text-destructive";
+  "rounded-sm px-[var(--dt-space-0-5)] tabular-nums outline-none motion-safe:transition-colors motion-safe:duration-150 data-[focused]:bg-primary data-[focused]:text-primary-foreground data-[placeholder]:text-muted-foreground data-[disabled]:text-muted-foreground data-[readonly]:text-muted-foreground data-[invalid]:text-destructive";
 
 const dateTimePickerClearButtonClasses =
-  "me-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40";
+  "me-[var(--dt-space-1)] inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40";
 
 const dateTimePickerTriggerButtonClasses =
-  "me-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40 data-[pressed]:bg-muted data-[pressed]:text-foreground";
+  "me-[var(--dt-space-1)] inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40 data-[pressed]:bg-muted data-[pressed]:text-foreground";
 
 const dateTimePickerPopoverClasses =
-  "z-50 rounded-md border border-border bg-background p-3 text-foreground shadow-lg outline-none motion-safe:transition-[opacity,transform] motion-safe:duration-150 data-[entering]:opacity-100 data-[exiting]:translate-y-1 data-[exiting]:opacity-0";
+  "z-50 rounded-md border border-border bg-background p-[var(--dt-space-3)] text-foreground shadow-lg outline-none motion-safe:transition-[opacity,transform] motion-safe:duration-150 data-[entering]:opacity-100 data-[exiting]:translate-y-1 data-[exiting]:opacity-0";
 
-const dateTimePickerDialogClasses = "grid gap-3 outline-none";
+const dateTimePickerDialogClasses = "grid gap-[var(--dt-space-3)] outline-none";
 
-const dateTimePickerCalendarClasses = "grid gap-3";
+const dateTimePickerCalendarClasses = "grid gap-[var(--dt-space-3)]";
 
 const dateTimePickerCalendarHeaderClasses =
-  "flex items-center justify-between gap-2";
+  "flex items-center justify-between gap-[var(--dt-space-2)]";
 
 const dateTimePickerCalendarHeadingClasses =
   "min-w-40 text-center text-sm font-medium text-foreground";
@@ -111,7 +111,7 @@ const dateTimePickerCalendarButtonClasses =
   "inline-flex size-8 items-center justify-center rounded-md text-muted-foreground motion-safe:transition-[background-color,color,transform] motion-safe:duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-40";
 
 const dateTimePickerCalendarGridClasses =
-  "w-full border-separate border-spacing-1 text-sm";
+  "w-full border-separate border-spacing-[var(--dt-space-1)] text-sm";
 
 const dateTimePickerCalendarHeaderCellClasses =
   "size-8 text-center text-xs font-medium text-muted-foreground";
@@ -120,10 +120,10 @@ const dateTimePickerCalendarCellClasses =
   "size-8 rounded-md text-center text-sm tabular-nums outline-none motion-safe:transition-[background-color,color,box-shadow,transform] motion-safe:duration-150 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring data-[disabled]:pointer-events-none data-[disabled]:opacity-35 data-[focused]:ring-2 data-[focused]:ring-ring data-[invalid]:text-destructive data-[outside-month]:text-muted-foreground data-[outside-month]:opacity-50 data-[pressed]:scale-95 data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[today]:font-semibold data-[unavailable]:text-destructive data-[unavailable]:line-through";
 
 const dateTimePickerPresetsClasses =
-  "grid gap-1 border-b border-border pb-3 sm:grid-cols-2";
+  "grid gap-[var(--dt-space-1)] border-b border-border pb-[var(--dt-space-3)] sm:grid-cols-2";
 
 const dateTimePickerPresetButtonClasses =
-  "rounded-md border border-border bg-background px-3 py-2 text-left text-sm text-foreground shadow-sm motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-150 hover:border-ring/50 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
+  "rounded-md border border-border bg-background px-[var(--dt-space-3)] py-[var(--dt-space-2)] text-left text-sm text-foreground shadow-sm motion-safe:transition-[background-color,border-color,box-shadow,transform] motion-safe:duration-150 hover:border-ring/50 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:translate-y-px disabled:pointer-events-none disabled:opacity-50";
 
 const dateTimePickerHelpClasses = "text-xs leading-5 text-muted-foreground";
 

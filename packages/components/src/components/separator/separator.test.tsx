@@ -36,7 +36,7 @@ function spacingClass(orientation: SeparatorOrientation, spacing: SeparatorSpaci
     return undefined;
   }
 
-  return `${orientation === "horizontal" ? "my" : "mx"}-${spacing}`;
+  return `${orientation === "horizontal" ? "my" : "mx"}-[var(--dt-space-${spacing})]`;
 }
 
 describe("Separator", () => {
@@ -144,8 +144,8 @@ describe("Separator", () => {
       expect(horizontal).toHaveClass(horizontalClass);
       expect(vertical).toHaveClass(verticalClass);
     } else {
-      expect(horizontal).not.toHaveClass("my-1");
-      expect(vertical).not.toHaveClass("mx-1");
+      expect(horizontal).not.toHaveClass("my-[var(--dt-space-1)]");
+      expect(vertical).not.toHaveClass("mx-[var(--dt-space-1)]");
     }
   });
 
@@ -187,7 +187,7 @@ describe("Separator", () => {
     expect(className).toContain("h-full");
     expect(className).toContain("w-0.5");
     expect(className).toContain("bg-foreground/40");
-    expect(className).toContain("mx-4");
+    expect(className).toContain("mx-[var(--dt-space-4)]");
   });
 
   it("rejects unsupported public props at the TypeScript boundary", () => {
