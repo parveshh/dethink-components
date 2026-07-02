@@ -233,6 +233,13 @@ export {
   type InputProps,
 } from "./components/input";
 export {
+  Checkbox,
+  checkboxClassNames,
+  type CheckboxCheckedState,
+  type CheckboxControlSize,
+  type CheckboxProps,
+} from "./components/checkbox";
+export {
   Textarea,
   textareaClassNames,
   type TextareaControlSize,

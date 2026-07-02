@@ -97,6 +97,7 @@ const box = await readJson(join(registryRoot, "box.json"));
 const button = await readJson(join(registryRoot, "button.json"));
 const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
+const checkbox = await readJson(join(registryRoot, "checkbox.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const formField = await readJson(join(registryRoot, "form-field.json"));
 const input = await readJson(join(registryRoot, "input.json"));
@@ -119,6 +120,7 @@ const registryItemsByName = new Map(
     button,
     card,
     cardStack,
+    checkbox,
     container,
     formField,
     input,
@@ -143,6 +145,7 @@ assert(
   cardStack.name === "card-stack",
   "card-stack registry item must be named card-stack.",
 );
+assert(checkbox.name === "checkbox", "checkbox registry item must be named checkbox.");
 assert(container.name === "container", "container registry item must be named container.");
 assert(formField.name === "form-field", "form-field registry item must be named form-field.");
 assert(input.name === "input", "input registry item must be named input.");
@@ -183,6 +186,10 @@ assert(
 assert(
   cardStack.registryDependencies?.includes("icon-button"),
   "card-stack registry item must depend on icon-button.",
+);
+assert(
+  checkbox.registryDependencies?.includes("dethink-base"),
+  "checkbox registry item must depend on dethink-base.",
 );
 assert(
   container.registryDependencies?.includes("dethink-base"),
@@ -261,6 +268,10 @@ assert(
   "card-stack registry item must not add runtime dependencies.",
 );
 assert(
+  Array.isArray(checkbox.dependencies) && checkbox.dependencies.length === 0,
+  "checkbox registry item must not add runtime dependencies.",
+);
+assert(
   Array.isArray(container.dependencies) && container.dependencies.length === 0,
   "container registry item must not add runtime dependencies.",
 );
@@ -327,6 +338,7 @@ for (const item of [
   button,
   card,
   cardStack,
+  checkbox,
   container,
   formField,
   input,
@@ -350,6 +362,7 @@ for (const item of [
 await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
+await assertRegistryRelativeImportsResolve(checkbox, registryItemsByName);
 await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
 await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
@@ -375,6 +388,10 @@ const cardSource = await readFile(
 );
 const cardStackSource = await readFile(
   join(root, "packages/components/src/components/card-stack/card-stack.tsx"),
+  "utf8",
+);
+const checkboxSource = await readFile(
+  join(root, "packages/components/src/components/checkbox/checkbox.tsx"),
   "utf8",
 );
 const containerSource = await readFile(
@@ -536,6 +553,47 @@ assert(
 );
 assert(!cardStackSource.includes("framer-motion"), "card-stack source must not use Motion.");
 assert(!cardStackSource.includes("@radix-ui"), "card-stack source must remain Radix-free.");
+assert(
+  checkboxSource.includes('data-slot={dataSlot ?? "checkbox"}'),
+  "checkbox source must expose stable root slot data.",
+);
+assert(
+  checkboxSource.includes('data-slot="checkbox-input"'),
+  "checkbox source must expose stable input slot data.",
+);
+assert(
+  checkboxSource.includes('data-slot="checkbox-indicator"'),
+  "checkbox source must expose stable indicator slot data.",
+);
+assert(
+  checkboxSource.includes("CheckboxCheckedState"),
+  "checkbox source must expose checked state typing.",
+);
+assert(
+  checkboxSource.includes("indeterminate"),
+  "checkbox source must support indeterminate state.",
+);
+assert(
+  checkboxSource.includes('aria-checked={checkedState === "indeterminate" ? "mixed" : undefined}'),
+  "checkbox source must expose mixed state to assistive tech.",
+);
+assert(
+  checkboxSource.includes("onCheckedChange"),
+  "checkbox source must expose checked change callbacks.",
+);
+assert(
+  checkboxSource.includes("type=\"checkbox\""),
+  "checkbox source must preserve native checkbox input semantics.",
+);
+assert(
+  checkboxSource.includes("border-input"),
+  "checkbox source must use tokenized input border utilities.",
+);
+assert(
+  checkboxSource.includes("focus-visible:ring-2"),
+  "checkbox source must include visible focus styling.",
+);
+assert(!checkboxSource.includes("@radix-ui"), "checkbox source must remain Radix-free.");
 assert(
   containerSource.includes('"data-slot": "container"'),
   "container source must expose stable slot data.",

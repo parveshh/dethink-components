@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardStack,
   CardTitle,
+  Checkbox,
   Container,
   DateTimePicker,
   DethinkProvider,
@@ -263,7 +264,7 @@ export function App() {
                         <FieldDescription>Send operational reports.</FieldDescription>
                       </FieldContent>
                       <FieldControl asChild>
-                        <input className="mt-0.5 size-5 accent-primary" type="checkbox" />
+                        <Checkbox name="channels" value="email" defaultChecked />
                       </FieldControl>
                     </Field>
                   </FieldGroup>
