@@ -240,6 +240,13 @@ export {
   type TextareaResize,
 } from "./components/textarea";
 export {
+  NumberInput,
+  numberInputClassNames,
+  type NumberInputControlSize,
+  type NumberInputMode,
+  type NumberInputProps,
+} from "./components/number-input";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,

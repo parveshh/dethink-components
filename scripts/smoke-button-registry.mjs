@@ -104,6 +104,7 @@ const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
 const link = await readJson(join(registryRoot, "link.json"));
+const numberInput = await readJson(join(registryRoot, "number-input.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
 const textarea = await readJson(join(registryRoot, "textarea.json"));
@@ -125,6 +126,7 @@ const registryItemsByName = new Map(
     flex,
     grid,
     link,
+    numberInput,
     separator,
     stack,
     textarea,
@@ -148,6 +150,7 @@ assert(iconButton.name === "icon-button", "icon-button registry item must be nam
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
 assert(link.name === "link", "link registry item must be named link.");
+assert(numberInput.name === "number-input", "number-input registry item must be named number-input.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
@@ -212,6 +215,10 @@ assert(
 assert(
   link.registryDependencies?.includes("dethink-base"),
   "link registry item must depend on dethink-base.",
+);
+assert(
+  numberInput.registryDependencies?.includes("dethink-base"),
+  "number-input registry item must depend on dethink-base.",
 );
 assert(
   separator.registryDependencies?.includes("dethink-base"),
@@ -280,6 +287,10 @@ assert(
 assert(
   Array.isArray(link.dependencies) && link.dependencies.length === 0,
   "link registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(numberInput.dependencies) && numberInput.dependencies.length === 0,
+  "number-input registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(separator.dependencies) && separator.dependencies.length === 0,

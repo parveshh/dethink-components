@@ -31,6 +31,7 @@ import {
   Input,
   Link,
   Divider,
+  NumberInput,
   Separator,
   Stack,
   Text,
@@ -238,6 +239,19 @@ export function App() {
                   </FieldControl>
                   <FieldDescription>
                     Multiline controls share the same Field wiring.
+                  </FieldDescription>
+                </Field>
+                <Field id="playground-quota">
+                  <FieldLabel>Quota</FieldLabel>
+                  <FieldControl asChild>
+                    <NumberInput
+                      name="quota"
+                      numberMode="numeric"
+                      defaultValue="25"
+                    />
+                  </FieldControl>
+                  <FieldDescription>
+                    Numeric-entry controls keep string values until app validation.
                   </FieldDescription>
                 </Field>
                 <FieldSet>
