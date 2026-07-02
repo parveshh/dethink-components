@@ -175,6 +175,13 @@ export {
   type IconButtonVariant,
 } from "./components/icon-button";
 export {
+  CardStack,
+  cardStackClassNames,
+  type CardStackCardElement,
+  type CardStackMode,
+  type CardStackProps,
+} from "./components/card-stack";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,

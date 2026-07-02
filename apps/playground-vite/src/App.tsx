@@ -6,6 +6,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
+  CardStack,
   CardTitle,
   Container,
   DateTimePicker,
@@ -132,6 +133,32 @@ export function App() {
               </Button>
             </CardFooter>
           </Card>
+          <CardStack aria-label="Playground card stack">
+            <Card as="article">
+              <CardHeader>
+                <CardTitle>CardStack smoke</CardTitle>
+                <CardDescription>
+                  Verifies the package export path for the interactive Card deck.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Text size="sm" tone="muted">
+                  The active card exposes controls while the inactive card is inert.
+                </Text>
+              </CardContent>
+            </Card>
+            <Card as="article">
+              <CardHeader>
+                <CardTitle>Second stacked card</CardTitle>
+                <CardDescription>Navigation loops by default.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button size="sm" variant="outline">
+                  Active only
+                </Button>
+              </CardContent>
+            </Card>
+          </CardStack>
           <Box
             border="default"
             p="4"
