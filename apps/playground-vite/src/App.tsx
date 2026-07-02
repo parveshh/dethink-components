@@ -11,8 +11,19 @@ import {
   Container,
   DateTimePicker,
   DethinkProvider,
+  Field,
+  FieldContent,
+  FieldControl,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
   Flex,
   FlexItem,
+  Form,
   Grid,
   GridItem,
   Heading,
@@ -184,6 +195,58 @@ export function App() {
             label="Smoke date and time"
             name="smokeDateTime"
           />
+          <Card as="section">
+            <CardHeader>
+              <CardTitle>Form field smoke</CardTitle>
+              <CardDescription>
+                Verifies package exports for Form, Field, labels, descriptions,
+                errors, fieldsets, legends, and grouped rows.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form action="/settings" method="post">
+                <Field id="playground-workspace" required>
+                  <FieldLabel>Workspace</FieldLabel>
+                  <FieldControl asChild>
+                    <input
+                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      name="workspace"
+                      placeholder="Acme Ops"
+                    />
+                  </FieldControl>
+                  <FieldDescription>Visible helper text is wired to the input.</FieldDescription>
+                </Field>
+                <Field id="playground-owner" invalid>
+                  <FieldLabel>Owner email</FieldLabel>
+                  <FieldControl asChild>
+                    <input
+                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm aria-[invalid=true]:border-destructive"
+                      name="owner"
+                      defaultValue="owner"
+                    />
+                  </FieldControl>
+                  <FieldError>Enter a valid owner email.</FieldError>
+                </Field>
+                <FieldSet>
+                  <FieldLegend>Channels</FieldLegend>
+                  <FieldGroup>
+                    <Field id="playground-email" orientation="horizontal">
+                      <FieldContent>
+                        <FieldTitle>Email</FieldTitle>
+                        <FieldDescription>Send operational reports.</FieldDescription>
+                      </FieldContent>
+                      <FieldControl asChild>
+                        <input className="mt-0.5 size-5 accent-primary" type="checkbox" />
+                      </FieldControl>
+                    </Field>
+                  </FieldGroup>
+                </FieldSet>
+                <Button type="submit" size="sm">
+                  Save fields
+                </Button>
+              </Form>
+            </CardContent>
+          </Card>
         </Stack>
       </Container>
     </DethinkProvider>
