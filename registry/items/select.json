@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "title": "Select",
+  "description": "React Aria backed single-select primitive with token-backed trigger, popover, item, form, invalid, disabled, read-only, density, dark mode, and provider-theme styling.",
+  "dependencies": ["react-aria-components"],
+  "devDependencies": [],
+  "registryDependencies": ["dethink-base"],
+  "files": [
+    {
+      "path": "packages/components/src/components/select/select.tsx",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/components/select/index.ts",
+      "type": "registry:component"
+    },
+    {
+      "path": "packages/components/src/utils/cn.ts",
+      "type": "registry:lib"
+    }
+  ]
+}

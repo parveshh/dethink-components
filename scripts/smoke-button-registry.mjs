@@ -108,6 +108,7 @@ const link = await readJson(join(registryRoot, "link.json"));
 const numberInput = await readJson(join(registryRoot, "number-input.json"));
 const radioGroup = await readJson(join(registryRoot, "radio-group.json"));
 const separator = await readJson(join(registryRoot, "separator.json"));
+const select = await readJson(join(registryRoot, "select.json"));
 const stack = await readJson(join(registryRoot, "stack.json"));
 const switchItem = await readJson(join(registryRoot, "switch.json"));
 const textarea = await readJson(join(registryRoot, "textarea.json"));
@@ -133,6 +134,7 @@ const registryItemsByName = new Map(
     numberInput,
     radioGroup,
     separator,
+    select,
     stack,
     switchItem,
     textarea,
@@ -160,6 +162,7 @@ assert(link.name === "link", "link registry item must be named link.");
 assert(numberInput.name === "number-input", "number-input registry item must be named number-input.");
 assert(radioGroup.name === "radio-group", "radio-group registry item must be named radio-group.");
 assert(separator.name === "separator", "separator registry item must be named separator.");
+assert(select.name === "select", "select registry item must be named select.");
 assert(stack.name === "stack", "stack registry item must be named stack.");
 assert(switchItem.name === "switch", "switch registry item must be named switch.");
 assert(textarea.name === "textarea", "textarea registry item must be named textarea.");
@@ -240,6 +243,10 @@ assert(
 assert(
   separator.registryDependencies?.includes("dethink-base"),
   "separator registry item must depend on dethink-base.",
+);
+assert(
+  select.registryDependencies?.includes("dethink-base"),
+  "select registry item must depend on dethink-base.",
 );
 assert(
   stack.registryDependencies?.includes("dethink-base"),
@@ -326,6 +333,10 @@ assert(
   "separator registry item must not add runtime dependencies.",
 );
 assert(
+  select.dependencies?.includes("react-aria-components"),
+  "select registry item must include react-aria-components.",
+);
+assert(
   Array.isArray(stack.dependencies) && stack.dependencies.length === 0,
   "stack registry item must not add runtime dependencies.",
 );
@@ -371,6 +382,7 @@ for (const item of [
   numberInput,
   radioGroup,
   separator,
+  select,
   stack,
   switchItem,
   textarea,
@@ -393,6 +405,7 @@ await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
 await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
 await assertRegistryRelativeImportsResolve(radioGroup, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
+await assertRegistryRelativeImportsResolve(select, registryItemsByName);
 await assertRegistryRelativeImportsResolve(switchItem, registryItemsByName);
 await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
@@ -450,6 +463,10 @@ const radioGroupSource = await readFile(
 );
 const separatorSource = await readFile(
   join(root, "packages/components/src/components/separator/separator.tsx"),
+  "utf8",
+);
+const selectSource = await readFile(
+  join(root, "packages/components/src/components/select/select.tsx"),
   "utf8",
 );
 const stackSource = await readFile(
@@ -903,6 +920,55 @@ assert(
   "separator source must strip splitter value semantics at runtime.",
 );
 assert(!separatorSource.includes("@radix-ui"), "separator source must remain dependency-free.");
+assert(
+  selectSource.includes("react-aria-components"),
+  "select source must use React Aria Components.",
+);
+assert(
+  selectSource.includes('data-slot={dataSlot ?? "select"}'),
+  "select source must expose stable root slot data.",
+);
+assert(
+  selectSource.includes('data-slot="select-trigger"'),
+  "select source must expose stable trigger slot data.",
+);
+assert(
+  selectSource.includes('data-slot="select-value"'),
+  "select source must expose stable value slot data.",
+);
+assert(
+  selectSource.includes('data-slot="select-popover"'),
+  "select source must expose stable popover slot data.",
+);
+assert(
+  selectSource.includes('data-slot="select-listbox"'),
+  "select source must expose stable listbox slot data.",
+);
+assert(
+  selectSource.includes('data-slot="select-item"'),
+  "select source must expose stable item slot data.",
+);
+assert(
+  selectSource.includes("bg-background"),
+  "select source must use tokenized background utilities.",
+);
+assert(
+  selectSource.includes("border-input"),
+  "select source must use tokenized input border utilities.",
+);
+assert(
+  selectSource.includes("ring-ring"),
+  "select source must use tokenized focus ring utilities.",
+);
+assert(
+  selectSource.includes("text-destructive"),
+  "select source must use tokenized destructive utilities.",
+);
+assert(
+  selectSource.includes("h-density-control"),
+  "select source must use provider density control utilities.",
+);
+assert(!selectSource.includes("@radix-ui"), "select source must remain Radix-free.");
 assert(stackSource.includes('"data-slot": "stack"'), "stack source must expose stable slot data.");
 assert(stackSource.includes("asChild"), "stack source must expose child composition.");
 assert(stackSource.includes("stackClassNames"), "stack source must expose class-name composition.");
