@@ -329,12 +329,15 @@ for (const item of [
   cardStack,
   container,
   formField,
+  input,
   iconButton,
   flex,
   grid,
   link,
+  numberInput,
   separator,
   stack,
+  textarea,
   typography,
   dateTimePicker,
   timeline,
@@ -348,8 +351,11 @@ await assertRegistryRelativeImportsResolve(container, registryItemsByName);
 await assertRegistryRelativeImportsResolve(card, registryItemsByName);
 await assertRegistryRelativeImportsResolve(cardStack, registryItemsByName);
 await assertRegistryRelativeImportsResolve(formField, registryItemsByName);
+await assertRegistryRelativeImportsResolve(input, registryItemsByName);
 await assertRegistryRelativeImportsResolve(grid, registryItemsByName);
+await assertRegistryRelativeImportsResolve(numberInput, registryItemsByName);
 await assertRegistryRelativeImportsResolve(separator, registryItemsByName);
+await assertRegistryRelativeImportsResolve(textarea, registryItemsByName);
 
 const stylePath = base.files.find((file) => file.type === "registry:style")?.path;
 assert(stylePath, "base registry item must include a registry:style file.");
