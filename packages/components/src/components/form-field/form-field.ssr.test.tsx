@@ -4,25 +4,42 @@ import { renderToString } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import {
   Field,
+  FieldContent,
   FieldControl,
   FieldDescription,
   FieldError,
+  FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+  Form,
 } from ".";
 
 describe("Field SSR", () => {
   it("renders Field markup on the server", () => {
     const markup = renderToString(
-      <Field id="server-field" invalid required>
-        <FieldLabel>Server field</FieldLabel>
-        <FieldControl asChild>
-          <input />
-        </FieldControl>
-        <FieldDescription>Rendered on the server.</FieldDescription>
-        <FieldError>Server field is invalid.</FieldError>
-      </Field>,
+      <Form action="/save" method="post">
+        <FieldSet>
+          <FieldLegend>Server group</FieldLegend>
+          <FieldGroup>
+            <Field id="server-field" invalid required>
+              <FieldLabel>Server field</FieldLabel>
+              <FieldControl asChild>
+                <input />
+              </FieldControl>
+              <FieldDescription>Rendered on the server.</FieldDescription>
+              <FieldError>Server field is invalid.</FieldError>
+            </Field>
+          </FieldGroup>
+        </FieldSet>
+      </Form>,
     );
 
+    expect(markup).toContain('data-slot="form"');
+    expect(markup).toContain('data-slot="field-set"');
+    expect(markup).toContain('data-slot="field-legend"');
+    expect(markup).toContain('data-slot="field-group"');
     expect(markup).toContain('data-slot="field"');
     expect(markup).toContain('data-slot="field-label"');
     expect(markup).toContain('data-slot="field-control"');
@@ -39,11 +56,14 @@ describe("Field SSR", () => {
     const container = document.createElement("div");
     const field = (
       <Field invalid>
-        <FieldLabel>Hydrate field</FieldLabel>
+        <FieldContent>
+          <FieldTitle>Hydrate field</FieldTitle>
+          <FieldDescription>Stable generated description.</FieldDescription>
+        </FieldContent>
+        <FieldLabel>Hydrate field label</FieldLabel>
         <FieldControl asChild>
           <input />
         </FieldControl>
-        <FieldDescription>Stable generated description.</FieldDescription>
         <FieldError>Stable generated error.</FieldError>
       </Field>
     );

@@ -4,14 +4,49 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import {
   Field,
+  FieldContent,
   FieldControl,
   FieldDescription,
   FieldError,
+  FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+  Form,
   fieldClassNames,
+  formClassNames,
 } from ".";
 
 describe("Field", () => {
+  it("renders a native form with native attributes and spacing", () => {
+    const ref = createRef<HTMLFormElement>();
+
+    render(
+      <Form
+        ref={ref}
+        action="/settings"
+        method="post"
+        spacing="lg"
+        className="custom-form"
+      >
+        <button type="submit">Save settings</button>
+      </Form>,
+    );
+
+    const form = screen.getByRole("button", { name: "Save settings" }).closest("form");
+
+    expect(form).toHaveAttribute("data-slot", "form");
+    expect(form).toHaveAttribute("data-spacing", "lg");
+    expect(form).toHaveAttribute("action", "/settings");
+    expect(form).toHaveAttribute("method", "post");
+    expect(form).toHaveClass("custom-form");
+    expect(formClassNames({ spacing: "lg", className: "custom-form" })).toContain(
+      "custom-form",
+    );
+    expect(ref.current).toBe(form);
+  });
+
   it("renders a structural field with safe defaults", () => {
     render(
       <Field>
@@ -191,5 +226,65 @@ describe("Field", () => {
         </FieldControl>,
       ),
     ).toThrow("FieldControl with asChild expects a single React element child.");
+  });
+
+  it("renders field groups, fieldsets, and legends with native semantics", () => {
+    const fieldSetRef = createRef<HTMLFieldSetElement>();
+
+    render(
+      <FieldSet ref={fieldSetRef} disabled className="custom-fieldset">
+        <FieldLegend variant="label">Preferences</FieldLegend>
+        <FieldDescription>Choose every notification channel to enable.</FieldDescription>
+        <FieldGroup gap="sm">
+          <Field id="email-notifications">
+            <FieldLabel>Email notifications</FieldLabel>
+            <FieldControl asChild>
+              <input type="checkbox" />
+            </FieldControl>
+          </Field>
+        </FieldGroup>
+      </FieldSet>,
+    );
+
+    const fieldset = screen.getByText("Preferences").closest("fieldset");
+    const legend = screen.getByText("Preferences");
+    const group = screen
+      .getByText("Email notifications")
+      .closest('[data-slot="field-group"]');
+    const checkbox = screen.getByLabelText("Email notifications");
+
+    expect(fieldset).toHaveAttribute("data-slot", "field-set");
+    expect(fieldset).toHaveAttribute("data-disabled", "true");
+    expect(fieldset).toHaveClass("custom-fieldset");
+    expect(fieldSetRef.current).toBe(fieldset);
+    expect(legend.tagName).toBe("LEGEND");
+    expect(legend).toHaveAttribute("data-slot", "field-legend");
+    expect(legend).toHaveAttribute("data-variant", "label");
+    expect(group).toHaveAttribute("data-gap", "sm");
+    expect(group).not.toHaveAttribute("role");
+    expect(checkbox).toBeDisabled();
+  });
+
+  it("supports horizontal field content rows", () => {
+    render(
+      <Field id="sync" orientation="horizontal">
+        <FieldContent>
+          <FieldTitle>Sync reports</FieldTitle>
+          <FieldDescription>Keep reports refreshed in the background.</FieldDescription>
+        </FieldContent>
+        <FieldControl asChild>
+          <input type="checkbox" />
+        </FieldControl>
+      </Field>,
+    );
+
+    const field = screen.getByText("Sync reports").closest('[data-slot="field"]');
+    const content = screen.getByText("Sync reports").closest('[data-slot="field-content"]');
+    const title = screen.getByText("Sync reports");
+
+    expect(field).toHaveAttribute("data-orientation", "horizontal");
+    expect(content).toHaveAttribute("data-slot", "field-content");
+    expect(title).toHaveAttribute("data-slot", "field-title");
+    expect(title.tagName).toBe("DIV");
   });
 });

@@ -12,6 +12,8 @@ import {
   useMemo,
   useState,
   type ForwardedRef,
+  type FieldsetHTMLAttributes,
+  type FormHTMLAttributes,
   type HTMLAttributes,
   type LabelHTMLAttributes,
   type ReactElement,
@@ -24,6 +26,11 @@ export type FieldElement = "div" | "section";
 export type FieldOrientation = "vertical" | "horizontal";
 export type FieldDescriptionElement = "p" | "div" | "span";
 export type FieldErrorElement = "div" | "p";
+export type FieldGroupElement = "div" | "section";
+export type FieldGroupGap = "sm" | "md" | "lg";
+export type FieldLegendVariant = "legend" | "label";
+export type FieldTitleElement = "div" | "span" | "p";
+export type FormSpacing = "sm" | "md" | "lg";
 export type FieldErrorItem =
   | string
   | {
@@ -31,6 +38,11 @@ export type FieldErrorItem =
     }
   | null
   | undefined;
+
+export interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
+  children?: ReactNode;
+  spacing?: FormSpacing;
+}
 
 export interface FieldProps extends HTMLAttributes<HTMLElement> {
   as?: FieldElement;
@@ -67,6 +79,30 @@ export interface FieldErrorProps extends HTMLAttributes<HTMLElement> {
   errors?: FieldErrorItem[];
 }
 
+export interface FieldGroupProps extends HTMLAttributes<HTMLElement> {
+  as?: FieldGroupElement;
+  children?: ReactNode;
+  gap?: FieldGroupGap;
+}
+
+export interface FieldSetProps extends FieldsetHTMLAttributes<HTMLFieldSetElement> {
+  children?: ReactNode;
+}
+
+export interface FieldLegendProps extends HTMLAttributes<HTMLLegendElement> {
+  children?: ReactNode;
+  variant?: FieldLegendVariant;
+}
+
+export interface FieldContentProps extends HTMLAttributes<HTMLDivElement> {
+  children?: ReactNode;
+}
+
+export interface FieldTitleProps extends HTMLAttributes<HTMLElement> {
+  as?: FieldTitleElement;
+  children?: ReactNode;
+}
+
 type FieldControlSlotProps = Record<string, unknown> & {
   "aria-describedby"?: string;
   "aria-errormessage"?: string;
@@ -95,6 +131,14 @@ type FieldContextValue = {
 
 const FieldContext = createContext<FieldContextValue | null>(null);
 
+const formBaseClasses = "grid w-full min-w-0 text-foreground";
+
+const formSpacingClasses: Record<FormSpacing, string> = {
+  sm: "gap-[calc(var(--dt-density-gap)*2)]",
+  md: "gap-[calc(var(--dt-density-gap)*3)]",
+  lg: "gap-[calc(var(--dt-density-gap)*4)]",
+};
+
 const fieldBaseClasses =
   "group/field grid min-w-0 gap-2 text-foreground data-[disabled=true]:opacity-60 data-[orientation=horizontal]:grid-cols-[minmax(0,1fr)_auto] data-[orientation=horizontal]:items-start data-[orientation=horizontal]:gap-x-density-gap data-[orientation=horizontal]:gap-y-1.5";
 
@@ -110,6 +154,28 @@ const fieldDescriptionBaseClasses =
   "text-xs leading-5 text-muted-foreground data-[disabled=true]:opacity-70";
 
 const fieldErrorBaseClasses = "text-xs font-medium leading-5 text-destructive";
+
+const fieldGroupBaseClasses = "grid min-w-0";
+
+const fieldGroupGapClasses: Record<FieldGroupGap, string> = {
+  sm: "gap-[var(--dt-density-gap)]",
+  md: "gap-[calc(var(--dt-density-gap)*2)]",
+  lg: "gap-[calc(var(--dt-density-gap)*3)]",
+};
+
+const fieldSetBaseClasses =
+  "min-w-0 border-0 p-0 text-foreground disabled:opacity-60";
+
+const fieldLegendBaseClasses = "max-w-full text-foreground";
+
+const fieldLegendVariantClasses: Record<FieldLegendVariant, string> = {
+  legend: "mb-2 text-base font-semibold leading-6",
+  label: "mb-2 text-sm font-medium leading-none",
+};
+
+const fieldContentBaseClasses = "grid min-w-0 gap-1.5";
+
+const fieldTitleBaseClasses = "text-sm font-medium leading-none text-foreground";
 
 function useFieldContext() {
   return useContext(FieldContext);
@@ -195,6 +261,13 @@ export function fieldClassNames({
   return cn(fieldBaseClasses, className);
 }
 
+export function formClassNames({
+  className,
+  spacing = "md",
+}: Pick<FormProps, "className" | "spacing"> = {}) {
+  return cn(formBaseClasses, formSpacingClasses[spacing], className);
+}
+
 export function fieldLabelClassNames({
   className,
 }: Pick<FieldLabelProps, "className"> = {}) {
@@ -218,6 +291,62 @@ export function fieldErrorClassNames({
 }: Pick<FieldErrorProps, "className"> = {}) {
   return cn(fieldErrorBaseClasses, className);
 }
+
+export function fieldGroupClassNames({
+  className,
+  gap = "md",
+}: Pick<FieldGroupProps, "className" | "gap"> = {}) {
+  return cn(fieldGroupBaseClasses, fieldGroupGapClasses[gap], className);
+}
+
+export function fieldSetClassNames({
+  className,
+}: Pick<FieldSetProps, "className"> = {}) {
+  return cn(fieldSetBaseClasses, className);
+}
+
+export function fieldLegendClassNames({
+  className,
+  variant = "legend",
+}: Pick<FieldLegendProps, "className" | "variant"> = {}) {
+  return cn(fieldLegendBaseClasses, fieldLegendVariantClasses[variant], className);
+}
+
+export function fieldContentClassNames({
+  className,
+}: Pick<FieldContentProps, "className"> = {}) {
+  return cn(fieldContentBaseClasses, className);
+}
+
+export function fieldTitleClassNames({
+  className,
+}: Pick<FieldTitleProps, "className"> = {}) {
+  return cn(fieldTitleBaseClasses, className);
+}
+
+export const Form = forwardRef<HTMLFormElement, FormProps>(
+  (
+    {
+      children,
+      className,
+      spacing = "md",
+      ...props
+    },
+    ref,
+  ) => (
+    <form
+      {...props}
+      ref={ref}
+      data-slot="form"
+      data-spacing={spacing}
+      className={formClassNames({ className, spacing })}
+    >
+      {children}
+    </form>
+  ),
+);
+
+Form.displayName = "Form";
 
 export const Field = forwardRef<HTMLElement, FieldProps>(
   (
@@ -533,3 +662,124 @@ export const FieldError = forwardRef<HTMLElement, FieldErrorProps>(
 );
 
 FieldError.displayName = "FieldError";
+
+export const FieldGroup = forwardRef<HTMLElement, FieldGroupProps>(
+  (
+    {
+      as: Element = "div",
+      children,
+      className,
+      gap = "md",
+      ...props
+    },
+    ref,
+  ) =>
+    createElement(
+      Element,
+      {
+        ...props,
+        ref,
+        "data-slot": "field-group",
+        "data-gap": gap,
+        className: fieldGroupClassNames({ className, gap }),
+      },
+      children,
+    ),
+);
+
+FieldGroup.displayName = "FieldGroup";
+
+export const FieldSet = forwardRef<HTMLFieldSetElement, FieldSetProps>(
+  (
+    {
+      children,
+      className,
+      disabled,
+      ...props
+    },
+    ref,
+  ) => (
+    <fieldset
+      {...props}
+      ref={ref}
+      disabled={disabled}
+      data-slot="field-set"
+      data-disabled={disabled ? "true" : undefined}
+      className={fieldSetClassNames({ className })}
+    >
+      {children}
+    </fieldset>
+  ),
+);
+
+FieldSet.displayName = "FieldSet";
+
+export const FieldLegend = forwardRef<HTMLLegendElement, FieldLegendProps>(
+  (
+    {
+      children,
+      className,
+      variant = "legend",
+      ...props
+    },
+    ref,
+  ) => (
+    <legend
+      {...props}
+      ref={ref}
+      data-slot="field-legend"
+      data-variant={variant}
+      className={fieldLegendClassNames({ className, variant })}
+    >
+      {children}
+    </legend>
+  ),
+);
+
+FieldLegend.displayName = "FieldLegend";
+
+export const FieldContent = forwardRef<HTMLDivElement, FieldContentProps>(
+  (
+    {
+      children,
+      className,
+      ...props
+    },
+    ref,
+  ) => (
+    <div
+      {...props}
+      ref={ref}
+      data-slot="field-content"
+      className={fieldContentClassNames({ className })}
+    >
+      {children}
+    </div>
+  ),
+);
+
+FieldContent.displayName = "FieldContent";
+
+export const FieldTitle = forwardRef<HTMLElement, FieldTitleProps>(
+  (
+    {
+      as: Element = "div",
+      children,
+      className,
+      ...props
+    },
+    ref,
+  ) =>
+    createElement(
+      Element,
+      {
+        ...props,
+        ref,
+        "data-slot": "field-title",
+        className: fieldTitleClassNames({ className }),
+      },
+      children,
+    ),
+);
+
+FieldTitle.displayName = "FieldTitle";

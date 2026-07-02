@@ -7,7 +7,10 @@ import {
   FieldControl,
   FieldDescription,
   FieldError,
+  FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from ".";
 
 expect.extend(toHaveNoViolations);
@@ -37,6 +40,42 @@ describe("Field accessibility", () => {
 
     expect(input).toHaveAttribute("aria-invalid", "true");
     expect(input).toHaveAttribute("aria-errormessage", "a11y-email-error");
+
+    await expect(axe(container)).resolves.toHaveNoViolations();
+  });
+
+  it("has no axe violations for grouped controls", async () => {
+    const { container } = render(
+      <DethinkProvider theme="light">
+        <main aria-label="Grouped field accessibility smoke">
+          <FieldSet>
+            <FieldLegend>Notifications</FieldLegend>
+            <FieldDescription>Choose the channels to enable.</FieldDescription>
+            <FieldGroup>
+              <Field id="notify-email">
+                <FieldLabel>Email</FieldLabel>
+                <FieldControl asChild>
+                  <input type="checkbox" name="notifications" value="email" />
+                </FieldControl>
+              </Field>
+              <Field id="notify-slack">
+                <FieldLabel>Slack</FieldLabel>
+                <FieldControl asChild>
+                  <input type="checkbox" name="notifications" value="slack" />
+                </FieldControl>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+        </main>
+      </DethinkProvider>,
+    );
+
+    expect(screen.getByRole("group", { name: "Notifications" })).toHaveAttribute(
+      "data-slot",
+      "field-set",
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("type", "checkbox");
+    expect(screen.getByLabelText("Slack")).toHaveAttribute("type", "checkbox");
 
     await expect(axe(container)).resolves.toHaveNoViolations();
   });
