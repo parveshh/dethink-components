@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, within } from "storybook/test";
+import {
+  expect,
+  userEvent,
+  waitFor,
+  within,
+} from "storybook/test";
 import {
   Combobox,
   ComboboxItem,
@@ -62,7 +67,9 @@ export const Base: Story = {
     ).toBeVisible();
     await userEvent.click(page.getByRole("option", { name: "Production" }));
     await expect(input).toHaveValue("Production");
-    await expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(page.queryByRole("listbox")).not.toBeInTheDocument();
+    });
     await expect(input).toHaveFocus();
 
     await userEvent.clear(input);
