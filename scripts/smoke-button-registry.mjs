@@ -99,6 +99,7 @@ const card = await readJson(join(registryRoot, "card.json"));
 const cardStack = await readJson(join(registryRoot, "card-stack.json"));
 const container = await readJson(join(registryRoot, "container.json"));
 const formField = await readJson(join(registryRoot, "form-field.json"));
+const input = await readJson(join(registryRoot, "input.json"));
 const iconButton = await readJson(join(registryRoot, "icon-button.json"));
 const flex = await readJson(join(registryRoot, "flex.json"));
 const grid = await readJson(join(registryRoot, "grid.json"));
@@ -118,6 +119,7 @@ const registryItemsByName = new Map(
     cardStack,
     container,
     formField,
+    input,
     iconButton,
     flex,
     grid,
@@ -139,6 +141,7 @@ assert(
 );
 assert(container.name === "container", "container registry item must be named container.");
 assert(formField.name === "form-field", "form-field registry item must be named form-field.");
+assert(input.name === "input", "input registry item must be named input.");
 assert(iconButton.name === "icon-button", "icon-button registry item must be named icon-button.");
 assert(flex.name === "flex", "flex registry item must be named flex.");
 assert(grid.name === "grid", "grid registry item must be named grid.");
@@ -182,6 +185,10 @@ assert(
 assert(
   formField.registryDependencies?.includes("dethink-base"),
   "form-field registry item must depend on dethink-base.",
+);
+assert(
+  input.registryDependencies?.includes("dethink-base"),
+  "input registry item must depend on dethink-base.",
 );
 assert(
   iconButton.registryDependencies?.includes("dethink-base"),
@@ -246,6 +253,10 @@ assert(
 assert(
   Array.isArray(formField.dependencies) && formField.dependencies.length === 0,
   "form-field registry item must not add runtime dependencies.",
+);
+assert(
+  Array.isArray(input.dependencies) && input.dependencies.length === 0,
+  "input registry item must not add runtime dependencies.",
 );
 assert(
   Array.isArray(iconButton.dependencies) && iconButton.dependencies.length === 0,

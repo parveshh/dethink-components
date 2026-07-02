@@ -28,6 +28,7 @@ import {
   GridItem,
   Heading,
   IconButton,
+  Input,
   Link,
   Divider,
   Separator,
@@ -180,9 +181,9 @@ export function App() {
             <label className="block text-sm font-medium" htmlFor="smoke-input">
               Smoke input
             </label>
-            <input
+            <Input
               id="smoke-input"
-              className="mt-2 h-density-control rounded-md border border-input bg-background px-3"
+              className="mt-2"
               placeholder="Token-backed field"
             />
           </Box>
@@ -208,8 +209,7 @@ export function App() {
                 <Field id="playground-workspace" required>
                   <FieldLabel>Workspace</FieldLabel>
                   <FieldControl asChild>
-                    <input
-                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    <Input
                       name="workspace"
                       placeholder="Acme Ops"
                     />
@@ -219,8 +219,7 @@ export function App() {
                 <Field id="playground-owner" invalid>
                   <FieldLabel>Owner email</FieldLabel>
                   <FieldControl asChild>
-                    <input
-                      className="min-h-density-control rounded-md border border-input bg-background px-3 py-2 text-sm aria-[invalid=true]:border-destructive"
+                    <Input
                       name="owner"
                       defaultValue="owner"
                     />

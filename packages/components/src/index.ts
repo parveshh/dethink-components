@@ -227,6 +227,12 @@ export {
   type FormSpacing,
 } from "./components/form-field";
 export {
+  Input,
+  inputClassNames,
+  type InputControlSize,
+  type InputProps,
+} from "./components/input";
+export {
   Timeline,
   TimelineControls,
   TimelineItem,
